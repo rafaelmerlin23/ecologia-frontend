@@ -7,9 +7,9 @@ function TarjetaDeproyecto({LinkImagen,nombre,fecha}) {
   return (
     <>
     <div className=' transition ease-in-out delay-10 hover:-translate-y-1 hover:scale-105  duration-10 '>
-        <div className='max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 m-2' >
         <button className=' absolute top-0 left-0 bg-gray-700  rounded-full w-6 flex hover:text-white hover:bg-red-950 justify-center content-center '>x</button>
-        <img src={LinkImagen} alt="incendio" className="rounded-t-lg hover:cursor-pointer hover-opacity-70"/>
+        <div className='max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 m-2' >
+        <img src={LinkImagen} alt="incendio" className="rounded-t-lg hover:cursor-pointer "/>
             <div className='p-4'>
                 <div className='group flex items-center space-x-2 hover:cursor-pointer'>
                   <p className='mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white group-hover:text-blue-500 group-hover:underline'>{nombre}   </p>
