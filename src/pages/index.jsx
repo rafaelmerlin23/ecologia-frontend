@@ -1,5 +1,5 @@
 import {Navigate} from 'react-router-dom'
-import Proyectos from './proyectos'
+import Proyectos from './Proyectos'
 
 export const Landing = () => <h2>Landing page (public)</h2>
 

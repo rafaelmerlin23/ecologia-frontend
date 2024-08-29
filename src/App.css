@@ -1,0 +1,6 @@
+
+.parent-focus-within:focus-within {
+    transition: border-color 500ms;
+    border-color: #3b82f6; /* Color del borde cuando está en foco (gray-700 en Tailwind) */
+    border-width: 1px;
+  }

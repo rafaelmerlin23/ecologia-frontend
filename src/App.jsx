@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import {BrowserRouter,Routes,Route,Link} from 'react-router-dom'
 import {Landing,Admin,Analytics,DashBoard,Home} from './pages'
 import ProtectedRoute from './components/ProtectedRoute'
-import Proyectos from './pages/proyectos'
+import Proyectos from './pages/Proyectos'
 function App() {
   
   const [user,setUser] = useState(null)
