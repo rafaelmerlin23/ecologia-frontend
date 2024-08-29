@@ -4,11 +4,11 @@ import {FontAwesomeIcon} from '@fortawesome/react-fontawesome'
 import {faTrash,faCalendar} from "@fortawesome/free-solid-svg-icons"
 
 
-function Eliminar({esActiva,cerrarOverlay,proyecto}) {
+const Eliminar = ({esActiva,cerrarOverlay,proyecto}) => {
     if(!esActiva) return null
 
     return (
-    <Overlay>
+    <Overlay animacion={cerrarOverlay}>
         
         <FontAwesomeIcon className='text-2xl' icon={faTrash}/>
         <div className='max-w-full sm:max-w-md md:max-w-lg lg:max-w-xl xl:max-w-2xl'>
@@ -28,7 +28,7 @@ function Eliminar({esActiva,cerrarOverlay,proyecto}) {
           <button className='py-2 px-6 text-white bg-red-800 hover:opacity-70 rounded-2xl m-1 border-1 border-red-600'>Eliminar</button>
           <button className='py-2 px-6 text-gray-400 bg-gray-800 hover:opacity-70 rounded-2xl m-1 border-1 border-gray-200  mt-0' onClick={cerrarOverlay}>cancelar</button>
         </div>
-    </Overlay>
+    </Overlay > 
   )
 }
 

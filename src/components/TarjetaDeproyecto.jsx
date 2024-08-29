@@ -49,7 +49,7 @@ function TarjetaDeproyecto({LinkImagen,nombre,fecha}) {
           </div>
           <div className='flex items-center space-x-2 mt-2 mb-4'>
             <FontAwesomeIcon icon={faCalendar} className="h-5 w-5 mr-2"/>
-            <p className='font-normal text-gray-700 dark:text-gray-400 text-center break-words'>
+            <p className='font-normal text-gray-700 dark:text-gray-400 text-center'>
               {fecha}
             </p>
           </div>

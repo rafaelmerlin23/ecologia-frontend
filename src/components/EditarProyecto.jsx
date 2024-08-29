@@ -5,7 +5,7 @@ const EditarProyecto = ({proyecto,esActivoEditar,cerrarEditar}) =>{
 
     return(
         <>
-            <Overlay>
+            <Overlay animacion={cerrarEditar}>
                 <p className='font-bold text-2xl'>Coloca el nombre del proyecto</p>
                 <form className='border border-gray-700 parent-focus-within inline-flex items-center bg-gray-600 rounded-2xl pl-6' action="">
                     <input placeholder='Proyecto oaxaca' value={proyecto} name={proyecto}  className='focus:outline-none text-2xl text-gray-300 bg-gray-600 p-2' type="text" max={50} />

@@ -3,6 +3,8 @@ import {BrowserRouter,Routes,Route,Link} from 'react-router-dom'
 import {Landing,Admin,Analytics,DashBoard,Home} from './pages'
 import ProtectedRoute from './components/ProtectedRoute'
 import Proyectos from './pages/Proyectos'
+import Puntos from './pages/puntos'
+
 function App() {
   
   const [user,setUser] = useState(null)
@@ -34,6 +36,7 @@ function App() {
     <Route path='analytics' element = {<Analytics/>}/>
     <Route path='admin' element = {<Admin/>}/>
     <Route path='proyectos' element = {<Proyectos/>}/>
+    <Route path='puntos' element = {<Puntos/>}/>
     
     </Routes>
     </BrowserRouter>
@@ -42,7 +45,7 @@ function App() {
 
 function Navigation(){
   return (
-    <nav>
+    <nav className=''>
       <ul>
         <li>
           <Link to="landing"> Landing </Link>
@@ -61,6 +64,9 @@ function Navigation(){
         </li>
         <li>
         <Link to="proyectos"> proyectos </Link>
+        </li>
+        <li>
+        <Link to="puntos"> Puntos </Link>
         </li>
       </ul>
     </nav>
