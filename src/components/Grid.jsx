@@ -1,8 +1,11 @@
 import React from 'react'
 
-function Grid({children}) {
+function Grid({children,gridInfraestructura}) {
+
+ 
+  const classText = `grid grid-cols-1 sm:grid-cols-${gridInfraestructura.sm} md:grid-cols-${gridInfraestructura.md} lg:grid-cols-${gridInfraestructura.lg} xl:grid-cols-${gridInfraestructura.xl} gap-6 bg-gradient-to-r from-gray-900 to-blue-gray-950 p-6`
   return (
-      <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 gap-4 bg-gradient-to-r from-gray-900 to-blue-gray-950 p-6'>
+      <div className={classText}>
          {children}
       </div>
   )

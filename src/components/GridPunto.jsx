@@ -12,10 +12,16 @@ import TarjetaPuntos from './TarjetaPuntos'
     puntos.push({imagen:imagen,coordenadas:coordenadas,nombre:nombre+" "+i,indice:i})
     }
    
-
+   
+    const  gridInfraestructura= {
+      sm:2,
+      md:2,
+      lg:2,
+      xl:4,
+    }
 function GridPunto() {
   return (
-    <Grid>
+    <Grid gridInfraestructura={gridInfraestructura}>
         {puntos.map( punto =><TarjetaPuntos coordenadas={punto.coordenadas} nombre={punto.nombre} key={punto.indice} imagen={punto.imagen}/>)}
     </Grid>
   )
