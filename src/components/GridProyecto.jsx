@@ -1,5 +1,6 @@
 import React from 'react'
 import TarjetaDeproyecto from '../components/TarjetaDeproyecto'
+import Grid from './Grid'
 
 function GridProyecto() {
     
@@ -27,11 +28,11 @@ function GridProyecto() {
 
       <>
       {
-        imagenes.length >0? <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 gap-4 bg-gradient-to-r from-gray-900 to-blue-gray-950 p-6'>
+        imagenes.length >0?<Grid>
           {imagenes.map((x)=>(
           <TarjetaDeproyecto  key = {x.indice} LinkImagen={x.imagen} fecha={x.fecha} nombre={x.nombre}/>
         ))}
-      </div>:
+      </Grid>:
       <div className='flex justify-center content-center p-5 bg-gradient-to-r from-gray-900 to-blue-gray-950'>
         <div className=''>
         <p className = 'text-1xl text-gray-500'>-- No tienes Proyectos, comienza uno --</p>
