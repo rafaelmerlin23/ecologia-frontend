@@ -35,7 +35,7 @@ function TarjetaDeproyecto({LinkImagen,nombre,fecha}) {
   return (
     <>
     <EditarProyecto proyecto = {nombre}  esActivoEditar= {esActivaEditar} cerrarEditar ={cerrarOverlayEditar} />
-    <Eliminar cerrarOverlay={cerrarOverlayEliminar} esActiva={esActicva} proyecto={{nombre:nombre,fecha:fecha}}></Eliminar>
+    <Eliminar iconoInformacionSecundaria={faCalendar} objetoEliminar={"Proyecto"} cerrarOverlay={cerrarOverlayEliminar} esActiva={esActicva} proyecto={{informacionPrimaria:nombre,informacionSecundaria:fecha}  }></Eliminar>
       <div id='tarjeta' className={claseContenedor}>
       <div className='text-center max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 m-2'>
         <button onClick={abrirOverlayEliminar} className='absolute top-0 left-0 bg-gray-700 rounded-full w-6 flex hover:text-white hover:bg-red-950 justify-center content-center'>x</button>

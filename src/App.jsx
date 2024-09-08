@@ -1,76 +1,45 @@
-import React, { useState } from 'react'
-import {BrowserRouter,Routes,Route,Link} from 'react-router-dom'
-import {Landing,Admin,Analytics,DashBoard,Home} from './pages'
-import ProtectedRoute from './components/ProtectedRoute'
-import Proyectos from './pages/Proyectos'
-import Puntos from './pages/puntos'
+import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
+import Login from './pages/auth/Login';
+import Proyectos from './pages/Proyectos';
+import Puntos from './pages/Puntos';
+// import Albumes from './Albumes';
+import { AuthProvider, useAuth } from './AuthProvider';
 
-function App() {
-  
-  const [user,setUser] = useState(null)
-
-  const login =() =>{
-    ///request done
-    setUser({
-      id:1,
-      name:"john"
-    })
-  }
-
-  const logout = () =>{
-    setUser(null)
-  }
-  
-  return (
-    <BrowserRouter>
-    <Navigation/>
-    {user ? <button onClick={logout}>Logout</button>:<button onClick={login}>loggin</button>}
-
-    <Routes>
-    <Route index element = {<Landing/>}/>
-    <Route  path='/' element = {<h1>Home</h1>}/>
-    <Route path='home' element = {<ProtectedRoute user = {user}>
-      <Home/>
-    </ProtectedRoute>}/>
-    <Route path='dashboard' element = {<DashBoard/>}/>
-    <Route path='analytics' element = {<Analytics/>}/>
-    <Route path='admin' element = {<Admin/>}/>
-    <Route path='proyectos' element = {<Proyectos/>}/>
-    <Route path='puntos' element = {<Puntos/>}/>
-    
-    </Routes>
-    </BrowserRouter>
-  )
+function PrivateRoute({ element, ...rest }) {
+  const { isAuthenticated } = useAuth();
+  return isAuthenticated ? element : <Navigate to="/login" />;
 }
 
-function Navigation(){
+function App() {
   return (
-    <nav className=''>
-      <ul>
-        <li>
-          <Link to="landing"> Landing </Link>
-        </li>
-        <li>
-        <Link to="home"> Home </Link>
-        </li>
-        <li>
-        <Link to="dashboard"> DashBoard</Link>
-        </li>
-        <li>
-        <Link to="analytics"> Analytics </Link>
-        </li>
-        <li>
-        <Link to="admin"> Admin </Link>
-        </li>
-        <li>
-        <Link to="proyectos"> proyectos </Link>
-        </li>
-        <li>
-        <Link to="puntos"> Puntos </Link>
-        </li>
-      </ul>
-    </nav>
-  )
+    <Router>
+      <AuthProvider>
+        <Routes>
+          <Route path="/login" element={<Login />} />
+          <Route path="/proyectos" element={<PrivateRoute element={<Proyectos />} />} />
+          <Route path="/puntos" element={<PrivateRoute element={<Puntos />} />} />
+          {/*<Route path="/albumes" element={<PrivateRoute element={<Albumes />} />} />*/}
+          <Route path="/" element={<Navigate to="/login" />} />
+        </Routes>
+      </AuthProvider>
+    </Router>
+  );
 }
 
 export default App
+
+// function Navigation(){
+//   return (
+//     <>
+
+//     <nav className=''>
+//       <ul>
+//         <li>
+//         <Link to="proyectos"> proyectos </Link>
+//         </li>
+
+//       </ul>
+//     </nav>
+//     </>
+//   )
+// }
