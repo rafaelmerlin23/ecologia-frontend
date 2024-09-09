@@ -1,12 +1,21 @@
-import {Navigate} from 'react-router-dom'
-import Proyectos from './Proyectos'
-
-export const Landing = () => <h2>Landing page (public)</h2>
+import { useEffect } from "react"
 
 
+
+export const Landing = () => {
+    return(
+        <p>f</p>
+    )
+}
 
 export const Home = () => {
-    return <h2>Pagina de inicio</h2>
+    useEffect(()=>{
+     },[])
+    return(
+        <>
+
+        </>
+    )
 }
 
 export const DashBoard = () => <h2>DashBoard Page (Private)</h2>

@@ -23,18 +23,12 @@ function GridProyecto() {
     imagenes.push({imagen:imagen,fecha:fecha,nombre:"robertotototoototoototottoottototoottototoototttototo"})
     imagenes.push({imagen:imagen,fecha:fecha,nombre:"robertotototoototoototo"})
     
-    const  gridInfraestructura= {
-      sm:2,
-      md:4,
-      lg:4,
-      xl:6,
-    }
 
     return (
 
       <>
       {
-        imagenes.length >0?<Grid gridInfraestructura={gridInfraestructura}>
+        imagenes.length >0?<Grid >
           {imagenes.map((x)=>(
           <TarjetaDeproyecto  key = {x.indice} LinkImagen={x.imagen} fecha={x.fecha} nombre={x.nombre}/>
         ))}

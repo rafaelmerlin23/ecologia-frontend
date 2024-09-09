@@ -1,11 +1,11 @@
 import React from 'react'
 import GridProyecto from '../components/GridProyecto'
 import { useEffect } from 'react';
-const Proyectos =() => {
+const Proyectos =({user}) => {
   useEffect(() => {
     // Cambiar la clase del body cuando el componente se monta
     document.body.className = "bg-gradient-to-r from-gray-900 to-blue-gray-950";
-
+      console.log(user.token)
     // Limpiar las clases al desmontar el componente
       return () => {
       document.body.className = "bg-black";
