@@ -1,11 +1,18 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faLocationDot, faPen, faTrash } from "@fortawesome/free-solid-svg-icons"
 import Eliminar from './Eliminar'
+import { useAuth } from '../AuthProvider'
+import { Link } from 'react-router-dom'
 
-function TarjetaPuntos({ nombre, coordenadas, imagen }) {
+function TarjetaPuntos({ nombre, coordenadas, imagen,index }) {
 
   const [esActivoOverlay, setEsActivoOverlay] = useState(false)
+
+  const {projectInformation,setLocationInformation} = useAuth()
+
+  
+
 
   const cerrarOverlayEliminar = () => {
     setEsActivoOverlay(false)
@@ -18,7 +25,9 @@ function TarjetaPuntos({ nombre, coordenadas, imagen }) {
   return (
     <div className="pt-5 flex flex-col items-center bg-white border border-gray-200 rounded-lg shadow md:flex-row lg:flex-col xl:flex-col w-full md:max-w-2xl hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700">
       <Eliminar iconoInformacionSecundaria={faLocationDot} objetoEliminar={"Punto"} cerrarOverlay={cerrarOverlayEliminar} esActiva={esActivoOverlay} proyecto={{ informacionPrimaria: nombre, informacionSecundaria: coordenadas }}></Eliminar>
-      <img className="object-cover w-full rounded-t-lg h-64 md:h-auto md:w-48 md:rounded-none md:rounded-s-lg lg:w-200" src={imagen} alt="" />
+      <Link to={`${nombre}/albumes`}>
+        <img className="object-cover w-full rounded-t-lg h-64 md:h-auto md:w-48 md:rounded-none md:rounded-s-lg lg:w-200" src={imagen} alt="" />
+      </Link>
       <div className="flex flex-col justify-between p-4 leading-normal md:text-lg">
         <h5 className="mb-2 text-xl md:text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{nombre}</h5>
         <div className='flex items-center space-x-2 mt-2 mb-4'>

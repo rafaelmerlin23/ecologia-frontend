@@ -5,6 +5,7 @@ import Puntos from './pages/Puntos';
 // import Albumes from './Albumes';
 import { AuthProvider, useAuth } from './AuthProvider';
 import Albumes from './pages/Albumes';
+import Tarjeta from './components/album/Tarjeta';
 
 function PrivateRoute({ element, ...rest }) {
   const { isAuthenticated } = useAuth();
@@ -22,6 +23,7 @@ function App() {
           {/*<Route path="/albumes" element={<PrivateRoute element={<Albumes />} />} />*/}
           <Route path="/proyectos/:proyectoId/puntos/:puntoID/albumes" element={<PrivateRoute element={<Albumes />}></PrivateRoute>} />
           <Route path="/" element={<Navigate to="/login" />} />
+          <Route path='tarjeta' element = {<Tarjeta></Tarjeta>}/>
         </Routes>
       </AuthProvider>
     </Router>

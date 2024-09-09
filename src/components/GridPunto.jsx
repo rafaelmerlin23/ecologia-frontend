@@ -3,15 +3,13 @@ import Grid from './Grid'
 import TarjetaPuntos from './TarjetaPuntos'
 import { useAuth } from '../AuthProvider'
 const imagen = "https://s22908.pcdn.co/wp-content/uploads/2020/02/google-maps-alternatives-1.jpg"
-const nombre = "punto"
-const coordenadas = "17.952708, -94.910466"
 
 
 
 
 function GridPunto() {
   const [locationInformation, setLocationInformation] = useState([])
-  const { userData, projectInformation, shouldRefresh, refreshProjects } = useAuth()
+  const { userData, projectInformation, shouldRefresh} = useAuth()
   const token = userData.token
   useEffect(() => {
     // Hacer la petición GET
@@ -31,9 +29,10 @@ function GridPunto() {
             name: location[1],
             coordinates: location[2],
           }));
+
           //coordenadas={location.coordinates} imagen={imagen} nombre={location.name} key={location.locationId}
           setLocationInformation(newLocationInformation)
-          refreshProjects()
+         
 
         }
       })
@@ -50,7 +49,7 @@ function GridPunto() {
       {
         locationInformation.length > 0 ?
           <Grid>
-            {locationInformation.map(location => <TarjetaPuntos coordenadas={location.coordinates} imagen={imagen} nombre={location.name} key={location.locationId} />)}
+            {locationInformation.map(location => <TarjetaPuntos  index={location.locationId} coordenadas={location.coordinates} imagen={imagen} nombre={location.name} key={location.locationId} />)}
           </Grid>
           : <div className='flex justify-center content-center p-5 bg-gradient-to-r from-gray-900 to-blue-gray-950'>
             <div className=''>

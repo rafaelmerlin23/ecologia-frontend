@@ -11,6 +11,9 @@ export const AuthProvider = ({ children }) => {
 
     const [projectInformation, setProjectInformation] = useState(null)
 
+    const [locationInformation,setLocationInformation] = useState(null)
+
+
     const refreshProjects = () => {
         setShouldRefresh(prev => !prev);
     };
@@ -29,13 +32,15 @@ export const AuthProvider = ({ children }) => {
     return (
         <AuthContext.Provider value={{
             isAuthenticated
-            , userData
-            , login
-            , logout
-            , refreshProjects
-            , shouldRefresh
-            , setProjectInformation
-            , projectInformation
+            ,userData
+            ,login
+            ,logout
+            ,refreshProjects
+            ,shouldRefresh
+            ,setProjectInformation
+            ,projectInformation
+            ,locationInformation
+            ,setLocationInformation
         }}>
             {children}
         </AuthContext.Provider>

@@ -3,7 +3,8 @@ import FormularioPuntos from "../forms/FormularioPuntos"
 
 export const CrearPunto = ({ closeCreateLocation, isActive }) => {
     if (!isActive) return null
-    const { userData, projectInformation } = useAuth()
+    const {refreshProjects ,userData, projectInformation } = useAuth()
+    
     const token = userData.token
 
     const handleCreateLocation = (e, name, longitude, latitude) => {
@@ -31,6 +32,7 @@ export const CrearPunto = ({ closeCreateLocation, isActive }) => {
                 console.log('Respuesta del servidor:', data);
                 if (data && data.status == 'success') {
                     closeCreateLocation()
+                    refreshProjects()
 
                 }
 
