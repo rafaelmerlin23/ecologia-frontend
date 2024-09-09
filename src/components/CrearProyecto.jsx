@@ -1,35 +1,26 @@
-import Overlay from './Overlay'
-import '../App.css'
-import FormularioProyecto from '../forms/FormularioProyecto'
-import { useAuth } from '../AuthProvider'
 import { useState } from 'react'
+import { useAuth } from '../AuthProvider'
+import FormularioProyecto from '../forms/FormularioProyecto'
 
-const EditarProyecto = ({ proyecto, cerrarEditar, isActive }) => {
+export const CrearProyecto = ({ isActive, closeCreateProject }) => {
+
     if (!isActive) return null
 
     const [response, setResponse] = useState(null)
     const { userData, refreshProjects } = useAuth()
     const token = userData.token
+    console.log(token)
 
-    const project = {
-        index: proyecto.indice,
-        name: proyecto.nombre,
-        description: proyecto.description,
-        date: proyecto.fecha
-    }
-
-
-    const handleUpdateProject = (e, name, description, date) => {
+    const handleCreateProject = (e, name, description, date) => {
         e.preventDefault()
         const formData = new FormData();
-        formData.append('project_id', project.index);
         formData.append('project_name', name);
         formData.append('project_description', description);
         formData.append('project_date', date);
 
-        // Hacer la petición PATCH
-        fetch('http://127.0.0.1:5000/api/pictures/update_project', {
-            method: 'PATCH',
+        // Hacer la petición POST
+        fetch('http://127.0.0.1:5000/api/pictures/create_project', {
+            method: 'POST',
 
             headers: {
                 'Authorization': token // Envía el token en el encabezado Authorization
@@ -44,7 +35,7 @@ const EditarProyecto = ({ proyecto, cerrarEditar, isActive }) => {
                 if (data && data.status == 'success') {
                     setResponse(data)
                     refreshProjects()
-                    cerrarEditar()
+                    closeCreateProject()
 
                 }
 
@@ -56,14 +47,10 @@ const EditarProyecto = ({ proyecto, cerrarEditar, isActive }) => {
     }
 
     return (
-        <FormularioProyecto closeCreateProject={cerrarEditar} handle={handleUpdateProject} message={"Actualizar"} project={project}>
+        <FormularioProyecto closeCreateProject={closeCreateProject} handle={handleCreateProject} message={"Crear"} >
 
         </FormularioProyecto>
     )
-
 }
 
-
-
-
-export default EditarProyecto
+export default CrearProyecto

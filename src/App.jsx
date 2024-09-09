@@ -1,34 +1,34 @@
-import React, { useState } from 'react'
-import {BrowserRouter,Routes,Route,Link} from 'react-router-dom'
-import ProtectedRoute from './components/ProtectedRoute'
-import Proyectos from './pages/Proyectos'
-import Login from './pages/auth/login'
+import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
+import Login from './pages/auth/Login';
+import Proyectos from './pages/Proyectos';
+import Puntos from './pages/Puntos';
+// import Albumes from './Albumes';
+import { AuthProvider, useAuth } from './AuthProvider';
+import Albumes from './pages/Albumes';
+
+function PrivateRoute({ element, ...rest }) {
+  const { isAuthenticated } = useAuth();
+  return isAuthenticated ? element : <Navigate to="/login" />;
+}
 
 function App() {
-  
-  const [user,setUser] = useState(null)
-
-
-  const handleLogin = (userInfo) =>{
-    setUser(userInfo)
-  }
-
-  const handleLogout = () => {
-    setUser(null);
-  } 
-  
   return (
-    <BrowserRouter>
-    
-      <Routes>
-        <Route path='/' element = {<Login onLogin={handleLogin}></Login>}/>
-        <Route path='/proyectos' element = { <ProtectedRoute redirectTo='/' user={user}> 
-          <Proyectos user={user}></Proyectos>
-           </ProtectedRoute>}/>
+    <Router>
+      <AuthProvider>
+        <Routes>
+          <Route path="/login" element={<Login />} />
+          <Route path="/proyectos" element={<PrivateRoute element={<Proyectos />} />} />
+          <Route path="/proyectos/:proyectoId/puntos" element={<PrivateRoute element={<Puntos />} />} />
+          {/*<Route path="/albumes" element={<PrivateRoute element={<Albumes />} />} />*/}
+          <Route path="/proyectos/:proyectoId/puntos/:puntoID/albumes" element={<PrivateRoute element={<Albumes />}></PrivateRoute>} />
+          <Route path="/" element={<Navigate to="/login" />} />
         </Routes>
-    </BrowserRouter>
-  )
+      </AuthProvider>
+    </Router>
+  );
 }
+
+export default App
 
 // function Navigation(){
 //   return (
@@ -39,11 +39,9 @@ function App() {
 //         <li>
 //         <Link to="proyectos"> proyectos </Link>
 //         </li>
-       
+
 //       </ul>
 //     </nav>
 //     </>
 //   )
 // }
-
-export default App
