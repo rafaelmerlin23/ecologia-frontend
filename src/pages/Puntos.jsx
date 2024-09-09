@@ -1,24 +1,41 @@
 import React from 'react'
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import GridPunto from '../components/GridPunto';
+import CrearPunto from '../components/CrearPunto';
 
 
 function Puntos() {
-    useEffect(() => {
-        // Cambiar la clase del body cuando el componente se monta
-        document.body.className = "bg-gradient-to-r from-gray-900 to-blue-gray-950";
-    
-        // Limpiar las clases al desmontar el componente
-        return () => {
-        document.body.className = "bg-black";
-        };
-    }, []); 
-    return (
+  const [isActiveCreate, setIsActiveCreate] = useState(false)
+
+  const closeCreateLocation = () => {
+    const addLocationButton = document.getElementById('agregar_punto')
+    addLocationButton.className = 'flex items-center justify-center bg-gradient-to-r from-sky-900 to-sky-950 rounded-2xl w-1/2 py-5 text-3xl font-bold hover:opacity-70 transition duration-200 ease-in-out mt-20'
+    setIsActiveCreate(false)
+  }
+
+  const openCreateLocation = () => {
+    const addLocationButton = document.getElementById('agregar_punto')
+    addLocationButton.className = 'flex items-center justify-center bg-gradient-to-r from-sky-900 to-sky-950 rounded-2xl w-1/2 py-5 text-3xl font-bold  mt-20'
+    setIsActiveCreate(true)
+  }
+
+
+  useEffect(() => {
+    // Cambiar la clase del body cuando el componente se monta
+    document.body.className = "bg-gradient-to-r from-gray-900 to-blue-gray-950";
+
+    // Limpiar las clases al desmontar el componente
+    return () => {
+      document.body.className = "bg-black";
+    };
+  }, []);
+  return (
     <>
+      <CrearPunto closeCreateLocation={closeCreateLocation} isActive={isActiveCreate}></CrearPunto>
       <div className=' bg-gradient-to-r from-gray-900 to-blue-gray-950 p-6 flex items-center justify-center h.screen'>
-      <button className='flex items-center justify-center bg-gradient-to-r from-sky-900 to-sky-950 rounded-2xl w-1/2 py-5 text-3xl font-bold hover:opacity-70 transition duration-200 ease-in-out mt-20'>Agregar punto</button>        
+        <button onClick={openCreateLocation} id='agregar_punto' className='flex items-center justify-center bg-gradient-to-r from-sky-900 to-sky-950 rounded-2xl w-1/2 py-5 text-3xl font-bold hover:opacity-70 transition duration-200 ease-in-out mt-20'>Agregar punto</button>
       </div>
-          <GridPunto/>
+      <GridPunto />
     </>
   )
 }

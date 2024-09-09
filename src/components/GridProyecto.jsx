@@ -13,7 +13,7 @@ function GridProyecto() {
   const quantity = 50
 
   useEffect(() => {
-    // Hacer la petición POST
+    // Hacer la petición GET
     fetch(`http://127.0.0.1:5000/api/pictures/show_projects?page=${page}&quantity=${quantity}`, {
       method: 'GET',
       headers: {
@@ -28,10 +28,12 @@ function GridProyecto() {
             indice: image[0],
             imagen: imagen,
             fecha: image[3].slice(4, 17),
-            nombre: image[1]
+            nombre: image[1],
+            description: image[2]
           }));
           setImagesInformation(newImagesInformation);
           console.log(newImagesInformation);
+          console.log(data)
 
         }
 
@@ -48,7 +50,7 @@ function GridProyecto() {
       {
         imagesInformation.length > 0 ? <Grid >
           {imagesInformation.map((x) => (
-            <TarjetaDeproyecto key={x.indice} LinkImagen={x.imagen} fecha={x.fecha} nombre={x.nombre} />
+            <TarjetaDeproyecto key={x.indice} indice={x.indice} LinkImagen={x.imagen} fecha={x.fecha} nombre={x.nombre} description={x.description} />
           ))}
         </Grid> :
           <div className='flex justify-center content-center p-5 bg-gradient-to-r from-gray-900 to-blue-gray-950'>

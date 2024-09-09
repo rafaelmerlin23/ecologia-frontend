@@ -7,7 +7,9 @@ export const AuthProvider = ({ children }) => {
 
     const [userData, setUserData] = useState(null)
 
-    const [shouldRefresh, setShouldRefresh] = useState(false);
+    const [shouldRefresh, setShouldRefresh] = useState(false)
+
+    const [projectInformation, setProjectInformation] = useState(null)
 
     const refreshProjects = () => {
         setShouldRefresh(prev => !prev);
@@ -22,8 +24,19 @@ export const AuthProvider = ({ children }) => {
         setUserData(null)
     }
 
+
+
     return (
-        <AuthContext.Provider value={{ isAuthenticated, userData, login, logout, refreshProjects, shouldRefresh }}>
+        <AuthContext.Provider value={{
+            isAuthenticated
+            , userData
+            , login
+            , logout
+            , refreshProjects
+            , shouldRefresh
+            , setProjectInformation
+            , projectInformation
+        }}>
             {children}
         </AuthContext.Provider>
     )

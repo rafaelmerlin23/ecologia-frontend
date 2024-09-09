@@ -1,21 +1,69 @@
 import Overlay from './Overlay'
 import '../App.css'
-const EditarProyecto = ({proyecto,esActivoEditar,cerrarEditar}) =>{
-    if(!esActivoEditar)return null
+import FormularioProyecto from '../forms/FormularioProyecto'
+import { useAuth } from '../AuthProvider'
+import { useState } from 'react'
 
-    return(
-        <>
-            <Overlay animacion={cerrarEditar}>
-                <p className='font-bold text-2xl'>Coloca el nombre del proyecto</p>
-                <form className='border border-gray-700 parent-focus-within inline-flex items-center bg-gray-600 rounded-2xl pl-6' action="">
-                    <input placeholder='Proyecto oaxaca' value={proyecto} name={proyecto}  className='focus:outline-none text-2xl text-gray-300 bg-gray-600 p-2' type="text" max={50} />
-                    <button className='pb-3 ml-4 flex items-center justify-center bg-blue-500 p-3 rounded-r-2xl transition ease-in-out delay-10 hover:bg-blue-400'>confirmar</button>
-                </form>
+const EditarProyecto = ({ proyecto, cerrarEditar, isActive }) => {
+    if (!isActive) return null
 
-            </Overlay>
-        </>
+    const [response, setResponse] = useState(null)
+    const { userData, refreshProjects } = useAuth()
+    const token = userData.token
+
+    const project = {
+        index: proyecto.indice,
+        name: proyecto.nombre,
+        description: proyecto.description,
+        date: proyecto.fecha
+    }
+
+
+    const handleUpdateProject = (e, name, description, date) => {
+        e.preventDefault()
+        const formData = new FormData();
+        formData.append('project_id', project.index);
+        formData.append('project_name', name);
+        formData.append('project_description', description);
+        formData.append('project_date', date);
+
+        // Hacer la petición PATCH
+        fetch('http://127.0.0.1:5000/api/pictures/update_project', {
+            method: 'PATCH',
+
+            headers: {
+                'Authorization': token // Envía el token en el encabezado Authorization
+            },
+            body: formData // Enviamos el FormData
+
+
+        })
+            .then((res) => res.json())
+            .then((data) => {
+                console.log('Respuesta del servidor:', data);
+                if (data && data.status == 'success') {
+                    setResponse(data)
+                    refreshProjects()
+                    cerrarEditar()
+
+                }
+
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+            });
+
+    }
+
+    return (
+        <FormularioProyecto closeCreateProject={cerrarEditar} handle={handleUpdateProject} message={"Actualizar"} project={project}>
+
+        </FormularioProyecto>
     )
 
 }
+
+
+
 
 export default EditarProyecto
