@@ -1,25 +1,24 @@
 import { useState } from 'react'
-import { useAuth } from '../AuthProvider'
-import FormularioProyecto from '../forms/FormularioProyecto'
-import prefixUrl from '../helpers/ip'
-export const CrearProyecto = ({ isActive, closeCreateProject }) => {
+import FormularioAlbum from '../../forms/FormularioAlbum'
+import prefixUrl from '../../helpers/ip'
+import { useAuth } from '../../AuthProvider'
 
-    if (!isActive) return null
-
+export function CrearAlbum({ isActive, closeCreateAlbum }) {
+    if(!isActive) return null
     const [response, setResponse] = useState(null)
-    const { userData, refreshProjects } = useAuth()
+    const { locationInformation,userData, refreshProjects } = useAuth()
     const token = userData.token
     console.log(token)
 
-    const handleCreateProject = (e, name, description, date) => {
+    const handleCreateProject = (e, name, date) => {
         e.preventDefault()
         const formData = new FormData();
-        formData.append('project_name', name);
-        formData.append('project_description', description);
-        formData.append('project_date', date);
+        formData.append('album_name', name);
+        formData.append('album_date', date);
+        formData.append('location_id', locationInformation.index);
 
         // Hacer la petición POST
-        fetch(`${prefixUrl}pictures/create_project`, {
+        fetch(`${prefixUrl}pictures/create_album`, {
             method: 'POST',
 
             headers: {
@@ -35,7 +34,7 @@ export const CrearProyecto = ({ isActive, closeCreateProject }) => {
                 if (data && data.status == 'success') {
                     setResponse(data)
                     refreshProjects()
-                    closeCreateProject()
+                    closeCreateAlbum()
 
                 }
 
@@ -45,12 +44,12 @@ export const CrearProyecto = ({ isActive, closeCreateProject }) => {
             });
 
     }
-
+  
     return (
-        <FormularioProyecto closeCreateProject={closeCreateProject} handle={handleCreateProject} message={"Crear"} >
+    <FormularioAlbum closeCreatAlbum={closeCreateAlbum} handle={handleCreateProject} message={"Crear"} >
 
-        </FormularioProyecto>
-    )
+    </FormularioAlbum>
+  )
 }
 
-export default CrearProyecto
+export default CrearAlbum

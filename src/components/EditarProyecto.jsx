@@ -1,34 +1,27 @@
-import Overlay from './Overlay'
 import '../App.css'
 import FormularioProyecto from '../forms/FormularioProyecto'
 import { useAuth } from '../AuthProvider'
 import { useState } from 'react'
+import prefixUrl from '../helpers/ip'
 
-const EditarProyecto = ({ proyecto, cerrarEditar, isActive }) => {
+const EditarProyecto = ({cerrarEditar, isActive }) => {
     if (!isActive) return null
 
     const [response, setResponse] = useState(null)
-    const { userData, refreshProjects } = useAuth()
+    const { projectInformation,userData, refreshProjects } = useAuth()
     const token = userData.token
 
-    const project = {
-        index: proyecto.indice,
-        name: proyecto.nombre,
-        description: proyecto.description,
-        date: proyecto.fecha
-    }
-
-
+ 
     const handleUpdateProject = (e, name, description, date) => {
         e.preventDefault()
         const formData = new FormData();
-        formData.append('project_id', project.index);
+        formData.append('project_id', projectInformation.index);
         formData.append('project_name', name);
         formData.append('project_description', description);
         formData.append('project_date', date);
 
         // Hacer la petición PATCH
-        fetch('http://127.0.0.1:5000/api/pictures/update_project', {
+        fetch(`${prefixUrl}pictures/update_project`, {
             method: 'PATCH',
 
             headers: {
@@ -56,7 +49,7 @@ const EditarProyecto = ({ proyecto, cerrarEditar, isActive }) => {
     }
 
     return (
-        <FormularioProyecto closeCreateProject={cerrarEditar} handle={handleUpdateProject} message={"Actualizar"} project={project}>
+        <FormularioProyecto closeCreateProject={cerrarEditar} handle={handleUpdateProject} message={"Actualizar"} project={projectInformation}>
 
         </FormularioProyecto>
     )

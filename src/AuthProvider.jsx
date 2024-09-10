@@ -13,6 +13,7 @@ export const AuthProvider = ({ children }) => {
 
     const [locationInformation,setLocationInformation] = useState(null)
 
+    const [albumInformation,setAlbumInformation] = useState(null)
 
     const refreshProjects = () => {
         setShouldRefresh(prev => !prev);
@@ -41,6 +42,8 @@ export const AuthProvider = ({ children }) => {
             ,projectInformation
             ,locationInformation
             ,setLocationInformation
+            ,albumInformation
+            ,setAlbumInformation
         }}>
             {children}
         </AuthContext.Provider>

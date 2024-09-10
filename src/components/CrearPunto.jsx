@@ -1,6 +1,6 @@
 import { useAuth } from "../AuthProvider"
 import FormularioPuntos from "../forms/FormularioPuntos"
-
+import prefixUrl from "../helpers/ip"
 export const CrearPunto = ({ closeCreateLocation, isActive }) => {
     if (!isActive) return null
     const {refreshProjects ,userData, projectInformation } = useAuth()
@@ -17,7 +17,7 @@ export const CrearPunto = ({ closeCreateLocation, isActive }) => {
 
 
         // Hacer la petición POST
-        fetch('http://127.0.0.1:5000/api/pictures/create_location', {
+        fetch(`${prefixUrl}pictures/create_location`, {
             method: 'POST',
 
             headers: {

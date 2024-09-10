@@ -3,6 +3,7 @@ import TarjetaDeproyecto from '../components/TarjetaDeproyecto'
 import Grid from './Grid'
 import { useEffect, useState } from 'react'
 import { useAuth } from '../AuthProvider'
+import prefixUrl from '../helpers/ip'
 function GridProyecto() {
 
   const { userData, shouldRefresh } = useAuth()
@@ -14,7 +15,7 @@ function GridProyecto() {
 
   useEffect(() => {
     // Hacer la petición GET
-    fetch(`http://127.0.0.1:5000/api/pictures/show_projects?page=${page}&quantity=${quantity}`, {
+    fetch(`${prefixUrl}pictures/show_projects?page=${page}&quantity=${quantity}`, {
       method: 'GET',
       headers: {
         'Authorization': token // Envía el token en el encabezado Authorization
