@@ -25,7 +25,7 @@ const Eliminar = ({esActiva,cerrarOverlay,proyecto,peticion,objetoEliminar,icono
             </div>
         </div >
         <div>
-          <button className='py-2 px-6 text-white bg-red-800 hover:opacity-70 rounded-2xl m-1 border-1 border-red-600'>Eliminar</button>
+          <button onClick={peticion} className='py-2 px-6 text-white bg-red-800 hover:opacity-70 rounded-2xl m-1 border-1 border-red-600'>Eliminar</button>
           <button className='py-2 px-6 text-gray-400 bg-gray-800 hover:opacity-70 rounded-2xl m-1 border-1 border-gray-200  mt-0' onClick={cerrarOverlay}>cancelar</button>
         </div>
     </Overlay > 

@@ -5,10 +5,12 @@ import Eliminar from './Eliminar'
 import EditarProyecto from './EditarProyecto'
 import { Link } from 'react-router-dom'
 import { useAuth } from '../AuthProvider'
-
+import handleDelete from '../helpers/deleteFetch'
+import prefixUrl from '../helpers/ip'
 function TarjetaDeproyecto({ LinkImagen, nombre, fecha, description, indice }) {
 
-  const { setProjectInformation, projectInformation } = useAuth()
+  const {userData, setProjectInformation, projectInformation,refreshProjects} = useAuth()
+  const token = userData.token
 
   const handleProjectInformation = () => {
     setProjectInformation({ index: indice, name: nombre, description: description, date: fecha })
@@ -44,10 +46,18 @@ function TarjetaDeproyecto({ LinkImagen, nombre, fecha, description, indice }) {
     setClaseContenedor("")
   }
 
+  
+
   return (
       <>
       <EditarProyecto  isActive={esActivaEditar} cerrarEditar={cerrarOverlayEditar} />
-      <Eliminar iconoInformacionSecundaria={faCalendar} objetoEliminar={"Proyecto"} cerrarOverlay={cerrarOverlayEliminar} esActiva={esActicva} proyecto={{ informacionPrimaria: nombre, informacionSecundaria: fecha }}/>
+      <Eliminar 
+       
+       iconoInformacionSecundaria={faCalendar}
+       objetoEliminar={"Proyecto"}
+       cerrarOverlay={cerrarOverlayEliminar} 
+       esActiva={esActicva}
+       proyecto={{ informacionPrimaria: nombre, informacionSecundaria: fecha }}/>
        <div className="pt-5 flex flex-col items-center bg-white border border-gray-200 rounded-lg shadow md:flex-col lg:flex-col xl:flex-col w-full md:max-w-2xl hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700">
       <Link onClick={handleProjectInformation} to={`/proyectos/${nombre}/puntos`}>
         <img className="object-cover w-full rounded-t-lg h-64 md:h-auto md:w-48 md:rounded-none md:rounded-s-lg lg:w-200" src={LinkImagen} alt="" />

@@ -27,7 +27,7 @@ export const GridAlbum = () => {
                     (albumInformation)=>({
                           index:albumInformation[0],
                           name:albumInformation[2],
-                          date:albumInformation[3],
+                          date:albumInformation[3].slice(4, 17),
                           image:image,  
                     }));
                 setAlbumsInformation(newAlbumInformation)
