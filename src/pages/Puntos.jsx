@@ -9,13 +9,13 @@ function Puntos() {
 
   const closeCreateLocation = () => {
     const addLocationButton = document.getElementById('agregar_punto')
-    addLocationButton.className = 'flex items-center justify-center bg-gradient-to-r from-sky-900 to-sky-950 rounded-2xl w-1/2 py-5 text-3xl font-bold hover:opacity-70 transition duration-200 ease-in-out mt-20'
+    addLocationButton.className = 'flex items-center justify-center bg-gradient-to-r from-sky-900 to-sky-950 rounded-2xl w-1/2 py-5 text-3xl font-bold hover:opacity-70 transition duration-200 ease-in-out mt-10'
     setIsActiveCreate(false)
   }
 
   const openCreateLocation = () => {
     const addLocationButton = document.getElementById('agregar_punto')
-    addLocationButton.className = 'flex items-center justify-center bg-gradient-to-r from-sky-900 to-sky-950 rounded-2xl w-1/2 py-5 text-3xl font-bold  mt-20'
+    addLocationButton.className = 'flex items-center justify-center bg-gradient-to-r from-sky-900 to-sky-950 rounded-2xl w-1/2 py-5 text-3xl font-bold  mt-10'
     setIsActiveCreate(true)
   }
 
@@ -32,8 +32,8 @@ function Puntos() {
   return (
     <>
       <CrearPunto closeCreateLocation={closeCreateLocation} isActive={isActiveCreate}></CrearPunto>
-      <div className=' bg-gradient-to-r from-gray-900 to-blue-gray-950 p-6 flex items-center justify-center h.screen'>
-        <button onClick={openCreateLocation} id='agregar_punto' className='flex items-center justify-center bg-gradient-to-r from-sky-900 to-sky-950 rounded-2xl w-1/2 py-5 text-3xl font-bold hover:opacity-70 transition duration-200 ease-in-out mt-20'>Agregar punto</button>
+      <div className=' bg-transparent p-6 flex items-center justify-center h.screen'>
+        <button onClick={openCreateLocation} id='agregar_punto' className='flex items-center justify-center bg-gradient-to-r from-sky-900 to-sky-950 rounded-2xl w-1/2 py-5 text-3xl font-bold hover:opacity-70 transition duration-200 ease-in-out mt-10'>Agregar punto</button>
       </div>
       <GridPunto />
     </>

@@ -7,12 +7,12 @@ export const Albumes = () => {
   const [isActiveCreate,setIsActiveCreate] = useState(false)
   const openCreateAlbum = () =>{
       const createButton =document.getElementById('boton_de_crear')
-      createButton.className = 'flex items-center justify-center bg-gradient-to-r from-sky-900 to-sky-950 rounded-2xl w-1/2 py-5 text-3xl font-bold mt-20'
+      createButton.className = 'flex items-center justify-center bg-gradient-to-r from-sky-900 to-sky-950 rounded-2xl w-1/2 py-5 text-3xl font-bold mt-10'
       setIsActiveCreate(true)
   }
   const closeCreateAlbum = () => {
       const createButton =document.getElementById('boton_de_crear')
-      createButton.className = 'flex items-center justify-center bg-gradient-to-r from-sky-900 to-sky-950 rounded-2xl w-1/2 py-5 text-3xl font-bold hover:opacity-70 transition duration-200 ease-in-out mt-20'
+      createButton.className = 'flex items-center justify-center bg-gradient-to-r from-sky-900 to-sky-950 rounded-2xl w-1/2 py-5 text-3xl font-bold hover:opacity-70 transition duration-200 ease-in-out mt-10'
       setIsActiveCreate(false)
     }
     
@@ -30,8 +30,8 @@ export const Albumes = () => {
     return (
         <>
         <CrearAlbum closeCreateAlbum={closeCreateAlbum} isActive={isActiveCreate}></CrearAlbum>
-        <div className=' bg-gradient-to-r from-gray-900 to-blue-gray-950 p-6 flex items-center justify-center h.screen'>
-        <button onClick={openCreateAlbum} id='boton_de_crear' className='flex items-center justify-center bg-gradient-to-r from-sky-900 to-sky-950 rounded-2xl w-1/2 py-5 text-3xl font-bold hover:opacity-70 transition duration-200 ease-in-out mt-20'>Agregar Album</button>
+        <div className=' bg-transparent p-6 flex items-center justify-center h.screen'>
+        <button onClick={openCreateAlbum} id='boton_de_crear' className='flex items-center justify-center bg-gradient-to-r from-sky-900 to-sky-950 rounded-2xl w-1/2 py-5 text-3xl font-bold hover:opacity-70 transition duration-200 ease-in-out mt-10'>Agregar Album</button>
         </div>
         <GridAlbum/>
         </>

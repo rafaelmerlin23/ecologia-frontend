@@ -48,7 +48,7 @@ export const TarjetaAlbum = ({album}) => {
     <EditarAlbum closeEdit={cerrarOverlayEditar} isActive={isEditActive} ></EditarAlbum>
     <Eliminar iconoInformacionSecundaria={faCalendar} objetoEliminar={"Album"} cerrarOverlay={cerrarOverlayEliminar} esActiva={isDeleteActive} proyecto={{ informacionPrimaria: album.name, informacionSecundaria: album.date }}/>
      <div className="pt-5 flex flex-col items-center bg-white border border-gray-200 rounded-lg shadow md:flex-col lg:flex-col xl:flex-col w-full md:max-w-2xl hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700">
-    <Link onClick = {handleAlbumInformation} >
+    <Link onClick = {handleAlbumInformation} to={`${album.name}/imagenes`}  >
       <img className="object-cover w-full rounded-t-lg h-64 md:h-auto md:w-48 md:rounded-none md:rounded-s-lg lg:w-200" src={album.image} alt="" />
     </Link>
       <div className='flex items-center justify-center space-x-2 pt-6'>

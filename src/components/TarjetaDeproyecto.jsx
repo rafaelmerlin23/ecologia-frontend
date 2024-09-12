@@ -5,7 +5,6 @@ import Eliminar from './Eliminar'
 import EditarProyecto from './EditarProyecto'
 import { Link } from 'react-router-dom'
 import { useAuth } from '../AuthProvider'
-import handleDelete from '../helpers/deleteFetch'
 import prefixUrl from '../helpers/ip'
 function TarjetaDeproyecto({ LinkImagen, nombre, fecha, description, indice }) {
 
@@ -46,13 +45,47 @@ function TarjetaDeproyecto({ LinkImagen, nombre, fecha, description, indice }) {
     setClaseContenedor("")
   }
 
+  const handleDeleteProject = () => {
+    const formData = new FormData();
+    formData.append('project_id', indice);
+
+    // Hacer la petición POST
+    fetch(`${prefixUrl}pictures/delete_project`, {
+        method: 'DELETE',
+
+        headers: {
+            'Authorization': token // Envía el token en el encabezado Authorization
+        },
+        body: formData // Enviamos el FormData
+
+
+    })
+        .then((res) => res.json())
+        .then((data) => {
+            console.log('Respuesta del servidor:', data);
+            if (data && data.status == 'success') {
+                setResponse(data)
+                console.log(data)
+                refreshProjects()
+                cerrarOverlayEditar()
+            }
+
+        })
+        .catch((error) => {
+            console.error('Error:', error);
+        });
+
+}
+
+
   
 
   return (
       <>
+      
       <EditarProyecto  isActive={esActivaEditar} cerrarEditar={cerrarOverlayEditar} />
       <Eliminar 
-       
+       peticion={handleDeleteProject}
        iconoInformacionSecundaria={faCalendar}
        objetoEliminar={"Proyecto"}
        cerrarOverlay={cerrarOverlayEliminar} 
@@ -60,7 +93,7 @@ function TarjetaDeproyecto({ LinkImagen, nombre, fecha, description, indice }) {
        proyecto={{ informacionPrimaria: nombre, informacionSecundaria: fecha }}/>
        <div className="pt-5 flex flex-col items-center bg-white border border-gray-200 rounded-lg shadow md:flex-col lg:flex-col xl:flex-col w-full md:max-w-2xl hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700">
       <Link onClick={handleProjectInformation} to={`/proyectos/${nombre}/puntos`}>
-        <img className="object-cover w-full rounded-t-lg h-64 md:h-auto md:w-48 md:rounded-none md:rounded-s-lg lg:w-200" src={LinkImagen} alt="" />
+        <img className="object-cover w-full rounded-t-lg h-64 md:h-auto md:w-48 md:rounded-none md:rounded-s-lg lg:w-100" src={LinkImagen} alt="" />
       </Link>
         <div className='flex items-center justify-center space-x-2 pt-6'>
           <button onClick={abrirOverlayEditar}><FontAwesomeIcon className='text-2xl bg-gray-950 p-2 pl-6 pr-6 rounded-2xl' icon={faPen} /></button>

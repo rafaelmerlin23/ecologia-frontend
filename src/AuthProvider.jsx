@@ -15,6 +15,8 @@ export const AuthProvider = ({ children }) => {
 
     const [albumInformation,setAlbumInformation] = useState(null)
 
+    const [files,setFiles] = useState(null)
+
     const refreshProjects = () => {
         setShouldRefresh(prev => !prev);
     };
@@ -44,6 +46,8 @@ export const AuthProvider = ({ children }) => {
             ,setLocationInformation
             ,albumInformation
             ,setAlbumInformation
+            ,files
+            ,setFiles
         }}>
             {children}
         </AuthContext.Provider>
