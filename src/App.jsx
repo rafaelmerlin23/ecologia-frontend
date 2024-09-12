@@ -6,7 +6,7 @@ import Puntos from './pages/Puntos';
 import { AuthProvider, useAuth } from './AuthProvider';
 import Albumes from './pages/Albumes';
 import Imagenes from './pages/Imagenes';
-import SubirImagenes from './pages/SubirImagenes';
+import ModalImagenes from './components/imagenes/ModalImagenes';
 
 function PrivateRoute({ element, ...rest }) {
   const { isAuthenticated } = useAuth();
@@ -24,7 +24,7 @@ function App() {
           {/*<Route path="/albumes" element={<PrivateRoute element={<Albumes />} />} />*/}
           <Route path="/proyectos/:proyectoId/puntos/:puntoID/albumes" element={<PrivateRoute element={<Albumes />}></PrivateRoute>} />
           <Route path="/proyectos/:proyectoId/puntos/:puntoID/albumes/:albumID/imagenes" element={<PrivateRoute element={ <Imagenes/>}></PrivateRoute>} />
-          <Route path="/proyectos/:proyectoId/puntos/:puntoID/albumes/:albumID/imagenes/subir-imagenes" element={<PrivateRoute element={ <SubirImagenes/>}></PrivateRoute>} />
+          <Route path="/modal" element={<ModalImagenes/>} />
 
           <Route path="/" element={<Navigate to="/login" />} />
         </Routes>

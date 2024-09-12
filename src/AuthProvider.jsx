@@ -15,7 +15,7 @@ export const AuthProvider = ({ children }) => {
 
     const [albumInformation,setAlbumInformation] = useState(null)
 
-    const [files,setFiles] = useState(null)
+    const [files,setFiles] = useState([])
 
     const refreshProjects = () => {
         setShouldRefresh(prev => !prev);
