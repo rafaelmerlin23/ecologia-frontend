@@ -77,9 +77,6 @@ function TarjetaDeproyecto({ LinkImagen, nombre, fecha, description, indice }) {
 
 }
 
-
-  
-
   return (
       <>
       

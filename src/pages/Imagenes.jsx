@@ -1,23 +1,23 @@
 import { useState,useEffect } from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faImage } from '@fortawesome/free-solid-svg-icons';
-import SubirImagenes from "./SubirImagenes";
+import { faImage,faImages } from '@fortawesome/free-solid-svg-icons';
+import SubirImagenes from "../components/imagenes/SubirImagenes";
 import { useAuth } from "../AuthProvider";
+
 
 function Imagenes() {
   const [isActiveUploadImages, setIsActiveUploadImages] = useState(false);
-  const { setFiles } = useAuth();
- 
+  const {images,setImages} = useAuth()
+  
   const openImageOverlay = () => {
-    setIsActiveUploadImages(true)
-    setFiles([])
     const addImageBotton = document.getElementById('agregar-imagen')
     addImageBotton.className = '' 
+    setIsActiveUploadImages(true)
   }
   const closeImageOverlay = () => {
-    setIsActiveUploadImages(false)
     const addImageBotton = document.getElementById('agregar-imagen')
     addImageBotton.className = 'group hover:cursor-pointer'
+    setIsActiveUploadImages(false)
   };
 
   useEffect(() => {
@@ -28,29 +28,40 @@ function Imagenes() {
   }, []);
 
   return (
-    <div
+    <>
+
+      {
+        images.length > 0 ?
+        <div>
+          <SubirImagenes
+            closeOverlay={closeImageOverlay}
+            isActive={isActiveUploadImages}
+          />
+          <button 
+          id="agregar-imagen"
+          className="group hover:cursor-pointer"
+          onClick={openImageOverlay}>
+            <FontAwesomeIcon
+              className="text-4xl group-hover:text-gray-400"
+              icon={faImage}
+            />
+            <p className="mt-2 font-bold group-hover:text-gray-400">
+              Subir imágenes aquí
+            </p>
+          </button>
+        </div>
+
+        :<div className="h-screen w-screen flex flex-col items-center justify-center ">
+            <button 
+            className="group hover:cursor-pointer"
+            >
+              <p className="text-2xl font-bold mb-6 text-gray-400 group-hover:text-white">No tienes imagenes, click para subir</p>
+              <FontAwesomeIcon className="text-9xl text-gray-400 group-hover:text-white" icon={faImages} />
+            </button>
+          </div>
+      }
       
-      className="flex flex-col items-center justify-center m-20 "
-    >
-      <SubirImagenes
-        closeOverlay={closeImageOverlay}
-        isActive={isActiveUploadImages}
-      />
-      <button 
-      id="agregar-imagen"
-      className="group hover:cursor-pointer"
-      onClick={openImageOverlay}>
-      <FontAwesomeIcon
-        className="text-4xl group-hover:text-gray-400"
-        icon={faImage}
-      />
-      <p className="mt-2 font-bold group-hover:text-gray-400">
-        Sube tus imágenes aquí
-      </p>
-      </button>
-      
-      
-    </div>
+    </>
   );
 }
 
