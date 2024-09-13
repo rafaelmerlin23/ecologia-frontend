@@ -5,9 +5,17 @@ function DropZone({}) {
     
     const {files,setFiles} = useAuth()
 
+    const handleDrop = (e) => {
+      e.preventDefault();
+      handleChange(e.dataTransfer)  // Guardar los archivos
+    }
+  
+    const handleDragOver = (e) => {
+      e.preventDefault();  // Permitir el drop
+    }
 
     function handleChange(event) {
-      const selectedFiles = Array.from(event.target.files)
+      const selectedFiles = Array.from(event.files || event.target.files)
       let combineFiles = selectedFiles
 
       if(files.length > 0){
@@ -38,7 +46,10 @@ function DropZone({}) {
       }
 
     return (
-    <div className="flex items-center justify-center w-full">
+    <div 
+    onDrop={handleDrop} 
+    onDragOver={handleDragOver}
+    className="flex items-center justify-center w-full">
     <label className="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 dark:hover:bg-gray-800 dark:bg-gray-800 hover:bg-gray-100 dark:border-gray-600 dark:hover:border-gray-500 dark:hover:bg-gray-600">
         <div className="flex flex-col items-center justify-center pt-5 pb-6">
             <svg className="w-8 h-8 mb-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16">
@@ -47,7 +58,14 @@ function DropZone({}) {
             <p className="mb-2 text-sm text-gray-500 dark:text-gray-400"><span className="font-semibold">Click para subir</span></p>
             <p className="text-xs text-gray-500 dark:text-gray-400">SVG, PNG, JPG </p>
         </div>
-        <input  onChange={(e)=>handleChange(e)} multiple = {true} id="dropzone-file" type="file" className="hidden" accept=".jpg, .jpeg, .png" />
+        <input  
+        onClick={(e) => e.target.value = null}
+        onChange={(e)=>handleChange(e)} 
+        multiple = {true}
+        id="dropzone-file"
+        type="file"
+        className="hidden"
+        accept=".jpg, .jpeg, .png" />
     </label>
     </div> 
   )

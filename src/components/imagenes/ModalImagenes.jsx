@@ -1,7 +1,11 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faUpload} from "@fortawesome/free-solid-svg-icons"
-function ModalImagenes({closeModal,children}) {
+import { useAuth } from '../../AuthProvider';
+import { useEffect, useState } from 'react';
 
+function ModalImagenes({closeModal,children}) {
+  const {files} = useAuth()
+ 
  
   return (
     <div>
@@ -22,13 +26,21 @@ function ModalImagenes({closeModal,children}) {
                 {children}
             </div>
 
-            <div className="p-4 border-t flex justify-end">
+            <div className="p-4 border-t flex justify-end gap-x-6">
+              <button
+               className="px-4 py-2 bg-sky-800 text-white rounded flex justify-center items-center gap-x-2 hover:opacity-50 disabled:bg-gray-400 disabled:cursor-not-allowed disabled:opacity-70"
+               disabled={files.length === 0} 
+              >
+                <FontAwesomeIcon  icon={faUpload}/>
+                <p>Subir</p>
+              </button>
               <button
                 onClick={closeModal}
-                className="px-4 py-2 bg-red-500 text-white rounded"
+                className="px-4 py-2 bg-red-500 text-white rounded hover:opacity-50"
               >
                 Cerrar
               </button>
+              
             </div>
           </div>
         </div>

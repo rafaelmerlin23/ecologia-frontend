@@ -9,18 +9,17 @@ function Imagenes() {
   const [isActiveUploadImages, setIsActiveUploadImages] = useState(false);
   const {images,setImages} = useAuth()
   
+  
   const openImageOverlay = () => {
-    const addImageBotton = document.getElementById('agregar-imagen')
-    addImageBotton.className = '' 
     setIsActiveUploadImages(true)
   }
   const closeImageOverlay = () => {
-    const addImageBotton = document.getElementById('agregar-imagen')
-    addImageBotton.className = 'group hover:cursor-pointer'
     setIsActiveUploadImages(false)
   };
 
+
   useEffect(() => {
+    setImages([])
     document.body.className = 'bg-gradient-to-r from-gray-900 to-blue-gray-950';
     return () => {
       document.body.className = 'bg-black';
@@ -29,34 +28,36 @@ function Imagenes() {
 
   return (
     <>
-
+      <SubirImagenes
+        closeOverlay={closeImageOverlay}
+        isActive={isActiveUploadImages}
+      />
       {
         images.length > 0 ?
-        <div>
-          <SubirImagenes
-            closeOverlay={closeImageOverlay}
-            isActive={isActiveUploadImages}
-          />
+        <div className=" flex flex-col items-center justify-center mt-20">
+          
           <button 
           id="agregar-imagen"
-          className="group hover:cursor-pointer"
+          className={isActiveUploadImages ?"" : 'group hover:cursor-pointer'}
           onClick={openImageOverlay}>
             <FontAwesomeIcon
-              className="text-4xl group-hover:text-gray-400"
+              className="text-4xl text-gray-400 group-hover:text-gray-300"
               icon={faImage}
             />
-            <p className="mt-2 font-bold group-hover:text-gray-400">
+            <p className="mt-2 font-bold text-gray-400 group-hover:text-gray-300">
               Subir imágenes aquí
             </p>
           </button>
         </div>
 
-        :<div className="h-screen w-screen flex flex-col items-center justify-center ">
-            <button 
-            className="group hover:cursor-pointer"
+        :<div
+        className="h-screen w-screen flex flex-col items-center justify-center ">
+            <button
+            onClick={openImageOverlay} 
+            className={isActiveUploadImages ?"" : 'group hover:cursor-pointer'}
             >
-              <p className="text-2xl font-bold mb-6 text-gray-400 group-hover:text-white">No tienes imagenes, click para subir</p>
-              <FontAwesomeIcon className="text-9xl text-gray-400 group-hover:text-white" icon={faImages} />
+              <p className="text-2xl font-bold mb-6 text-gray-400 group-hover:text-gray-300">No tienes imagenes, click para subir</p>
+              <FontAwesomeIcon className="text-9xl text-gray-400 group-hover:text-gray-300" icon={faImages} />
             </button>
           </div>
       }
