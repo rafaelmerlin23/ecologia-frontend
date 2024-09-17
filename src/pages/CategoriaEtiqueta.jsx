@@ -172,7 +172,7 @@ export const CategoriaEtiqueta = () => {
                         </button>
                     </div>
                 </form>
-                <button onClick={addField} className="text-gray-700 bg-blue-400 rounded-full mt-4">
+                <button onClick={addField} className="text-gray-700 bg-blue-400 rounded-full mt-4 mb-10">
                     <FontAwesomeIcon icon={faPlus} />
                 </button>
             </div>
