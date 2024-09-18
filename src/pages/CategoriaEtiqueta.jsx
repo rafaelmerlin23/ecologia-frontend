@@ -3,14 +3,30 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPlus, faTrash, faTag } from "@fortawesome/free-solid-svg-icons"
 import { useAuth } from "../AuthProvider";
 import prefixUrl from "../helpers/ip";
+import Overlay from "../components/Overlay";
 
 export const CategoriaEtiqueta = () => {
     const page = 1
     const quantity = 20
-    const [fields, setFields] = useState([]);
-    const { userData, shouldRefresh, refreshProjects } = useAuth()
+    const { userData 
+            ,shouldRefresh
+            ,refreshProjects
+            ,categoriesToDelete
+            ,fields
+            , setFields
+            ,setCategoryToDelete} = useAuth()
+
     const [oldFields, setOldFiles] = useState([])
     const token = userData.token
+    const [goingToDelete,setGoingToDelete] = useState(false)
+
+    const handlecloseOverlay = () =>{
+        setGoingToDelete(false)
+    }
+
+    const handleOpenOverayDelete = ()=>{
+        setGoingToDelete(true)
+    }
 
     // Maneja el cambio en los campos de entrada
     const handleFieldChange = (index, e) => {
@@ -19,6 +35,26 @@ export const CategoriaEtiqueta = () => {
         newFields[index] = { ...newFields[index], [name]: value };
         setFields(newFields);
     };
+
+    const handleDelete = (e,field)=> {
+        e.preventDefault()
+        if(field.id == 0){
+            let newfields = []
+            for (let fieldFor of fields) {
+            if (fieldFor != field) {
+                newfields.push(fieldFor)
+                console.log(fieldFor)
+            }
+            }
+            setFields(newfields)
+        }
+        else{
+            setCategoryToDelete(field)
+            handleOpenOverayDelete()
+            
+        }
+    }
+
 
     const handleCreateCategory = (field) => {
         const formData = new FormData();
@@ -136,23 +172,26 @@ export const CategoriaEtiqueta = () => {
 
 
     return (
-        <div className="mx-auto border-x  w-3/5 flex justify-center">
-            <div className="flex flex-col w-1/2 ">
+        <div className="bg-gray-950 mx-auto min-h-screen  w-full flex justify-center">
+        <ModalDelete isActive={goingToDelete} handleClose={handlecloseOverlay} />    
+            <div className="flex flex-col  w-1/2 ">
                 <form onSubmit={handleSubmit} className="mt-24">
                     {fields.map((field, index) => (
-                        <div key={index} className="mb-4 flex flex-col gap-4 m-0 p-0 justify-center items-center">
+                        <div key={index} className="bg-blue-600 mb-4 flex flex-row gap-4 m-0 p-0 justify-center items-center">
                             <input
                                 type="text"
                                 name="field"
                                 value={field.field}
                                 onChange={(e) => handleFieldChange(index, e)}
-                                placeholder="nombre"
+                                placeholder="rojo"
                                 className="text-black p-1 w-full"
                                 required
                                 minLength={5}
                             />
-                            <div className="m-0 p-0 flex gap-6">
-                                <button className="bg-red-500 rounded-full px-2">
+                            <div className="m-0 p-0 flex gap-6 pr-4 ">
+                                <button 
+                                onClick={(e)=>handleDelete(e,field)}
+                                className="bg-red-500 rounded-full px-2">
                                     <FontAwesomeIcon icon={faTrash} />
                                 </button>
 
@@ -165,20 +204,54 @@ export const CategoriaEtiqueta = () => {
                     {/* Contenedor para centrar el botón */}
                     <div className="flex justify-center mt-4">
                         <button
-                            className="px-2 text-black bg-green-500 rounded-full hover:bg-green-400"
+                            className="mb-10 px-4 py-2 text-black bg-green-500 rounded-md hover:bg-green-400"
                             type="submit"
                         >
                             Guardar
                         </button>
                     </div>
                 </form>
-                <button onClick={addField} className="text-gray-700 bg-blue-400 rounded-full mt-4 mb-10">
-                    <FontAwesomeIcon icon={faPlus} />
-                </button>
+                
             </div>
+            <button 
+            id="ad-bottom"
+            onClick={addField} 
+            className="fixed bottom-5 right-20 w-auto z-[100] text-gray-700 bg-blue-400 rounded-full mt-4 mb-10 px-4 py-2">
+             <FontAwesomeIcon icon={faPlus} />
+            </button>
+
         </div>
     )
 
+}
+
+const ModalDelete =({isActive,handleClose}) =>{
+    if(!isActive) return null
+    const { setCategoriesToDelete,setFields,fields,categoryToDelete} = useAuth()
+    
+    const handleDelete = ()=>{
+        setCategoriesToDelete((categoriesToDelete)=>[...categoriesToDelete,categoriesToDelete])
+        let newfields = []
+        for (let field of fields) {
+            if (field != categoryToDelete) {
+                newfields.push(field)
+            }
+        }
+        setFields(newfields)
+        handleClose()
+    }
+    
+    return(
+        <Overlay animacion={handleClose} > 
+            <FontAwesomeIcon icon={faTrash}></FontAwesomeIcon>
+            <p className='text-2xl font-bold flex items-center justify-center'>¿Deseas eliminar esta categoria?</p>
+            <div>
+            <button onClick={handleDelete} className='py-2 px-6 text-white bg-red-800 hover:opacity-70 rounded-2xl m-1 border-1 border-red-600'>Eliminar</button>
+            <button className='py-2 px-6 text-gray-400 bg-gray-800 hover:opacity-70 rounded-2xl m-1 border-1 border-gray-200  mt-0' onClick={handleClose}>cancelar</button>
+            </div>
+        </Overlay>
+    )
+   
 }
 
 export default CategoriaEtiqueta

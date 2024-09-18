@@ -19,6 +19,14 @@ export const AuthProvider = ({ children }) => {
 
     const [images,setImages] = useState([])
 
+    const [categoriesToDelete,setCategoriesToDelete] = useState([])
+
+    const [categoryToDelete,setCategoryToDelete] = useState(null)
+
+
+    const [fields,setFields] = useState([])    
+            
+
     const refreshProjects = () => {
         setShouldRefresh(prev => !prev);
     };
@@ -52,6 +60,12 @@ export const AuthProvider = ({ children }) => {
             ,setFiles
             ,images
             ,setImages
+            ,setCategoriesToDelete
+            ,categoriesToDelete
+            ,fields
+            ,setFields
+            ,categoryToDelete
+            ,setCategoryToDelete
         }}>
             {children}
         </AuthContext.Provider>
