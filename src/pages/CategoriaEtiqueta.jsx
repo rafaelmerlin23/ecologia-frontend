@@ -4,6 +4,7 @@ import { faPlus, faTrash, faTag } from "@fortawesome/free-solid-svg-icons"
 import { useAuth } from "../AuthProvider";
 import prefixUrl from "../helpers/ip";
 import Overlay from "../components/Overlay";
+import loading from '../assets/loading.gif';
 
 export const CategoriaEtiqueta = () => {
     const page = 1
@@ -11,7 +12,6 @@ export const CategoriaEtiqueta = () => {
     const { userData 
             ,shouldRefresh
             ,refreshProjects
-            ,categoriesToDelete
             ,fields
             , setFields
             ,setCategoryToDelete} = useAuth()
@@ -19,6 +19,7 @@ export const CategoriaEtiqueta = () => {
     const [oldFields, setOldFiles] = useState([])
     const token = userData.token
     const [goingToDelete,setGoingToDelete] = useState(false)
+    const [isLoading,setIsLoading] = useState(false)
 
     const handlecloseOverlay = () =>{
         setGoingToDelete(false)
@@ -43,7 +44,6 @@ export const CategoriaEtiqueta = () => {
             for (let fieldFor of fields) {
             if (fieldFor != field) {
                 newfields.push(fieldFor)
-                console.log(fieldFor)
             }
             }
             setFields(newfields)
@@ -73,9 +73,8 @@ export const CategoriaEtiqueta = () => {
         })
             .then((res) => res.json())
             .then((data) => {
-                console.log('Respuesta del servidor:', data);
                 if (data && data.status == 'success') {
-                    console.log(data.response)
+                    refreshProjects()
                 }
 
             })
@@ -103,9 +102,7 @@ export const CategoriaEtiqueta = () => {
         })
             .then((res) => res.json())
             .then((data) => {
-                console.log('Respuesta del servidor:', data);
                 if (data && data.status == 'success') {
-                    console.log(data.response)
                 }
 
             })
@@ -122,9 +119,12 @@ export const CategoriaEtiqueta = () => {
 
     // Maneja el envío del formulario
     const handleSubmit = (e) => {
-
         e.preventDefault();
-
+        if(oldFields === fields){
+            setIsLoading(false)
+            return
+        }
+        setIsLoading(true)
         for (let field of fields) {
             if (field.id === 0) {
                 handleCreateCategory(field)
@@ -136,9 +136,8 @@ export const CategoriaEtiqueta = () => {
                 }
             }
         }
+        setIsLoading(false)
         refreshProjects()
-        // Procesar los datos aquí
-        console.log(fields);
     };
 
     useEffect(() => {
@@ -152,7 +151,6 @@ export const CategoriaEtiqueta = () => {
         })
             .then((res) => res.json())
             .then((data) => {
-                console.log('Respuesta del servidor:', data);
                 if (data && data.status == 'success') {
                     const newFields = data.response.map(category => ({ field: category[1], id: category[0] }));
                     setOldFiles(newFields);
@@ -172,12 +170,16 @@ export const CategoriaEtiqueta = () => {
 
 
     return (
-        <div className="bg-gray-950 mx-auto min-h-screen  w-full flex justify-center">
+        <div className=" mx-auto min-h-screen  w-full flex justify-center">
         <ModalDelete isActive={goingToDelete} handleClose={handlecloseOverlay} />    
-            <div className="flex flex-col  w-1/2 ">
-                <form onSubmit={handleSubmit} className="mt-24">
-                    {fields.map((field, index) => (
-                        <div key={index} className="bg-blue-600 mb-4 flex flex-row gap-4 m-0 p-0 justify-center items-center">
+            <div className="flex flex-col  xl:w-1/3 md:w-1/2 sm:w-1/2 ">
+            <label className="text-center block mt-20 mb-0 text-4xl font-medium text-gray-900 dark:text-white">Categorías</label>
+                <form onSubmit={handleSubmit} className="mt-10">
+                    {isLoading ? 
+                    <img src={loading} />
+                    :
+                    (fields.map((field, index) => (
+                        <div key={index} className="bg-blue-600 mb-4 flex md:flex-row sm:flex-row xl:flex-row gap-4 m-0 p-0 justify-center items-center">
                             <input
                                 type="text"
                                 name="field"
@@ -200,7 +202,8 @@ export const CategoriaEtiqueta = () => {
                                 </button>
                             </div>
                         </div>
-                    ))}
+                    )))
+                    }
                     {/* Contenedor para centrar el botón */}
                     <div className="flex justify-center mt-4">
                         <button
