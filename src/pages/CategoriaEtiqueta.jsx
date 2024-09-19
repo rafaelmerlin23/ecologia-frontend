@@ -5,8 +5,10 @@ import { useAuth } from "../AuthProvider";
 import prefixUrl from "../helpers/ip";
 import Overlay from "../components/Overlay";
 import loading from '../assets/loading.gif';
+import Categorias from "../components/etiqueta/Categorias";
 
 export const CategoriaEtiqueta = () => {
+   
     const page = 1
     const quantity = 20
     const { userData 
@@ -38,6 +40,8 @@ export const CategoriaEtiqueta = () => {
         newFields[index] = { ...newFields[index], [name]: value };
         setFields(newFields);
     };
+
+
 
     const handleDelete = (e,field)=> {
         e.preventDefault()
@@ -181,35 +185,14 @@ export const CategoriaEtiqueta = () => {
                     <img src={loading} />
                     :
                     (fields.map((field, index) => (
-                        <div key={index} className="bg-blue-600 mb-4 flex md:flex-row sm:flex-row xl:flex-row gap-4 m-0 p-0 justify-center items-center">
-                            <input
-                                type="text"
-                                name="field"
-                                value={field.field}
-                                onChange={(e) => handleFieldChange(index, e)}
-                                placeholder="rojo"
-                                className="text-black p-1 w-full"
-                                required
-                                minLength={5}
-                            />
-                            <div className="m-0 p-0 flex gap-6 pr-4 ">
-                                <button 
-                                onClick={(e)=>handleDelete(e,field)}
-                                className="bg-red-500 rounded-full px-2">
-                                    <FontAwesomeIcon icon={faTrash} />
-                                </button>
-
-                                <button className="bg-gray-500 rounded-full px-2">
-                                    <FontAwesomeIcon icon={faTag} />
-                                </button>
-                            </div>
-                        </div>
+                        <Categorias field={field} handleDelete={handleDelete} handleFieldChange={handleFieldChange} index={index} key={index}/>
                     )))
                     }
                     {/* Contenedor para centrar el botón */}
                     <div className="flex justify-center mt-4">
                         <button
-                            className="mb-10 px-4 py-2 text-black bg-green-500 rounded-md hover:bg-green-400"
+                            disabled={!isSaveActive}
+                            className="disabled:bg-gray-400 disabled:cursor-not-allowed disabled:opacity-70 mb-10 px-4 py-2 text-black bg-green-500 rounded-md hover:bg-green-400"
                             type="submit"
                         >
                             Guardar
