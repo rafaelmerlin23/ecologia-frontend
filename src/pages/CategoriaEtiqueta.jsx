@@ -20,6 +20,7 @@ export const CategoriaEtiqueta = () => {
     const token = userData.token
     const [goingToDelete,setGoingToDelete] = useState(false)
     const [isLoading,setIsLoading] = useState(false)
+    const [isSaveActive,setIsSaveActive] = useState(false)
 
     const handlecloseOverlay = () =>{
         setGoingToDelete(false)
@@ -31,6 +32,7 @@ export const CategoriaEtiqueta = () => {
 
     // Maneja el cambio en los campos de entrada
     const handleFieldChange = (index, e) => {
+        setIsSaveActive(true)
         const { name, value } = e.target;
         const newFields = [...fields];
         newFields[index] = { ...newFields[index], [name]: value };
@@ -219,7 +221,7 @@ export const CategoriaEtiqueta = () => {
             <button 
             id="ad-bottom"
             onClick={addField} 
-            className="fixed bottom-5 right-20 w-auto z-[100] text-gray-700 bg-blue-400 rounded-full mt-4 mb-10 px-4 py-2">
+            className="fixed bottom-5 right-20 w-auto z-30 text-gray-700 bg-blue-400 rounded-full mt-4 mb-10 px-4 py-2">
              <FontAwesomeIcon icon={faPlus} />
             </button>
 

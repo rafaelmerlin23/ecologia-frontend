@@ -53,7 +53,7 @@ export const TarjetaAlbum = ({ album }) => {
         </Link>
         <div className='flex items-center justify-center space-x-2 pt-6'>
           <button onClick={abrirOverlayEditar}><FontAwesomeIcon className='text-2xl bg-gray-950 p-2 pl-6 pr-6 rounded-2xl' icon={faPen} /></button>
-          <button oncl onClick={abrirOverlayEliminar}><FontAwesomeIcon className='text-2xl bg-red-800 p-2 pr-6  pl-6 rounded-2xl' icon={faTrash} /> </button>
+          <button onClick={abrirOverlayEliminar}><FontAwesomeIcon className='text-2xl bg-red-800 p-2 pr-6  pl-6 rounded-2xl' icon={faTrash} /> </button>
         </div>
         <div className="flex flex-col justify-between p-4 leading-normal md:text-lg">
           <h5 className="mb-2 text-xl md:text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{album.name}</h5>
