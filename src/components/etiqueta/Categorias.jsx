@@ -28,10 +28,12 @@ function Categorias({index,field,handleFieldChange,handleDelete}) {
             className="text-black p-1 w-full"
             required
             minLength={5}
-        />
+            />
+
         <div className=" flex gap-6 pr-4 ">
             <button 
             onClick={(e)=>handleDelete(e,field)}
+            
             className="bg-red-500 rounded-full px-2">
                 <FontAwesomeIcon icon={faTrash} />
             </button>
@@ -44,9 +46,9 @@ function Categorias({index,field,handleFieldChange,handleDelete}) {
             </button>
         </div>
         
-    </div>
+    </div >
         {isActiveTagMenu?
-        <Etiqueta categoryId={field.id}/>
+        <Etiqueta category = {field} />
         :
         <div className='mb-4'>
 

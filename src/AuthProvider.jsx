@@ -25,7 +25,10 @@ export const AuthProvider = ({ children }) => {
 
 
     const [fields,setFields] = useState([])    
-            
+
+    const [isModalCategoryDeleteActive,setIsModalCategoryDeleteActive ] = useState(true)
+    
+    const [newTags,setNewTags] = useState([])
 
     const refreshProjects = () => {
         setShouldRefresh(prev => !prev);
@@ -66,6 +69,10 @@ export const AuthProvider = ({ children }) => {
             ,setFields
             ,categoryToDelete
             ,setCategoryToDelete
+            ,isModalCategoryDeleteActive
+            ,setIsModalCategoryDeleteActive
+            ,newTags
+            ,setNewTags 
         }}>
             {children}
         </AuthContext.Provider>

@@ -16,13 +16,16 @@ export const CategoriaEtiqueta = () => {
             ,refreshProjects
             ,fields
             , setFields
-            ,setCategoryToDelete} = useAuth()
+            ,setCategoryToDelete
+            ,isModalCategoryDeleteActive
+            } = useAuth()
 
     const [oldFields, setOldFiles] = useState([])
     const token = userData.token
     const [goingToDelete,setGoingToDelete] = useState(false)
     const [isLoading,setIsLoading] = useState(false)
     const [isSaveActive,setIsSaveActive] = useState(false)
+    
 
     const handlecloseOverlay = () =>{
         setGoingToDelete(false)
@@ -177,7 +180,11 @@ export const CategoriaEtiqueta = () => {
 
     return (
         <div className=" mx-auto min-h-screen  w-full flex justify-center">
-        <ModalDelete isActive={goingToDelete} handleClose={handlecloseOverlay} />    
+            
+        {
+            isModalCategoryDeleteActive && <ModalDelete isActive={goingToDelete} handleClose={handlecloseOverlay} />
+        }
+    
             <div className="flex flex-col  xl:w-1/3 md:w-1/2 sm:w-1/2 ">
             <label className="text-center block mt-20 mb-0 text-4xl font-medium text-gray-900 dark:text-white">Categorías</label>
                 <form onSubmit={handleSubmit} className="mt-10">

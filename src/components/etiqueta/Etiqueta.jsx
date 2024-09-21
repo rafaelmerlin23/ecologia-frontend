@@ -5,19 +5,33 @@ import AgregarEtiqueta from './AgregarEtiqueta'
 import { useAuth } from '../../AuthProvider'
 import prefixUrl from '../../helpers/ip'
 
-function Etiqueta({categoryId}) {
+function Etiqueta({category}) {
 
-    const [tags,setTags] = useState([])
-    const {shouldRefresh,userData} = useAuth()
+    
+    const {shouldRefresh,userData,setIsModalCategoryDeleteActive,isModalCategoryDeleteActive} = useAuth()
     const [isActiveTagOverlay,setIsActiveTagOverlay] = useState(false)
-    const handleOpenTagOverlay = () => setIsActiveTagOverlay(true)
-    const handleCloseTagOverlay = () => setIsActiveTagOverlay(false)
+    const [tags,setTags] = useState([])
+
+    const handleOpenTagOverlay = () => {
+        setIsModalCategoryDeleteActive(false)
+        console.log(isModalCategoryDeleteActive)
+        setIsActiveTagOverlay(true)
+    }
+    const handleCloseTagOverlay = () => {        
+        console.log(isModalCategoryDeleteActive)
+        setIsActiveTagOverlay(false)
+
+    }
     const token = userData.token
     const page = 1
     const quantity = 100
 
     useEffect(() => {
-        fetch(`${prefixUrl}pictures/show_tags?page=${page}&quantity=${quantity}`, {
+        if(category.id === 0){
+            setTags([])
+            return
+        }
+        fetch(`${prefixUrl}pictures/show_tags?page=${page}&quantity=${quantity}&category_id=${category.id}`, {
             method: 'GET',
             headers: {
                 'Authorization': token // Envía el token en el encabezado Authorization
@@ -25,28 +39,28 @@ function Etiqueta({categoryId}) {
         })
             .then((res) => res.json())
             .then((data) => {
-                if (data && data.status == 'success') {
-                    console.log(data.response)
-                    const newTags = data.response.map((tag)=>({
-                        name:tag[1],
-                        idTag:tag[2]
-                    }))
-                    setTags(newTags)
-
+                if (data && data.status === 'success') {
+                    console.log(data.response);
+                    const newTags = data.response.map((tag) => ({
+                        name: tag[1], // El nombre de la etiqueta está en el índice 1
+                        idTag: tag[0] // El tag_id está en el índice 0
+                    }));
+                    setTags(newTags);
                 }
             })
             .catch((error) => {
                 console.error('Error:', error);
             });
-    }, [shouldRefresh])
+    }, [shouldRefresh]);
+    
     
     return (
-    <div className='flex justify-center flex-col items-center border-x border-b border-gray-600  mt-0 mb-5 p-2'>
-        <AgregarEtiqueta categoryId={categoryId} isActive={isActiveTagOverlay} handleClose={handleCloseTagOverlay}/>
-        <div className='grid grid-cols-1 sm:grid-cols-2 gap-3 py-4'>
+    <div className=' flex justify-center flex-col items-center border-x border-b border-gray-600  mt-0 mb-5 p-2'>
+        <AgregarEtiqueta setTags = {setTags} category={category} isActive={isActiveTagOverlay} handleClose={handleCloseTagOverlay}/>
+        <div className='px-0 grid sm:grid-cols-1 grid md:grid-cols-2 grid lg:grid-cols-1 grid xl:grid-cols-3  gap-3 py-4'>
         {tags.map((tag) => (
         <div className='flex items-center justify-between bg-green-700 px-4 rounded-full'>
-            <span className='flex-grow text-center text-white'>{tag.name.lenght <=20? tag.name : tag.name.slice(0,18)+".."}</span>
+            <span className='flex-grow text-center text-white'>{tag.name.lenght <=20?  tag.name.slice(0,18)+"..":tag.name}</span>
             <button className='text-gray-200'>
                 <FontAwesomeIcon className='pl-2 text-sm' icon={faX} />
             </button>
