@@ -11,24 +11,25 @@ export const AuthProvider = ({ children }) => {
 
     const [projectInformation, setProjectInformation] = useState(null)
 
-    const [locationInformation,setLocationInformation] = useState(null)
+    const [locationInformation, setLocationInformation] = useState(null)
 
-    const [albumInformation,setAlbumInformation] = useState(null)
+    const [albumInformation, setAlbumInformation] = useState(null)
 
-    const [files,setFiles] = useState([])
+    const [files, setFiles] = useState([])
 
-    const [images,setImages] = useState([])
+    const [images, setImages] = useState([])
 
-    const [categoriesToDelete,setCategoriesToDelete] = useState([])
+    const [categoriesToDelete, setCategoriesToDelete] = useState([])
 
-    const [categoryToDelete,setCategoryToDelete] = useState(null)
+    const [categoryToDelete, setCategoryToDelete] = useState(null)
 
 
-    const [fields,setFields] = useState([])    
+    const [fields, setFields] = useState([])
 
-    const [isModalCategoryDeleteActive,setIsModalCategoryDeleteActive ] = useState(true)
-    
-    const [newTags,setNewTags] = useState([])
+    const [isModalCategoryDeleteActive, setIsModalCategoryDeleteActive] = useState(true)
+
+    const [image, setImage] = useState(null);
+
 
     const refreshProjects = () => {
         setShouldRefresh(prev => !prev);
@@ -48,31 +49,32 @@ export const AuthProvider = ({ children }) => {
     return (
         <AuthContext.Provider value={{
             isAuthenticated
-            ,userData
-            ,login
-            ,logout
-            ,refreshProjects
-            ,shouldRefresh
-            ,setProjectInformation
-            ,projectInformation
-            ,locationInformation
-            ,setLocationInformation
-            ,albumInformation
-            ,setAlbumInformation
-            ,files
-            ,setFiles
-            ,images
-            ,setImages
-            ,setCategoriesToDelete
-            ,categoriesToDelete
-            ,fields
-            ,setFields
-            ,categoryToDelete
-            ,setCategoryToDelete
-            ,isModalCategoryDeleteActive
-            ,setIsModalCategoryDeleteActive
-            ,newTags
-            ,setNewTags 
+            , userData
+            , login
+            , logout
+            , refreshProjects
+            , shouldRefresh
+            , setProjectInformation
+            , projectInformation
+            , locationInformation
+            , setLocationInformation
+            , albumInformation
+            , setAlbumInformation
+            , files
+            , setFiles
+            , images
+            , setImages
+            , setCategoriesToDelete
+            , categoriesToDelete
+            , fields
+            , setFields
+            , categoryToDelete
+            , setCategoryToDelete
+            , isModalCategoryDeleteActive
+            , setIsModalCategoryDeleteActive
+            , image
+            , setImage
+
         }}>
             {children}
         </AuthContext.Provider>

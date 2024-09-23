@@ -46,22 +46,24 @@ function TarjetaDeproyecto({ LinkImagen, nombre, fecha, description, indice }) {
   }
 
   const handleDeleteProject = () => {
+
+    const formData = new FormData();
+    formData.append('project_id', indice);
     // Construye la URL con el project_id como parámetro de la consulta
-    const url = `${prefixUrl}pictures/delete_project?project_id=${indice}`;
-  
+    const url = `${prefixUrl}pictures/delete_project`;
     // Hacer la petición DELETE
     fetch(url, {
       method: 'DELETE',
       mode: 'cors',
       headers: {
         'Authorization': token // Envía el token en el encabezado Authorization
-      }
+      },
+      body: formData
     })
       .then((res) => res.json())
       .then((data) => {
         console.log('Respuesta del servidor:', data);
         if (data && data.status === 'success') {
-          setResponse(data);
           console.log(data);
           refreshProjects();
           cerrarOverlayEditar();

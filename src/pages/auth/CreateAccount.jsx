@@ -1,5 +1,5 @@
 import { useState } from "react"
-import AuthBackGround from "./components/AuthBackground"
+import AuthBackGround from "./components/AuthBackGround"
 import prefixUrl from "../../helpers/ip"
 import { Link } from "react-router-dom"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -86,7 +86,7 @@ export const CreateAccount = () => {
 
                 <div className="flex items-center justify-between">
 
-                    <p className='text-sm text-1xl text-gray-200 flex flex-row gap-2'>¿Ya tienes una cuenta?, <Link to={'/login'}><p className='text-blue-600'>Inicia Sesión</p> </Link> </p>
+                    <p className='text-sm text-1xl text-gray-200 flex flex-row gap-2'>¿Ya tienes una cuenta?, <Link to={'/login'}><span className='text-blue-600'>Inicia Sesión</span> </Link> </p>
                 </div>
                 <button type="submit" className="bg-blue-700 w-full text-white bg-primary-600 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center">Crear Cuenta</button>
 

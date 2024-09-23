@@ -1,14 +1,33 @@
 import { useState, useEffect } from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faImage, faImages } from '@fortawesome/free-solid-svg-icons';
+import { faImage, faImages, faGreaterThan, faLessThan } from '@fortawesome/free-solid-svg-icons';
 import SubirImagenes from "../components/imagenes/SubirImagenes";
 import { useAuth } from "../AuthProvider";
 import prefixUrl from "../helpers/ip";
+import imagenStock from "../assets/burningForest.jpg";
+import GridImagenes from "../components/imagenes/GridImagenes";
+
 
 function Imagenes() {
   const [isActiveUploadImages, setIsActiveUploadImages] = useState(false);
-  const { images, setImages, shouldRefresh, userData } = useAuth()
+  const { images, setImages, shouldRefresh, userData, albumInformation } = useAuth()
+  const [isNextPage, setIsNextPage] = useState(false)
   const token = userData.token
+  const [page, setPage] = useState(1)
+  const quantity = 20
+
+
+  const handleNext = () => {
+    if (isNextPage) {
+      setPage((page) => page++)
+    }
+  }
+
+  const handlePrevious = () => {
+    if (page !== 1) {
+      setPage((page) => page--)
+    }
+  }
 
   const openImageOverlay = () => {
     setIsActiveUploadImages(true)
@@ -18,7 +37,42 @@ function Imagenes() {
   };
 
   useEffect(() => {
-    setImages([])
+    let getImages = []
+    for (let i = 0; i < 20; i++) {
+      getImages.push({ id: i, date: '21/12/2024', link: imagenStock })
+    }
+
+    setImages(getImages)
+    /*
+      esto podria ir dentro de la peticion serian dos peticiones una con la pagina que quieres
+      y otra con la siguiente para comprobar si existen datos y poder dibujar el boton de siguiente
+      de lo contrario no se dibujará    
+    */
+    let nextPageImage = null //{ link: "link" }
+    if (nextPageImage !== null) {
+      setIsNextPage(true)
+    }
+
+
+
+    // fetch(`${prefixUrl}pictures/show_picture_from_album?page=${page}&quantity=${quantity}&album_id=${albumInformation.index}`, {
+    //   method: 'GET',
+    //   headers: {
+    //     'Authorization': token // Envía el token en el encabezado Authorization
+    //   }
+    // })
+    //   .then((res) => res.json())
+    //   .then((data) => {
+    //     console.log('Respuesta del servidor:', data);
+    //     if (data && data.status == 'success') {
+    //       console.log(data)
+
+    //     }
+
+    //   })
+    //   .catch((error) => {
+    //     console.error('Error:', error);
+    //   });
     document.body.className = ' bg-gradient-to-r from-gray-900 to-blue-gray-950 ';
     return () => {
       document.body.className = 'bg-black';
@@ -37,7 +91,7 @@ function Imagenes() {
 
             <button
               id="agregar-imagen"
-              className={isActiveUploadImages ? "" : 'group hover:cursor-pointer'}
+              className={isActiveUploadImages ? "" : 'pb-4 group hover:cursor-pointer'}
               onClick={openImageOverlay}>
               <FontAwesomeIcon
                 className="text-4xl text-gray-400 group-hover:text-gray-300"
@@ -47,7 +101,20 @@ function Imagenes() {
                 Subir imágenes aquí
               </p>
             </button>
-          </div>
+            <GridImagenes images={images} />
+            {page === 1 && !isNextPage ? "" : <div className="mb-10 flex bg-blue-700 px-6 flex-row rounded-full">
+              {page !== 1 ? <button onClick={handlePrevious} className="p-0 m-0 pr-2">
+                <FontAwesomeIcon className="pr-2" icon={faLessThan} />
+                Ant
+              </button> : ""}
+              <p>|</p>
+              {isNextPage ?
+                <button onClick={handleNext} className="p-0 m-0 pl-2">
+                  Sig
+                  <FontAwesomeIcon className="pl-2" icon={faGreaterThan} />
+                </button> : ""}
+            </div>}
+          </div >
 
           : <div
             className="h-screen w-full flex flex-col items-center justify-center ">
@@ -58,6 +125,7 @@ function Imagenes() {
               <p className="text-2xl font-bold mb-6 text-gray-400 group-hover:text-gray-300">No tienes imagenes, click para subir</p>
               <FontAwesomeIcon className="text-9xl text-gray-400 group-hover:text-gray-300" icon={faImages} />
             </button>
+
           </div>
       }
 

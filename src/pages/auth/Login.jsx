@@ -1,8 +1,7 @@
 import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../AuthProvider';
-import AuthBackGround from './components/AuthBackground';
-
+import AuthBackGround from './components/AuthBackGround';
 
 function Login() {
 
@@ -11,6 +10,7 @@ function Login() {
     const [response, setResponse] = useState(null);
     const navigate = useNavigate();
     const { login } = useAuth()
+
 
     const Login = (e) => {
         e.preventDefault()
@@ -63,7 +63,7 @@ function Login() {
                 </div>
                 <button type="submit" className="bg-blue-700 w-full text-white bg-primary-600 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center ">Iniciar Sesión</button>
 
-                <p className='text-sm text-1xl text-gray-200 flex flex-row gap-2'>¿No tienes una cuenta?, <Link to={'/crear_cuenta'}><p className='text-blue-600'>Crea Una</p> </Link> </p>
+                <p className='text-sm text-1xl text-gray-200 flex flex-row gap-2'>¿No tienes una cuenta?, <Link to={'/crear_cuenta'}><span className='text-blue-600'>Crea Una</span> </Link> </p>
 
             </form>
         </AuthBackGround>

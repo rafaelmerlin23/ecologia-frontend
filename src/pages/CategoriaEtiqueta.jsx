@@ -8,30 +8,30 @@ import loading from '../assets/loading.gif';
 import Categorias from "../components/etiqueta/Categorias";
 
 export const CategoriaEtiqueta = () => {
-   
+
     const page = 1
     const quantity = 20
-    const { userData 
-            ,shouldRefresh
-            ,refreshProjects
-            ,fields
-            , setFields
-            ,setCategoryToDelete
-            ,isModalCategoryDeleteActive
-            } = useAuth()
+    const { userData
+        , shouldRefresh
+        , refreshProjects
+        , fields
+        , setFields
+        , setCategoryToDelete
+        , isModalCategoryDeleteActive
+    } = useAuth()
 
     const [oldFields, setOldFiles] = useState([])
     const token = userData.token
-    const [goingToDelete,setGoingToDelete] = useState(false)
-    const [isLoading,setIsLoading] = useState(false)
-    const [isSaveActive,setIsSaveActive] = useState(false)
-    
+    const [goingToDelete, setGoingToDelete] = useState(false)
+    const [isLoading, setIsLoading] = useState(false)
+    const [isSaveActive, setIsSaveActive] = useState(false)
 
-    const handlecloseOverlay = () =>{
+
+    const handlecloseOverlay = () => {
         setGoingToDelete(false)
     }
 
-    const handleOpenOverayDelete = ()=>{
+    const handleOpenOverayDelete = () => {
         setGoingToDelete(true)
     }
 
@@ -46,21 +46,21 @@ export const CategoriaEtiqueta = () => {
 
 
 
-    const handleDelete = (e,field)=> {
+    const handleDelete = (e, field) => {
         e.preventDefault()
-        if(field.id == 0){
+        if (field.id == 0) {
             let newfields = []
             for (let fieldFor of fields) {
-            if (fieldFor != field) {
-                newfields.push(fieldFor)
-            }
+                if (fieldFor != field) {
+                    newfields.push(fieldFor)
+                }
             }
             setFields(newfields)
         }
-        else{
+        else {
             setCategoryToDelete(field)
             handleOpenOverayDelete()
-            
+
         }
     }
 
@@ -112,6 +112,7 @@ export const CategoriaEtiqueta = () => {
             .then((res) => res.json())
             .then((data) => {
                 if (data && data.status == 'success') {
+
                 }
 
             })
@@ -129,7 +130,7 @@ export const CategoriaEtiqueta = () => {
     // Maneja el envío del formulario
     const handleSubmit = (e) => {
         e.preventDefault();
-        if(oldFields === fields){
+        if (oldFields === fields) {
             setIsLoading(false)
             return
         }
@@ -180,20 +181,20 @@ export const CategoriaEtiqueta = () => {
 
     return (
         <div className=" mx-auto min-h-screen  w-full flex justify-center">
-            
-        {
-            isModalCategoryDeleteActive && <ModalDelete isActive={goingToDelete} handleClose={handlecloseOverlay} />
-        }
-    
+
+            {
+                isModalCategoryDeleteActive && <ModalDelete isActive={goingToDelete} handleClose={handlecloseOverlay} />
+            }
+
             <div className="flex flex-col  xl:w-1/3 md:w-1/2 sm:w-1/2 ">
-            <label className="text-center block mt-20 mb-0 text-4xl font-medium text-gray-900 dark:text-white">Categorías</label>
+                <label className="text-center block mt-20 mb-0 text-4xl font-medium text-gray-900 dark:text-white">Categorías</label>
                 <form onSubmit={handleSubmit} className="mt-10">
-                    {isLoading ? 
-                    <img src={loading} />
-                    :
-                    (fields.map((field, index) => (
-                        <Categorias field={field} handleDelete={handleDelete} handleFieldChange={handleFieldChange} index={index} key={index}/>
-                    )))
+                    {isLoading ?
+                        <img src={loading} />
+                        :
+                        (fields.map((field, index) => (
+                            <Categorias field={field} handleDelete={handleDelete} handleFieldChange={handleFieldChange} index={index} key={index} />
+                        )))
                     }
                     {/* Contenedor para centrar el botón */}
                     <div className="flex justify-center mt-4">
@@ -206,13 +207,13 @@ export const CategoriaEtiqueta = () => {
                         </button>
                     </div>
                 </form>
-                
+
             </div>
-            <button 
-            id="ad-bottom"
-            onClick={addField} 
-            className="fixed bottom-5 right-20 w-auto z-30 text-gray-700 bg-blue-400 rounded-full mt-4 mb-10 px-4 py-2">
-             <FontAwesomeIcon icon={faPlus} />
+            <button
+                id="ad-bottom"
+                onClick={addField}
+                className="fixed bottom-5 right-20 w-auto z-30 text-gray-700 bg-blue-400 rounded-full mt-4 mb-10 px-4 py-2">
+                <FontAwesomeIcon icon={faPlus} />
             </button>
 
         </div>
@@ -220,12 +221,12 @@ export const CategoriaEtiqueta = () => {
 
 }
 
-const ModalDelete =({isActive,handleClose}) =>{
-    if(!isActive) return null
-    const { setCategoriesToDelete,setFields,fields,categoryToDelete} = useAuth()
-    
-    const handleDelete = ()=>{
-        setCategoriesToDelete((categoriesToDelete)=>[...categoriesToDelete,categoriesToDelete])
+const ModalDelete = ({ isActive, handleClose }) => {
+    if (!isActive) return null
+    const { setCategoriesToDelete, setFields, fields, categoryToDelete } = useAuth()
+
+    const handleDelete = () => {
+        setCategoriesToDelete((categoriesToDelete) => [...categoriesToDelete, categoriesToDelete])
         let newfields = []
         for (let field of fields) {
             if (field != categoryToDelete) {
@@ -235,18 +236,18 @@ const ModalDelete =({isActive,handleClose}) =>{
         setFields(newfields)
         handleClose()
     }
-    
-    return(
-        <Overlay animacion={handleClose} > 
+
+    return (
+        <Overlay animacion={handleClose} >
             <FontAwesomeIcon icon={faTrash}></FontAwesomeIcon>
             <p className='text-2xl font-bold flex items-center justify-center'>¿Deseas eliminar esta categoria?</p>
             <div>
-            <button onClick={handleDelete} className='py-2 px-6 text-white bg-red-800 hover:opacity-70 rounded-2xl m-1 border-1 border-red-600'>Eliminar</button>
-            <button className='py-2 px-6 text-gray-400 bg-gray-800 hover:opacity-70 rounded-2xl m-1 border-1 border-gray-200  mt-0' onClick={handleClose}>cancelar</button>
+                <button onClick={handleDelete} className='py-2 px-6 text-white bg-red-800 hover:opacity-70 rounded-2xl m-1 border-1 border-red-600'>Eliminar</button>
+                <button className='py-2 px-6 text-gray-400 bg-gray-800 hover:opacity-70 rounded-2xl m-1 border-1 border-gray-200  mt-0' onClick={handleClose}>cancelar</button>
             </div>
         </Overlay>
     )
-   
+
 }
 
 export default CategoriaEtiqueta
