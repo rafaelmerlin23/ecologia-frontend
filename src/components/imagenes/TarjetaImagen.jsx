@@ -23,12 +23,18 @@ export const TarjetaImagen = ({ image }) => {
                 <img onMouseEnter={handleMouseEnter} src={image.link} alt="burning" className="object-cover w-full h-full" />
                 :
                 <Link onClick={handleInitImage} to={`${image.id}/etquetador`}>
-                    <div className="relative w-full h-48" onMouseLeave={handleMouseLeave}>
-                        <img src={image.link} alt="burning" className="object-cover w-full h-full" />
-                        <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-                            <p className="text-white text-xl font-bold">{image.date}</p>
-                        </div>
+                <div className="relative w-full h-48 min-h-[12rem] bg-gray-200 flex items-center justify-center" onMouseLeave={handleMouseLeave}>
+                    {image.link ? (
+                    <img src={image.link} alt="burning" className="object-cover w-full h-full" />
+                    ) : (
+                    <div className="flex items-center justify-center w-full h-full">
+                        <p className="text-gray-500">No Image Available</p>
                     </div>
+                    )}
+                    <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+                    <p className="text-white text-xl font-bold">{image.date}</p>
+                    </div>
+                </div>
                 </Link>
             }
         </>

@@ -30,6 +30,8 @@ export const AuthProvider = ({ children }) => {
 
     const [image, setImage] = useState(null);
 
+    const [userName,setUserName] = useState(null) 
+
 
     const refreshProjects = () => {
         setShouldRefresh(prev => !prev);
@@ -74,6 +76,8 @@ export const AuthProvider = ({ children }) => {
             , setIsModalCategoryDeleteActive
             , image
             , setImage
+            ,setUserName
+            ,userName
 
         }}>
             {children}

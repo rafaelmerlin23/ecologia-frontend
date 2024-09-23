@@ -5,7 +5,7 @@ import prefixUrl from '../../helpers/ip';
 import { useState } from 'react';
 
 function ModalImagenes({ closeModal, children }) {
-  const { files, userData, albumInformation } = useAuth()
+  const { files, userData, albumInformation,refreshProjects} = useAuth()
   const token = userData.token
   const [status, setStatus] = useState('0 imagenes subidas')
   const [isUploading, setIsUploading] = useState(false)
@@ -37,8 +37,9 @@ function ModalImagenes({ closeModal, children }) {
           if (data && data.status == 'success') {
             console.log(data.reponse)
             setStatus(`${index + 1} imagenes subidas`)
+            refreshProjects()
           }
-
+          
         })
         .catch((error) => {
           console.error('Error:', error);

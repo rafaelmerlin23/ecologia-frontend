@@ -6,7 +6,7 @@ import { useAuth } from "../AuthProvider";
 import prefixUrl from "../helpers/ip";
 import imagenStock from "../assets/burningForest.jpg";
 import GridImagenes from "../components/imagenes/GridImagenes";
-
+import { handleDateTime } from "../helpers/formatDate";
 
 function Imagenes() {
   const [isActiveUploadImages, setIsActiveUploadImages] = useState(false);
@@ -19,13 +19,13 @@ function Imagenes() {
 
   const handleNext = () => {
     if (isNextPage) {
-      setPage((page) => page++)
+      setPage((page) => page+1)
     }
   }
 
   const handlePrevious = () => {
     if (page !== 1) {
-      setPage((page) => page--)
+      setPage((page) => page-1)
     }
   }
 
@@ -37,47 +37,71 @@ function Imagenes() {
   };
 
   useEffect(() => {
-    let getImages = []
-    for (let i = 0; i < 20; i++) {
-      getImages.push({ id: i, date: '21/12/2024', link: imagenStock })
-    }
+    // let getImages = []
+    // for (let i = 0; i < 20; i++) {
+    //   getImages.push({ id: i, date: '21/12/2024', link: imagenStock })
+    // }
 
-    setImages(getImages)
+    // setImages(getImages)
     /*
       esto podria ir dentro de la peticion serian dos peticiones una con la pagina que quieres
       y otra con la siguiente para comprobar si existen datos y poder dibujar el boton de siguiente
       de lo contrario no se dibujará    
     */
-    let nextPageImage = null //{ link: "link" }
-    if (nextPageImage !== null) {
-      setIsNextPage(true)
-    }
+    
 
 
+    fetch(`${prefixUrl}pictures/show_picture_from_album?page=${page}&quantity=${quantity}&album_id=${albumInformation.index}`, {
+      method: 'GET',
+      headers: {
+        'Authorization': token // Envía el token en el encabezado Authorization
+      }
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data && data.status == 'success') {
+          const newImages = data.response.map((response)=>(
+            {
+              link:response[0],
+              id:response[1],
+              date:response[2],
+            }
+          ))
+          setImages(newImages)
+        }
 
-    // fetch(`${prefixUrl}pictures/show_picture_from_album?page=${page}&quantity=${quantity}&album_id=${albumInformation.index}`, {
-    //   method: 'GET',
-    //   headers: {
-    //     'Authorization': token // Envía el token en el encabezado Authorization
-    //   }
-    // })
-    //   .then((res) => res.json())
-    //   .then((data) => {
-    //     console.log('Respuesta del servidor:', data);
-    //     if (data && data.status == 'success') {
-    //       console.log(data)
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+      });
 
-    //     }
-
-    //   })
-    //   .catch((error) => {
-    //     console.error('Error:', error);
-    //   });
-    document.body.className = ' bg-gradient-to-r from-gray-900 to-blue-gray-950 ';
-    return () => {
-      document.body.className = 'bg-black';
-    };
-  }, []);
+      fetch(`${prefixUrl}pictures/show_picture_from_album?page=${page+1}&quantity=${quantity}&album_id=${albumInformation.index}`, {
+        method: 'GET',
+        headers: {
+          'Authorization': token // Envía el token en el encabezado Authorization
+        }
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          console.log('Respuesta del servidor:', data);
+          if (data && data.status == 'success') {
+            if(data.response.length === 0){
+              setIsNextPage(false)
+            }else{
+              setIsNextPage(true)
+            }
+          }
+  
+        })
+        .catch((error) => {
+          console.error('Error:', error);
+        });
+      document.body.className = ' bg-gradient-to-r from-gray-900 to-blue-gray-950 ';
+      return () => {
+        document.body.className = 'bg-black';
+      };
+    
+  }, [page,shouldRefresh]);
 
   return (
     <>

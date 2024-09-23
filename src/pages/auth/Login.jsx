@@ -9,7 +9,7 @@ function Login() {
     const [clave, setClave] = useState("")
     const [response, setResponse] = useState(null);
     const navigate = useNavigate();
-    const { login } = useAuth()
+    const { login,setUserName } = useAuth()
 
 
     const Login = (e) => {
@@ -32,6 +32,7 @@ function Login() {
                 if (data && data.status == 'success') {
                     setResponse(data)
                     login(data)
+                    setUserName(usuario)
                     navigate('/proyectos')
 
                 }
