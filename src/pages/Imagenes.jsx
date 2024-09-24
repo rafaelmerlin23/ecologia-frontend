@@ -126,7 +126,7 @@ function Imagenes() {
               </p>
             </button>
             <GridImagenes images={images} />
-            {page === 1 && !isNextPage ? "" : <div className="mb-10 flex bg-blue-700 px-6 flex-row rounded-full">
+            {page === 1 && !isNextPage ? "" : <footer className="mb-10 mt-20 flex bg-blue-700 px-6 flex-row rounded-full">
               {page !== 1 ? <button onClick={handlePrevious} className="p-0 m-0 pr-2">
                 <FontAwesomeIcon className="pr-2" icon={faLessThan} />
                 Ant
@@ -137,7 +137,7 @@ function Imagenes() {
                   Sig
                   <FontAwesomeIcon className="pl-2" icon={faGreaterThan} />
                 </button> : ""}
-            </div>}
+            </footer>}
           </div >
 
           : <div

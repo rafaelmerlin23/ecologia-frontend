@@ -17,13 +17,11 @@ function ModalImagenes({ closeModal, children }) {
     }
     setIsUploading(true)
     files.forEach(async (file, index) => {
-
       const formData = new FormData();
 
       formData.append('file', file.file)
 
       formData.append('album_id', albumInformation.index);  // Cambiar por el valor adecuado
-      formData.append('tag_id', 2);    // Cambiar por el valor adecuado
 
       await fetch(`${prefixUrl}pictures/create_picture`, {
         method: 'POST',

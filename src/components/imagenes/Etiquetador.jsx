@@ -21,14 +21,30 @@ export const Etiquetador = () => {
         navigate('../categoria-etiqueta');
       };
 
-    const handleSelect = (tag) =>{
+    const handleSelect = (e,tag) =>{
+        e.preventDefault()
         setTagsSelected(tagsSelected=>[...tagsSelected,tag.idTag])
         let newTags = []
         tags.forEach((tagEach)=>{
             if(tagEach === tag){
-                newTags.push()
+                newTags.push({
+                    name: tagEach.name, // El nombre de la etiqueta está en el índice 1
+                    idTag: tagEach.idTag,
+                    isSelect:!tagEach.isSelect
+                })
+            }else{
+                newTags.push(tagEach)
             }
         })
+        setTags(newTags)
+        const newTagsSelected = []
+        newTags.forEach((newTag)=>{
+            if(newTag.isSelect){
+                newTagsSelected.push(newTag.idTag)
+            }
+        })
+        setTagsSelected(newTagsSelected)
+        console.log(newTagsSelected)
     }
 
     const handleCloseModal = () =>{
@@ -115,7 +131,8 @@ export const Etiquetador = () => {
                     <div className="pt-2 flex flex-col gap-y-2 ">
                     {tags.length>0? tags.map((tag)=>(
                         <button 
-                        className="px-2 bg-gray-700 rounded-full" 
+                        onClick={(e)=>handleSelect(e,tag)}
+                        className= {`px-2 ${tag.isSelect?"bg-green-700":"bg-gray-700"} rounded-full`} 
                         key={tag.idTag*3}>
                         {tag.name}
                         </button>

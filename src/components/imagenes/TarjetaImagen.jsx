@@ -20,10 +20,10 @@ export const TarjetaImagen = ({ image }) => {
     return (
         <>
             {!isHover ?
-                <img onMouseEnter={handleMouseEnter} src={image.link} alt="burning" className="object-cover w-full h-full" />
+                <img onMouseEnter={handleMouseEnter} src={image.link} alt="burning" className="object-cover w-full h-full aspect-[16/9]" />
                 :
                 <Link onClick={handleInitImage} to={`${image.id}/etquetador`}>
-                <div className="relative w-full h-48 min-h-[12rem] bg-gray-200 flex items-center justify-center" onMouseLeave={handleMouseLeave}>
+                <div className="relative w-full h-48 min-h-[12rem] bg-gray-200 flex items-center justify-center aspect-[16/9]" onMouseLeave={handleMouseLeave}>
                     {image.link ? (
                     <img src={image.link} alt="burning" className="object-cover w-full h-full" />
                     ) : (
