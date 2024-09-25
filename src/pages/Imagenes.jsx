@@ -4,28 +4,26 @@ import { faImage, faImages, faGreaterThan, faLessThan } from '@fortawesome/free-
 import SubirImagenes from "../components/imagenes/SubirImagenes";
 import { useAuth } from "../AuthProvider";
 import prefixUrl from "../helpers/ip";
-import imagenStock from "../assets/burningForest.jpg";
 import GridImagenes from "../components/imagenes/GridImagenes";
-import { handleDateTime } from "../helpers/formatDate";
 
 function Imagenes() {
   const [isActiveUploadImages, setIsActiveUploadImages] = useState(false);
-  const { images, setImages, shouldRefresh, userData, albumInformation } = useAuth()
+  const { setPageImage,pageImage,images, setImages, shouldRefresh, userData, albumInformation } = useAuth()
   const [isNextPage, setIsNextPage] = useState(false)
   const token = userData.token
-  const [page, setPage] = useState(1)
+
   const quantity = 20
 
 
   const handleNext = () => {
     if (isNextPage) {
-      setPage((page) => page+1)
+      setPageImage((pageImage) => pageImage+1)
     }
   }
 
   const handlePrevious = () => {
-    if (page !== 1) {
-      setPage((page) => page-1)
+    if (pageImage !== 1) {
+      setPageImage((pageImage) => pageImage-1)
     }
   }
 
@@ -51,7 +49,7 @@ function Imagenes() {
     
 
 
-    fetch(`${prefixUrl}pictures/show_picture_from_album?page=${page}&quantity=${quantity}&album_id=${albumInformation.index}`, {
+    fetch(`${prefixUrl}pictures/show_picture_from_album?page=${pageImage}&quantity=${quantity}&album_id=${albumInformation.index}`, {
       method: 'GET',
       headers: {
         'Authorization': token // Envía el token en el encabezado Authorization
@@ -75,7 +73,7 @@ function Imagenes() {
         console.error('Error:', error);
       });
 
-      fetch(`${prefixUrl}pictures/show_picture_from_album?page=${page+1}&quantity=${quantity}&album_id=${albumInformation.index}`, {
+      fetch(`${prefixUrl}pictures/show_picture_from_album?page=${pageImage+1}&quantity=${quantity}&album_id=${albumInformation.index}`, {
         method: 'GET',
         headers: {
           'Authorization': token // Envía el token en el encabezado Authorization
@@ -101,7 +99,11 @@ function Imagenes() {
         document.body.className = 'bg-black';
       };
     
-  }, [page,shouldRefresh]);
+  }, [pageImage,shouldRefresh]);
+
+  useEffect(()=>{
+    setPageImage(1)
+  },[])
 
   return (
     <>
@@ -126,8 +128,8 @@ function Imagenes() {
               </p>
             </button>
             <GridImagenes images={images} />
-            {page === 1 && !isNextPage ? "" : <footer className="mb-10 mt-20 flex bg-blue-700 px-6 flex-row rounded-full">
-              {page !== 1 ? <button onClick={handlePrevious} className="p-0 m-0 pr-2">
+            {pageImage === 1 && !isNextPage ? "" : <footer className="mb-10 mt-6 flex bg-blue-700 px-6 flex-row rounded-full">
+              {pageImage !== 1 ? <button onClick={handlePrevious} className="p-0 m-0 pr-2">
                 <FontAwesomeIcon className="pr-2" icon={faLessThan} />
                 Ant
               </button> : ""}

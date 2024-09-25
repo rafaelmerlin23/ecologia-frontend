@@ -5,7 +5,8 @@ import Eliminar from './Eliminar'
 import EditarProyecto from './EditarProyecto'
 import { Link } from 'react-router-dom'
 import { useAuth } from '../AuthProvider'
-import prefixUrl from '../helpers/ip'
+import { handleDelete } from '../helpers/handleDelete'
+
 function TarjetaDeproyecto({ LinkImagen, nombre, fecha, description, indice }) {
 
   const { userData, setProjectInformation, projectInformation, refreshProjects } = useAuth()
@@ -45,35 +46,16 @@ function TarjetaDeproyecto({ LinkImagen, nombre, fecha, description, indice }) {
     setClaseContenedor("")
   }
 
-  const handleDeleteProject = () => {
-
+  const handleDeleteProject = () =>{
     const formData = new FormData();
     formData.append('project_id', indice);
-    // Construye la URL con el project_id como parámetro de la consulta
-    const url = `${prefixUrl}pictures/delete_project`;
-    // Hacer la petición DELETE
-    fetch(url, {
-      method: 'DELETE',
-      mode: 'cors',
-      headers: {
-        'Authorization': token // Envía el token en el encabezado Authorization
-      },
-      body: formData
+    const endPoint = 'pictures/delete_project'
+    
+    handleDelete(endPoint,formData,token,()=>{
+      refreshProjects()
     })
-      .then((res) => res.json())
-      .then((data) => {
-        console.log('Respuesta del servidor:', data);
-        if (data && data.status === 'success') {
-          console.log(data);
-          refreshProjects();
-          cerrarOverlayEditar();
-        }
-      })
-      .catch((error) => {
-        console.error('Error:', error);
-      });
-  };
-  
+  }
+
   return (
     <>
 

@@ -25,12 +25,16 @@ export const AuthProvider = ({ children }) => {
 
 
     const [fields, setFields] = useState([])
-
+    
     const [isModalCategoryDeleteActive, setIsModalCategoryDeleteActive] = useState(true)
-
+    
     const [image, setImage] = useState(null);
-
+    
     const [userName,setUserName] = useState(null) 
+    
+    const [pageImage, setPageImage] = useState(1)
+
+    const [cardImagePage,setCardImagePage] = useState(1)
 
 
     const refreshProjects = () => {
@@ -45,6 +49,8 @@ export const AuthProvider = ({ children }) => {
         setIsAuthenticated(false)
         setUserData(null)
     }
+
+
 
 
 
@@ -78,6 +84,10 @@ export const AuthProvider = ({ children }) => {
             , setImage
             ,setUserName
             ,userName
+            ,pageImage
+            ,setPageImage
+            ,cardImagePage
+            ,setCardImagePage
 
         }}>
             {children}

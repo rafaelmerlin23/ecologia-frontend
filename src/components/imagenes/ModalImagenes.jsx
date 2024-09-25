@@ -5,7 +5,7 @@ import prefixUrl from '../../helpers/ip';
 import { useState } from 'react';
 
 function ModalImagenes({ closeModal, children }) {
-  const { files, userData, albumInformation,refreshProjects} = useAuth()
+  const { files, userData, albumInformation,refreshProjects,setFiles} = useAuth()
   const token = userData.token
   const [status, setStatus] = useState('0 imagenes subidas')
   const [isUploading, setIsUploading] = useState(false)
@@ -22,6 +22,8 @@ function ModalImagenes({ closeModal, children }) {
       formData.append('file', file.file)
 
       formData.append('album_id', albumInformation.index);  // Cambiar por el valor adecuado
+
+      formData.append('category_id',1)
 
       await fetch(`${prefixUrl}pictures/create_picture`, {
         method: 'POST',
@@ -44,6 +46,7 @@ function ModalImagenes({ closeModal, children }) {
         });
 
     });
+    setFiles([])
     setIsUploading(false)
     closeModal()
   }

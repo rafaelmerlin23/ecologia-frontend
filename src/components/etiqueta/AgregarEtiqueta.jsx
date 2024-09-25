@@ -13,7 +13,7 @@ function AgregarEtiqueta({ isActive, handleClose, categoryId, setTags }) {
     const handleCreateTag = (e) => {
         e.preventDefault()
 
-        if (name.length <= 5 || !name) {
+        if (name.length <= 3 || !name) {
             return
         }
 

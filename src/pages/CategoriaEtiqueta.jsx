@@ -6,6 +6,7 @@ import prefixUrl from "../helpers/ip";
 import Overlay from "../components/Overlay";
 import loading from '../assets/loading.gif';
 import Categorias from "../components/etiqueta/Categorias";
+import { handleDelete } from "../helpers/handleDelete";
 
 export const CategoriaEtiqueta = () => {
 
@@ -112,7 +113,7 @@ export const CategoriaEtiqueta = () => {
             .then((res) => res.json())
             .then((data) => {
                 if (data && data.status == 'success') {
-
+                    refreshProjects()
                 }
 
             })
@@ -223,14 +224,21 @@ export const CategoriaEtiqueta = () => {
 
 const ModalDelete = ({ isActive, handleClose }) => {
     if (!isActive) return null
-    const { setCategoriesToDelete, setFields, fields, categoryToDelete } = useAuth()
-
-    const handleDelete = () => {
+    const { setCategoriesToDelete, setFields, fields, categoryToDelete,userData } = useAuth()
+    const token = userData.token
+    const handleDeleteCategory = () => {
         setCategoriesToDelete((categoriesToDelete) => [...categoriesToDelete, categoriesToDelete])
         let newfields = []
-        for (let field of fields) {
+        for (let field of fields) { 
             if (field != categoryToDelete) {
                 newfields.push(field)
+            }else{
+                const formData = new FormData();
+                formData.append('category_id', field.id);
+                const endPoint = 'pictures/delete_category'
+                handleDelete(endPoint,formData,token,()=>{
+                
+            })
             }
         }
         setFields(newfields)
@@ -242,7 +250,7 @@ const ModalDelete = ({ isActive, handleClose }) => {
             <FontAwesomeIcon icon={faTrash}></FontAwesomeIcon>
             <p className='text-2xl font-bold flex items-center justify-center'>¿Deseas eliminar esta categoria?</p>
             <div>
-                <button onClick={handleDelete} className='py-2 px-6 text-white bg-red-800 hover:opacity-70 rounded-2xl m-1 border-1 border-red-600'>Eliminar</button>
+                <button onClick={handleDeleteCategory} className='py-2 px-6 text-white bg-red-800 hover:opacity-70 rounded-2xl m-1 border-1 border-red-600'>Eliminar</button>
                 <button className='py-2 px-6 text-gray-400 bg-gray-800 hover:opacity-70 rounded-2xl m-1 border-1 border-gray-200  mt-0' onClick={handleClose}>cancelar</button>
             </div>
         </Overlay>

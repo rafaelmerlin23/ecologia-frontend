@@ -1,17 +1,29 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useAuth } from "../../AuthProvider";
+import { handleDateTime } from "../../helpers/formatDate";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import {faCalendar} from '@fortawesome/free-solid-svg-icons';
+import Etiquetador from "./Etiquetador";
 
-export const TarjetaImagen = ({ image }) => {
+export const TarjetaImagen = ({ image,index }) => {
     const [isHover, setIsHover] = useState(false);
-    const { setImage } = useAuth()
+    const { setImage,pageImage,setCardImagePage } = useAuth()
+    const [isTaggerActive,setIsTaggerActive] = useState(false)
 
     const handleMouseEnter = () => {
         setIsHover(true)
     }
 
+    const handlecloseTagger = () =>setIsTaggerActive(false)
+
+    const handleOpenTagger = () =>setIsTaggerActive(true)
+
+
     const handleInitImage = () => {
+        setCardImagePage(((index+1) + (pageImage-1)*20))
         setImage(image)
+        handleOpenTagger()
     }
 
     const handleMouseLeave = () => {
@@ -19,10 +31,11 @@ export const TarjetaImagen = ({ image }) => {
     }
     return (
         <>
+            <Etiquetador handleClose={handlecloseTagger} isActive={isTaggerActive}></Etiquetador>
             {!isHover ?
                 <img onMouseEnter={handleMouseEnter} src={image.link} alt="burning" className="object-cover w-full h-full aspect-[16/9]" />
                 :
-                <Link onClick={handleInitImage} to={`${image.id}/etquetador`}>
+                <Link onClick={handleInitImage}>
                 <div className="relative w-full h-48 min-h-[12rem] bg-gray-200 flex items-center justify-center aspect-[16/9]" onMouseLeave={handleMouseLeave}>
                     {image.link ? (
                     <img src={image.link} alt="burning" className="object-cover w-full h-full" />
@@ -32,7 +45,12 @@ export const TarjetaImagen = ({ image }) => {
                     </div>
                     )}
                     <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-                    <p className="text-white text-xl font-bold">{image.date}</p>
+                        <div className='mt-2 flex flex-row justify-center items-center gap-2'>
+                            < FontAwesomeIcon className='text-1xl' icon={faCalendar}/>
+                            <p className='font-bold text-2xl text-white'>
+                            {handleDateTime(image.date)}
+                            </p>
+                        </div>
                     </div>
                 </div>
                 </Link>

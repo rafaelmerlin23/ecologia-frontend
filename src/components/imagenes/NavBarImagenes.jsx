@@ -1,6 +1,7 @@
 import { Link, Outlet } from "react-router-dom"
 import { faImage, faTag } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+
 export const NavBarImagenes = () => {
     return (
         <div className="">

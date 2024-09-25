@@ -5,6 +5,7 @@ import Eliminar from './Eliminar'
 import { useAuth } from '../AuthProvider'
 import { Link } from 'react-router-dom'
 import EditarPunto from './location/EditarPunto'
+import { handleDelete } from '../helpers/handleDelete'
 
 function TarjetaPuntos({ index ,nombre, coordenadas, imagen}) {
 
@@ -13,9 +14,11 @@ function TarjetaPuntos({ index ,nombre, coordenadas, imagen}) {
   const [esActivoOverlay, setEsActivoOverlay] = useState(false)
 
   const [isEditActive,setIsEditActive] = useState(false)
+  
 
-  const {setLocationInformation,locationInformation} = useAuth()
+  const {setLocationInformation,locationInformation,userData,refreshProjects} = useAuth()
 
+  const token = userData.token
 
   const handleLocationInformation = () =>{
     	setLocationInformation({index:index,name:nombre,coordinates:coordenadas,image:imagen})
@@ -39,10 +42,25 @@ function TarjetaPuntos({ index ,nombre, coordenadas, imagen}) {
     setEsActivoOverlay(true)
   }
 
+  const handleDeleteLocation = () =>{
+    const formData = new FormData();
+    formData.append('location_id', index);
+    const endPoint = 'pictures/delete_location'
+    
+    handleDelete(endPoint,formData,token,()=>{
+      refreshProjects()
+    })
+  }
+
   return (
     <div className="pt-5 flex flex-col items-center bg-white border border-gray-200 rounded-lg shadow md:flex-col lg:flex-col xl:flex-col w-full md:max-w-2xl hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700">
       <EditarPunto isActive={isEditActive} closeEdit={closeEditOverlay} ></EditarPunto>
-      <Eliminar iconoInformacionSecundaria={faLocationDot} objetoEliminar={"Punto"} cerrarOverlay={cerrarOverlayEliminar} esActiva={esActivoOverlay} proyecto={{ informacionPrimaria: nombre, informacionSecundaria: coordenadas }}></Eliminar>
+      <Eliminar peticion={handleDeleteLocation} 
+      iconoInformacionSecundaria={faLocationDot}
+       objetoEliminar={"Punto"}
+        cerrarOverlay={cerrarOverlayEliminar} 
+        esActiva={esActivoOverlay}
+         proyecto={{ informacionPrimaria: nombre, informacionSecundaria: coordenadas }}></Eliminar>
       <Link onClick={handleLocationInformation} to={`${nombre}/albumes`}>
         <img className="object-cover w-full rounded-t-lg h-64 md:h-auto md:w-48 md:rounded-none md:rounded-s-lg lg:w-200" src={imagen} alt="" />
       </Link>

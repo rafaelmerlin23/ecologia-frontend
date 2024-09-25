@@ -62,7 +62,7 @@ function Etiqueta({ category }) {
                     {tags.map((tag, index) => (
                         <div key={index} className='flex items-center justify-between bg-green-700 px-4 rounded-full'>
                             <span className='flex-grow text-center text-white'>
-                                {tag.name.length <= 20 ? tag.name.slice(0, 18) + ".." : tag.name}
+                                {!(tag.name.length <= 20) ? tag.name.slice(0, 18) + ".." : tag.name}
                             </span>
                             <button className='text-gray-200'>
                                 <FontAwesomeIcon className='pl-2 text-sm' icon={faX} />
