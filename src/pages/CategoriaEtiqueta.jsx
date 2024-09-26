@@ -163,7 +163,14 @@ export const CategoriaEtiqueta = () => {
             .then((res) => res.json())
             .then((data) => {
                 if (data && data.status == 'success') {
-                    const newFields = data.response.map(category => ({ field: category[1], id: category[0] }));
+                    
+                    let newFields = [] 
+                    data.response.forEach(category => {
+                        if(category[0] !==1){
+                            newFields.push({ field: category[1], id: category[0] }); 
+                        } 
+                    });
+                    
                     setOldFiles(newFields);
                     setFields(newFields);
                 }
