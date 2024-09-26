@@ -18,7 +18,7 @@ export const Etiquetador = ({isActive,handleClose}) => {
     const [isModalActive,setIsModalActive] = useState(false)
     const [tagsSelected,setTagsSelected] = useState([])
     const [isNextPage,setIsNextPage] = useState(true)
-
+    const [categorySelected,setCategorySelected] = useState(null) 
 
     const handleClick = () => {
         // Aquí puedes realizar alguna lógica antes de redirigir
@@ -26,7 +26,6 @@ export const Etiquetador = ({isActive,handleClose}) => {
       };
 
     const handleNext = () =>{
-        console.log(cardImagePage)
         fetch(`${prefixUrl}pictures/show_picture_from_album?page=${cardImagePage+1}&quantity=${1}&album_id=${albumInformation.index}`, {
             method: 'GET',
             headers: {
@@ -36,16 +35,17 @@ export const Etiquetador = ({isActive,handleClose}) => {
             .then((res) => res.json())
             .then((data) => {
               if (data && data.status == 'success') {
-                console.log(data.response)
                 const newImages = data.response.map((response)=>(
                     {
                       link:response[0],
                       id:response[1],
                       date:response[2],
+                      
                     }
                   ))
                 setImage(newImages[0])
                 setCardImagePage((CardImagePage)=>CardImagePage+1)
+                handleIsNextPage(2)
                 
             }
       
@@ -53,7 +53,6 @@ export const Etiquetador = ({isActive,handleClose}) => {
             .catch((error) => {
               console.error('Error:', error);
             });
-        handleIsNextPage(2)
     }
 
     const handleIsNextPage = (step)=>{
@@ -66,7 +65,6 @@ export const Etiquetador = ({isActive,handleClose}) => {
             .then((res) => res.json())
             .then((data) => {
               if (data && data.status == 'success') {
-                console.log(data.response)
                 const newImages = data.response.map((response)=>(
                     {
                       link:response[0],
@@ -86,19 +84,24 @@ export const Etiquetador = ({isActive,handleClose}) => {
             });
     }
 
-    const handlePrevious = () =>{
+    const handlePrevious =async () =>{
         const endPoint = `pictures/show_picture_from_album?page=${cardImagePage-1}&quantity=${1}&album_id=${albumInformation.index}`
-        const data = handleGet(endPoint,token)
-        console.log(data)
-        // const newImages = data.response.map((response)=>(
-        //     {
-        //       link:response[0],
-        //       id:response[1],
-        //       date:response[2],
-        //     }
-        //   ))
-        // setImage(newImages[0])
-        // setCardImagePage(cardImagePage=>cardImagePage-1)
+        let data = [image]
+        try {
+            data =await handleGet(endPoint,token)            
+        } catch (error) {
+            console.error(error)
+        }
+        const newImages = data.map((response)=>(
+            {
+              link:response[0],
+              id:response[1],
+              date:response[2],
+            }
+          ))
+          handleIsNextPage(0)   
+          setImage(newImages[0])
+          setCardImagePage(cardImagePage=>cardImagePage-1)
     }
 
     const handleSelect = (e,tag) =>{
@@ -124,7 +127,6 @@ export const Etiquetador = ({isActive,handleClose}) => {
             }
         })
         setTagsSelected(newTagsSelected)
-        console.log(newTagsSelected)
     }
 
     const handleCloseModal = () =>{
@@ -135,7 +137,12 @@ export const Etiquetador = ({isActive,handleClose}) => {
         setIsModalActive(true)
     }
 
+    const onLabel= ()=>{
+
+    }
+
     const handleTags = (id) => {
+        setCategorySelected(id)
         fetch(`${prefixUrl}pictures/show_tags?page=${1}&quantity=${13}&category_id=${id}`, {
             method: 'GET',
             headers: {
@@ -145,14 +152,12 @@ export const Etiquetador = ({isActive,handleClose}) => {
             .then((res) => res.json())
             .then((data) => {
                 if (data && data.status === 'success') {
-                    console.log(data.response);
                     const newTags = data.response.map((tag) => ({
                         name: tag[1], // El nombre de la etiqueta está en el índice 1
                         idTag: tag[0],
                         isSelect:false // El tag_id está en el índice 0
                     }));
                     setTags(newTags);
-                    console.log(tags)
                 }
             })
             .catch((error) => {
@@ -173,7 +178,12 @@ export const Etiquetador = ({isActive,handleClose}) => {
             .then((res) => res.json())
             .then((data) => {
                 if (data && data.status == 'success') {
-                    const newFields = data.response.map(category => ({ field: category[1], id: category[0] }));
+                    let newFields = [] 
+                    data.response.forEach(category => {
+                        if(category[0] !=1){
+                            newFields.push({ field: category[1], id: category[0] })
+                        }
+                    });
                     setCategories(newFields)
                     handleTags(newFields[0].id)
                 }
@@ -187,7 +197,7 @@ export const Etiquetador = ({isActive,handleClose}) => {
 
     return (
         <div className=' fixed z-40 inset-0 bg-black bg-opacity-30 backdrop-blur-sm flex justify-center items-center'>
-         <div className="bg-black border-1 border-white p-10  rounded-3xl">
+         <div className="bg-zinc-900 border border-gray-300 p-10  rounded-3xl flex justify-center items-center">
          <button onClick={handleClose} className=' absolute top-2 right-2 text-white text-xl hover:opacity-70'>
             x
         </button>
@@ -200,20 +210,21 @@ export const Etiquetador = ({isActive,handleClose}) => {
         className='flex justify-center items-center py-3 px-3 bg-white  rounded-full absolute top-1/2 right-2 text-white text-xl hover:opacity-70'>
             <FontAwesomeIcon className="text-sm text-black" icon={faGreaterThan}/>
         </button>:""}       
-        <div className="h-full w-full flex flex-col items-center gap-y-4 ">
+        <div className="h-full w-full flex flex-col justify-center items-center gap-y-4 ">
            
             <ModalIMagen handleClose={handleCloseModal} image={image} isActive={isModalActive}/>
             
             {/* Fila para la imagen y el select */}
-            <div className="flex justify-center items-center gap-x-10 sm:flex-col flex-col md:flex-row lg:flex-row xl:flex-row">
-            <div onClick={handleOpenModal} className="w-3/5 h-60  min-h-[30rem] bg-gray-200 flex items-center justify-center hover:cursor-pointer">
+            <div className=" flex justify-center items-center gap-x-10 sm:flex-col flex-col md:flex-row lg:flex-row xl:flex-row">
+            <div onClick={handleOpenModal} className=" w-3/5 h-60  min-h-[30rem] bg-gray-200 flex items-center justify-center hover:cursor-pointer">
                 {image.link ? (
-                    <img className="object-cover w-full h-full" src={image.link} alt="sin" />
+                    <img className=" object-cover w-full h-full" src={image.link} alt="sin" />
                 ) : (
                     <p className="text-gray-500">No Image Available</p>
                 )}
                 </div>
-                <div className="self-start ">
+                <div class="inline-block min-h-[30rem] w-0.5 bg-zinc-600"></div>
+                <div className="flex-col  lg:self-start xl:self-start md:self-start sm:flex sm:justify-center sm-items-center sm:flex">
                     <select onChange={(e)=>handleTags(e.target.value)} about="hola" className="text-gray-700">
                         {categories.map((category) => (
                             <option value={category.id} className="text-gray-700" key={category.id*10}>
@@ -221,11 +232,11 @@ export const Etiquetador = ({isActive,handleClose}) => {
                             </option>
                         ))}
                     </select>
-                    <div className="pt-2 flex flex-col gap-y-2 ">
+                    <div className="pt-4 flex flex-col gap-y-2 ">
                     {tags.length>0? tags.map((tag)=>(
                         <button 
                         onClick={(e)=>handleSelect(e,tag)}
-                        className= {`px-2 ${tag.isSelect?"bg-green-700":"bg-gray-700"} rounded-full`} 
+                        className= {`px-4 ${tag.isSelect?"bg-green-700":"bg-gray-700"} rounded-full border border-gray-600 hover:brightness-75`} 
                         key={tag.idTag*3}>
                         {tag.name}
                         </button>

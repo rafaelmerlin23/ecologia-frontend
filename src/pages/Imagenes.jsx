@@ -117,7 +117,7 @@ function Imagenes() {
 
             <button
               id="agregar-imagen"
-              className={isActiveUploadImages ? "" : 'pb-4 group hover:cursor-pointer'}
+              className={isActiveUploadImages ? "" : 'h-3/5 w-3/5 pb-4 group hover:cursor-pointer'}
               onClick={openImageOverlay}>
               <FontAwesomeIcon
                 className="text-4xl text-gray-400 group-hover:text-gray-300"

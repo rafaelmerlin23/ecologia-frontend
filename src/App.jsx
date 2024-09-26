@@ -28,7 +28,6 @@ function App() {
           <Route path="/proyectos/:proyectoId/puntos/:puntoID/albumes" element={<PrivateRoute element={<Albumes />}></PrivateRoute>} />
           <Route path="/proyectos/:proyectoId/puntos/:puntoID/albumes/:albumID/navbar-imagenes" element={<PrivateRoute element={<NavBarImagenes />}></PrivateRoute>} >
             <Route path='imagenes' element={<Imagenes />} />
-            <Route path='imagenes/:imagenID/etquetador' element={<Etiquetador />} />
             <Route path='categoria-etiqueta' element={<CategoriaEtiqueta />} />
 
           </Route>
