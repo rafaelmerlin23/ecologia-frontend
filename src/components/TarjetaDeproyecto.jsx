@@ -6,6 +6,7 @@ import EditarProyecto from './EditarProyecto'
 import { Link } from 'react-router-dom'
 import { useAuth } from '../AuthProvider'
 import { handleDelete } from '../helpers/handleDelete'
+import ImagenTarjeta from './imagenes/ImagenTarjeta'
 
 function TarjetaDeproyecto({ LinkImagen, nombre, fecha, description, indice }) {
 
@@ -72,20 +73,21 @@ function TarjetaDeproyecto({ LinkImagen, nombre, fecha, description, indice }) {
         esActiva={esActicva}
         proyecto={{ informacionPrimaria: nombre, informacionSecundaria: fecha }} />
         <Link onClick={handleProjectInformation} to={`/proyectos/${nombre}/puntos`}>
-      <div className="pt-5 flex flex-col items-center bg-white border border-gray-200 rounded-lg shadow md:flex-col lg:flex-col xl:flex-col w-full md:max-w-2xl hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700">
-          <img className="object-cover w-full rounded-t-lg h-64 md:h-auto md:w-48 md:rounded-none md:rounded-s-lg lg:w-100" src={LinkImagen} alt="" />
-        <div className='flex items-center justify-center space-x-2 pt-6'>
-          <button onClick={(e)=>abrirOverlayEditar(e)}><FontAwesomeIcon className='text-2xl bg-gray-950 p-2 pl-6 pr-6 rounded-2xl' icon={faPen} /></button>
-          <button onClick={(e)=>abrirOverlayEliminar(e)}><FontAwesomeIcon className='text-2xl bg-red-800 p-2 pr-6  pl-6 rounded-2xl' icon={faTrash} /> </button>
-        </div>
-        <div className="flex flex-col justify-between p-4 leading-normal md:text-lg">
-          <h5 className="mb-2 text-xl md:text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{nombre}</h5>
-          <div className='flex items-center space-x-2 mt-2 mb-4'>
-            <FontAwesomeIcon className='h-5 w-5 mr-2' icon={faCalendar} />
-            <p className="font-normal text-gray-700 dark:text-gray-400 text-center">{fecha}</p>
-          </div>
+        <div className="min-h-[5rem] aspect-[12/10] bg-blue-200 bg-opacity-100 my-20 ">
+        <ImagenTarjeta link={LinkImagen} />
+      <div className='flex items-center justify-center space-x-2 pt-6 '>
+        <button onClick={(e)=>abrirOverlayEditar(e)}><FontAwesomeIcon className='text-2xl bg-gray-950 p-2 pl-6 pr-6 rounded-2xl' icon={faPen} /></button>
+        <button onClick={(e)=>abrirOverlayEliminar(e)}><FontAwesomeIcon className='text-2xl bg-red-800 p-2 pr-6  pl-6 rounded-2xl' icon={faTrash} /> </button>
+      </div>
+      <div className="flex flex-col justify-between p-4 leading-normal md:text-lg overflow-hidden">
+        <h5 className="mb-2 text-xl md:text-2xl font-bold tracking-tight text-gray-900 dark:text-white truncate">{nombre}</h5>
+        <div className='flex items-center space-x-2 mt-2 mb-4'>
+          <FontAwesomeIcon className='h-5 w-5 mr-2' icon={faCalendar} />
+          <p className="font-normal text-gray-700 dark:text-gray-400 text-center truncate">{fecha}</p>
         </div>
       </div>
+    </div>
+
         </Link>
 
     </>

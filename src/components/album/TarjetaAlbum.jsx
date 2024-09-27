@@ -6,6 +6,7 @@ import Eliminar from "../Eliminar"
 import { Link } from "react-router-dom"
 import { EditarAlbum } from "./EditarAlbum"
 import { handleDelete } from "../../helpers/handleDelete"
+import ImagenTarjeta from "../imagenes/ImagenTarjeta"
 
 export const TarjetaAlbum = ({ album }) => {
   const { setAlbumInformation,userData,refreshProjects } = useAuth()
@@ -67,7 +68,7 @@ export const TarjetaAlbum = ({ album }) => {
       <Eliminar peticion={handleDeleteAlbum} iconoInformacionSecundaria={faCalendar} objetoEliminar={"Album"} cerrarOverlay={cerrarOverlayEliminar} esActiva={isDeleteActive} proyecto={{ informacionPrimaria: album.name, informacionSecundaria: album.date }} />
         <Link onClick={handleAlbumInformation} to={`${album.name}/navbar-imagenes/imagenes`}  >
       <div className="pt-5 flex flex-col items-center bg-white border border-gray-200 rounded-lg shadow md:flex-col lg:flex-col xl:flex-col w-full md:max-w-2xl hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700">
-          <img className="object-cover w-full rounded-t-lg h-64 md:h-auto md:w-48 md:rounded-none md:rounded-s-lg lg:w-200" src={album.image} alt="" />
+        <ImagenTarjeta link={album.image}/>
         <div className='flex items-center justify-center space-x-2 pt-6'>
           <button onClick={(e)=>abrirOverlayEditar(e)}><FontAwesomeIcon className='text-2xl bg-gray-950 p-2 pl-6 pr-6 rounded-2xl' icon={faPen} /></button>
           <button onClick={(e)=>abrirOverlayEliminar(e)}><FontAwesomeIcon className='text-2xl bg-red-800 p-2 pr-6  pl-6 rounded-2xl' icon={faTrash} /> </button>
