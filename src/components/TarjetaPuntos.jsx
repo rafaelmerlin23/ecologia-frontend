@@ -25,7 +25,9 @@ function TarjetaPuntos({ index ,nombre, coordenadas, imagen}) {
       console.log(locationInformation) 
   } 
 
-  const openEditOverlay = () =>{
+  const openEditOverlay = (e) =>{
+    e.preventDefault()
+    e.stopPropagation()
     handleLocationInformation()
     setIsEditActive(true)
   }
@@ -38,7 +40,9 @@ function TarjetaPuntos({ index ,nombre, coordenadas, imagen}) {
     setEsActivoOverlay(false)
   }
 
-  const abrirOverlayEliminar = () => {
+  const abrirOverlayEliminar = (e) => {
+    e.preventDefault()
+    e.stopPropagation()
     setEsActivoOverlay(true)
   }
 
@@ -53,7 +57,8 @@ function TarjetaPuntos({ index ,nombre, coordenadas, imagen}) {
   }
 
   return (
-    <div className="pt-5 flex flex-col items-center bg-white border border-gray-200 rounded-lg shadow md:flex-col lg:flex-col xl:flex-col w-full md:max-w-2xl hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700">
+
+    <>
       <EditarPunto isActive={isEditActive} closeEdit={closeEditOverlay} ></EditarPunto>
       <Eliminar peticion={handleDeleteLocation} 
       iconoInformacionSecundaria={faLocationDot}
@@ -61,12 +66,12 @@ function TarjetaPuntos({ index ,nombre, coordenadas, imagen}) {
         cerrarOverlay={cerrarOverlayEliminar} 
         esActiva={esActivoOverlay}
          proyecto={{ informacionPrimaria: nombre, informacionSecundaria: coordenadas }}></Eliminar>
-      <Link onClick={handleLocationInformation} to={`${nombre}/albumes`}>
+    <Link onClick={handleLocationInformation} to={`${nombre}/albumes`}>
+    <div className="pt-5 flex flex-col items-center bg-white border border-gray-200 rounded-lg shadow md:flex-col lg:flex-col xl:flex-col w-full md:max-w-2xl hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700">
         <img className="object-cover w-full rounded-t-lg h-64 md:h-auto md:w-48 md:rounded-none md:rounded-s-lg lg:w-200" src={imagen} alt="" />
-      </Link>
         <div className='flex items-center justify-center space-x-2 pt-6'>
-          <button onClick={openEditOverlay}><FontAwesomeIcon className='text-2xl bg-gray-950 p-2 pl-6 pr-6 rounded-2xl' icon={faPen} /></button>
-          <button onClick={abrirOverlayEliminar}><FontAwesomeIcon className='text-2xl bg-red-800 p-2 pr-6  pl-6 rounded-2xl' icon={faTrash} /> </button>
+          <button onClick={(e)=>openEditOverlay(e)}><FontAwesomeIcon className='text-2xl bg-gray-950 p-2 pl-6 pr-6 rounded-2xl' icon={faPen} /></button>
+          <button onClick={(e)=>abrirOverlayEliminar(e)}><FontAwesomeIcon className='text-2xl bg-red-800 p-2 pr-6  pl-6 rounded-2xl' icon={faTrash} /> </button>
         </div>
       <div className="flex flex-col justify-between p-4 leading-normal md:text-lg">
         <h5 className="mb-2 text-xl md:text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{nombre}</h5>
@@ -76,6 +81,8 @@ function TarjetaPuntos({ index ,nombre, coordenadas, imagen}) {
         </div>
       </div>
     </div>
+      </Link>
+    </>
   )
 }
 

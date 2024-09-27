@@ -9,7 +9,7 @@ export const GridAlbum = () => {
   const [page, setPage] = useState(1)
   const [quantity, setquantity] = useState(50)
   const [albumsInformation, setAlbumsInformation] = useState([])
-  const image = 'https://www.billboard.com/wp-content/uploads/media/tyler-the-creator-igor-album-art-2019-billboard-embed.jpg?w=600'
+  const image = 'https://insideclimatenews.org/wp-content/uploads/2024/02/US-Forest-Service_Prescribed-Burn_Oregon-2048x1366.jpg'
 
   useEffect(() => {
     // Hacer la petición GET

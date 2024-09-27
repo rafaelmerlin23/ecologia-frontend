@@ -30,7 +30,9 @@ function TarjetaDeproyecto({ LinkImagen, nombre, fecha, description, indice }) {
     setClaseContenedor("transition ease-in-out delay-10 hover:-translate-y-1 hover:scale-105  duration-10 hover:saturate-150")
   }
 
-  const abrirOverlayEliminar = () => {
+  const abrirOverlayEliminar = (e) => {
+    e.preventDefault()
+    e.stopPropagation()
     setEsActiva(true)
     setClaseContenedor("")
   }
@@ -40,7 +42,9 @@ function TarjetaDeproyecto({ LinkImagen, nombre, fecha, description, indice }) {
     setClaseContenedor("transition ease-in-out delay-10 hover:-translate-y-1 hover:scale-105  duration-10 hover:saturate-150")
   }
 
-  const abrirOverlayEditar = () => {
+  const abrirOverlayEditar = (e) => {
+    e.preventDefault()
+    e.stopPropagation()
     setProjectInformation({ index: indice, name: nombre, description: description, date: fecha })
     setEsActivaEditar(true)
     setClaseContenedor("")
@@ -67,13 +71,12 @@ function TarjetaDeproyecto({ LinkImagen, nombre, fecha, description, indice }) {
         cerrarOverlay={cerrarOverlayEliminar}
         esActiva={esActicva}
         proyecto={{ informacionPrimaria: nombre, informacionSecundaria: fecha }} />
-      <div className="pt-5 flex flex-col items-center bg-white border border-gray-200 rounded-lg shadow md:flex-col lg:flex-col xl:flex-col w-full md:max-w-2xl hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700">
         <Link onClick={handleProjectInformation} to={`/proyectos/${nombre}/puntos`}>
+      <div className="pt-5 flex flex-col items-center bg-white border border-gray-200 rounded-lg shadow md:flex-col lg:flex-col xl:flex-col w-full md:max-w-2xl hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700">
           <img className="object-cover w-full rounded-t-lg h-64 md:h-auto md:w-48 md:rounded-none md:rounded-s-lg lg:w-100" src={LinkImagen} alt="" />
-        </Link>
         <div className='flex items-center justify-center space-x-2 pt-6'>
-          <button onClick={abrirOverlayEditar}><FontAwesomeIcon className='text-2xl bg-gray-950 p-2 pl-6 pr-6 rounded-2xl' icon={faPen} /></button>
-          <button onClick={abrirOverlayEliminar}><FontAwesomeIcon className='text-2xl bg-red-800 p-2 pr-6  pl-6 rounded-2xl' icon={faTrash} /> </button>
+          <button onClick={(e)=>abrirOverlayEditar(e)}><FontAwesomeIcon className='text-2xl bg-gray-950 p-2 pl-6 pr-6 rounded-2xl' icon={faPen} /></button>
+          <button onClick={(e)=>abrirOverlayEliminar(e)}><FontAwesomeIcon className='text-2xl bg-red-800 p-2 pr-6  pl-6 rounded-2xl' icon={faTrash} /> </button>
         </div>
         <div className="flex flex-col justify-between p-4 leading-normal md:text-lg">
           <h5 className="mb-2 text-xl md:text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{nombre}</h5>
@@ -83,6 +86,7 @@ function TarjetaDeproyecto({ LinkImagen, nombre, fecha, description, indice }) {
           </div>
         </div>
       </div>
+        </Link>
 
     </>
   )

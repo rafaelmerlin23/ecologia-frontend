@@ -3,48 +3,64 @@ import TarjetaDeproyecto from '../components/TarjetaDeproyecto'
 import Grid from './Grid'
 import { useEffect, useState } from 'react'
 import { useAuth } from '../AuthProvider'
-import prefixUrl from '../helpers/ip'
+import handleGet from '../helpers/handleGet'
+import placeHolderImage from '../assets/place_holder_project.png'
+
 function GridProyecto() {
 
   const { userData, shouldRefresh } = useAuth()
   const token = userData.token
   const [imagesInformation, setImagesInformation] = useState([])
-  const imagen = "https://s3.abcstatics.com/abc/www/multimedia/espana/2024/08/27/incendio_20240827162958-R3i0wNdkbC83YsBPKdtBArN-1200x840@diario_abc.jpg"
   const page = 1
   const quantity = 50
+useEffect(() => {
+  const fetchData = async () => {
+    try {
 
-  useEffect(() => {
-    // Hacer la petición GET
-    fetch(`${prefixUrl}pictures/show_projects?page=${page}&quantity=${quantity}`, {
-      method: 'GET',
-      headers: {
-        'Authorization': token // Envía el token en el encabezado Authorization
-      }
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        console.log('Respuesta del servidor:', data);
-        if (data && data.status == 'success') {
-          const newImagesInformation = data.response.map((image) => ({
+      const endPoint = `pictures/show_projects?page=${page}&quantity=${quantity}`;
+      
+      // Hacer la petición GET principal
+      const response = await handleGet(endPoint, token);
+
+      if (response && response.length > 0) {
+        const newImagesInformation = [];
+
+        // Procesar cada imagen de manera asíncrona
+        for (const image of response) {
+          let imageProject =await fetchImageProject(image[0])
+          let urlImage = placeHolderImage;
+          if(imageProject.length > 0){
+            urlImage = imageProject[0][0]
+          }
+          newImagesInformation.push({
             indice: image[0],
-            imagen: imagen,
-            fecha: image[3].slice(4, 17),
+            imagen: urlImage,
+            fecha: image[3].slice(4, 17), // Verifica si la fecha está en el formato adecuado
             nombre: image[1],
             description: image[2]
-          }));
-          setImagesInformation(newImagesInformation);
-          console.log(newImagesInformation);
-          console.log(data)
-
+          });
         }
 
-      })
-      .catch((error) => {
-        console.error('Error:', error);
-      });
+        // Actualiza el estado con la nueva información
+        setImagesInformation(newImagesInformation);
+      }
 
-  }, [shouldRefresh])
+    } catch (error) {
+      console.error('Error en la obtención de datos:', error);
+    }
+  };
 
+  const fetchImageProject = async (projectId)=>{
+    const imageEndPoint = `pictures/show_picture_from_project?project_id=${projectId}&page=1&quantity=1`;
+      return await handleGet(imageEndPoint, token);
+      
+    
+  } 
+
+  // Llamar a la función fetchData dentro del useEffect
+  fetchData()
+}, [shouldRefresh, page, quantity, token]);
+ // Dependencia de shouldRefresh
   return (
 
     <>
