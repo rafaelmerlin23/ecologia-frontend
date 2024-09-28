@@ -1,8 +1,10 @@
 import { useState, useEffect } from "react"
 import { useAuth } from "../../AuthProvider"
 import Grid from "../Grid"
-import prefixUrl from "../../helpers/ip"
 import TarjetaAlbum from "./TarjetaAlbum"
+import placeHolderAlbum from '../../assets/place_holder_album.jpg'
+import handleGet from "../../helpers/handleGet"
+
 export const GridAlbum = () => {
   const { locationInformation, userData, shouldRefresh } = useAuth()
   const token = userData.token
@@ -12,31 +14,77 @@ export const GridAlbum = () => {
   const image = 'https://insideclimatenews.org/wp-content/uploads/2024/02/US-Forest-Service_Prescribed-Burn_Oregon-2048x1366.jpg'
 
   useEffect(() => {
-    // Hacer la petición GET
-    fetch(`${prefixUrl}pictures/show_albums?page=${page}&quantity=${quantity}&location_id=${locationInformation.index}`, {
-      method: 'GET',
-      headers: {
-        'Authorization': token // Envía el token en el encabezado Authorization
-      }
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        console.log('Respuesta del servidor:', data);
-        if (data && data.status == 'success') {
-          const newAlbumInformation = data.response.map(
-            (albumInformation) => ({
-              index: albumInformation[0],
-              name: albumInformation[2],
-              date: albumInformation[3].slice(4, 17),
-              image: image,
-            }));
+
+    const fetchData = async () => {
+      try {
+
+        const endPoint = `pictures/show_albums?page=${page}&quantity=${quantity}&location_id=${locationInformation.index}`;
+        // Hacer la petición GET principal
+        const response = await handleGet(endPoint, token);
+        console.log(response)
+
+        if (response && response.length > 0) {
+          const newAlbumInformation = [];
+          // Procesar cada imagen de manera asíncrona
+          for (const album of response) {
+            let imageAlbum = await fetchImageProject(album[0])
+            let urlImage = placeHolderAlbum;
+            if (imageAlbum.length > 0) {
+              urlImage = imageAlbum[0][0]
+            }
+            newAlbumInformation.push({
+              index: album[0],
+              name: album[2],
+              date: album[3].slice(4, 17),
+              image: urlImage,
+            })
+
+
+          }
           setAlbumsInformation(newAlbumInformation)
+
+          // Actualiza el estado con la nueva información
         }
 
-      })
-      .catch((error) => {
-        console.error('Error:', error);
-      });
+      } catch (error) {
+        console.error('Error en la obtención de datos:', error);
+      }
+    };
+
+    const fetchImageProject = async (albumId) => {
+      const imageEndPoint = `pictures/show_picture_from_album?album_id=${albumId}&page=1&quantity=1`;
+      return await handleGet(imageEndPoint, token);
+
+
+    }
+
+    // Llamar a la función fetchData dentro del useEffect
+    fetchData()
+    // // Hacer la petición GET
+    // fetch(`${prefixUrl}pictures/show_albums?page=${page}&quantity=${quantity}&location_id=${locationInformation.index}`, {
+    //   method: 'GET',
+    //   headers: {
+    //     'Authorization': token // Envía el token en el encabezado Authorization
+    //   }
+    // })
+    //   .then((res) => res.json())
+    //   .then((data) => {
+    //     console.log('Respuesta del servidor:', data);
+    //     if (data && data.status == 'success') {
+    //       const newAlbumInformation = data.response.map(
+    //         (albumInformation) => ({
+    //           index: albumInformation[0],
+    //           name: albumInformation[2],
+    //           date: albumInformation[3].slice(4, 17),
+    //           image: image,
+    //         }));
+    //       setAlbumsInformation(newAlbumInformation)
+    //     }
+
+    //   })
+    //   .catch((error) => {
+    //     console.error('Error:', error);
+    //   });
 
   }, [shouldRefresh])
 

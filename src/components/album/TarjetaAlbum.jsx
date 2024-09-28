@@ -7,13 +7,16 @@ import { Link } from "react-router-dom"
 import { EditarAlbum } from "./EditarAlbum"
 import { handleDelete } from "../../helpers/handleDelete"
 import ImagenTarjeta from "../imagenes/ImagenTarjeta"
+import TarjetaEnvoltorio from "../TarjetaEnvoltorio"
+import BotonesTarjeta from "../BotonesTarjeta"
 
 export const TarjetaAlbum = ({ album }) => {
-  const { setAlbumInformation,userData,refreshProjects } = useAuth()
+  const { setAlbumInformation, userData, refreshProjects, setImages } = useAuth()
 
   const token = userData.token
 
   const handleAlbumInformation = () => {
+    setImages([])
     setAlbumInformation(album)
   }
 
@@ -51,12 +54,12 @@ export const TarjetaAlbum = ({ album }) => {
     setClaseContenedor("")
   }
 
-  const handleDeleteAlbum = () =>{
+  const handleDeleteAlbum = () => {
     const formData = new FormData();
     formData.append('album_id', album.index);
     const endPoint = 'pictures/delete_album'
-    
-    handleDelete(endPoint,formData,token,()=>{
+
+    handleDelete(endPoint, formData, token, () => {
       refreshProjects()
     })
   }
@@ -66,24 +69,20 @@ export const TarjetaAlbum = ({ album }) => {
     <>
       <EditarAlbum closeEdit={cerrarOverlayEditar} isActive={isEditActive} ></EditarAlbum>
       <Eliminar peticion={handleDeleteAlbum} iconoInformacionSecundaria={faCalendar} objetoEliminar={"Album"} cerrarOverlay={cerrarOverlayEliminar} esActiva={isDeleteActive} proyecto={{ informacionPrimaria: album.name, informacionSecundaria: album.date }} />
-        <Link onClick={handleAlbumInformation} to={`${album.name}/navbar-imagenes/imagenes`}  >
-      <div className="pt-5 flex flex-col items-center bg-white border border-gray-200 rounded-lg shadow md:flex-col lg:flex-col xl:flex-col w-full md:max-w-2xl hover:bg-gray-100 dark:border-gray-700 dark:bg-gray-800 dark:hover:bg-gray-700">
-        <ImagenTarjeta link={album.image}/>
-        <div className='flex items-center justify-center space-x-2 pt-6'>
-          <button onClick={(e)=>abrirOverlayEditar(e)}><FontAwesomeIcon className='text-2xl bg-gray-950 p-2 pl-6 pr-6 rounded-2xl' icon={faPen} /></button>
-          <button onClick={(e)=>abrirOverlayEliminar(e)}><FontAwesomeIcon className='text-2xl bg-red-800 p-2 pr-6  pl-6 rounded-2xl' icon={faTrash} /> </button>
-        </div>
-        <div className="flex flex-col justify-between p-4 leading-normal md:text-lg">
-          <h5 className="mb-2 text-xl md:text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{album.name}</h5>
-          <div className='flex items-center space-x-2 mt-2 mb-4'>
-            <FontAwesomeIcon className='h-5 w-5 mr-2' icon={faCalendar} />
-            <p className="font-normal text-gray-700 dark:text-gray-400 text-center">{album.date}</p>
+      <Link onClick={handleAlbumInformation} to={`${album.name}/navbar-imagenes/imagenes`}  >
+        <TarjetaEnvoltorio imagen={album.image}>
+          <BotonesTarjeta openDelete={abrirOverlayEliminar} openEdit={abrirOverlayEditar} />
+          <div className="text-center flex flex-col justify-between p-4 leading-normal md:text-lg">
+            <h5 className="mb-2 text-xl md:text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{album.name}</h5>
+            <div className='justify-center flex items-center space-x-2 mt-2 mb-4'>
+              <FontAwesomeIcon className='h-5 w-5 mr-2' icon={faCalendar} />
+              <p className="font-normal text-gray-700 dark:text-gray-400 text-center">{album.date}</p>
+            </div>
           </div>
-        </div>
-      </div>
-        </Link>
-
+        </TarjetaEnvoltorio>
+      </Link>
     </>
+
   )
 }
 

@@ -1,14 +1,14 @@
 import React from 'react'
 
-function Grid({children}) {
+function Grid({ children }) {
 
- 
-  const classText = `sm:grid md:grid lg:grid xl:grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-6 gap-10  bg-transparent p-6`
+
+  const classText = `sm:grid md:grid lg:grid xl:grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-5 gap-10 p-6`
   return (
-      <div className={classText}>
-         {children}
+    <div className={classText}>
+      {children}
 
-      </div>
+    </div>
   )
 }
 

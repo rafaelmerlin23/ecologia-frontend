@@ -4,6 +4,8 @@ import { faPlus, faX, faArrowDown } from "@fortawesome/free-solid-svg-icons"
 import AgregarEtiqueta from './AgregarEtiqueta'
 import { useAuth } from '../../AuthProvider'
 import prefixUrl from '../../helpers/ip'
+import Overlay from '../Overlay'
+import { handleDelete } from '../../helpers/handleDelete'
 
 function Etiqueta({ category }) {
 
@@ -11,6 +13,16 @@ function Etiqueta({ category }) {
     const { shouldRefresh, userData, setIsModalCategoryDeleteActive, isModalCategoryDeleteActive } = useAuth()
     const [isActiveTagOverlay, setIsActiveTagOverlay] = useState(false)
     const [tags, setTags] = useState([])
+    const [isDeleteTagOverlayActive, setIsDeleteTagOverlayActive] = useState(false)
+    const [tagToDelete, setTagToDelete] = useState(null)
+    const handleOpenDeleteOverlay = (tagId) => {
+        setIsDeleteTagOverlayActive(true)
+        setTagToDelete(tagId)
+    }
+    const handleCloseDeleteOverlay = () => {
+        setIsDeleteTagOverlayActive(false)
+        setTagToDelete(null)
+    }
 
     const handleOpenTagOverlay = () => {
         setIsModalCategoryDeleteActive(false)
@@ -57,6 +69,8 @@ function Etiqueta({ category }) {
     return (
         <div className=' flex justify-center  items-center border-x border-b border-gray-600  mt-0 mb-5 p-2'>
             <AgregarEtiqueta setTags={setTags} categoryId={category.id} isActive={isActiveTagOverlay} handleClose={handleCloseTagOverlay} />
+            <DeleteTagModal handleClose={handleCloseDeleteOverlay} isActive={isDeleteTagOverlayActive} tagId={tagToDelete} />
+
             {category.id != 0 ? <div className='flex justify-center items-center flex-col '>
                 {tags.length !== 0 ? <div className='px-0 grid  lg:grid-cols-2 xl:grid-cols-3 gap-3 py-4'>
                     {tags.map((tag, index) => (
@@ -64,7 +78,9 @@ function Etiqueta({ category }) {
                             <span className='flex-grow text-center text-white'>
                                 {!(tag.name.length <= 20) ? tag.name.slice(0, 18) + ".." : tag.name}
                             </span>
-                            <button className='text-gray-200'>
+                            <button
+                                onClick={() => handleOpenDeleteOverlay(tag.idTag)}
+                                className='text-gray-200'>
                                 <FontAwesomeIcon className='pl-2 text-sm' icon={faX} />
                             </button>
                         </div>
@@ -85,6 +101,43 @@ function Etiqueta({ category }) {
             </div> : <p className='text-red-600'>presiona <span className='text-green-400'>[guardar]</span> para poder agregar etiquetas</p>}
         </div>
     )
+}
+
+const DeleteTagModal = ({ isActive, handleClose, tagId }) => {
+    if (!isActive) return null
+    const { refreshProjects, userData } = useAuth()
+    const token = userData.token
+
+    const handleDeleteTag = () => {
+        const formData = new FormData();
+        formData.append('tag_id', tagId);
+        const endPoint = 'pictures/delete_tag'
+        handleDelete(endPoint, formData, token, () => {
+            refreshProjects()
+        })
+        handleClose()
+    }
+
+    return (
+        <Overlay animacion={handleClose}>
+            <label className="block mb-2 text-1xl font-medium text-gray-900 dark:text-white">Eliminar etiqueta.</label>
+            <div className='flex justify-center items-center flex-row gap-2'>
+                <button
+                    onClick={handleDeleteTag}
+                    className="text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-1 text-center"
+                >
+                    Eliminar
+                </button>
+                <button
+                    onClick={handleClose}
+                    className="text-white bg-gray-800 hover:bg-gray-900 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-1    text-center "
+                >
+                    Cancelar
+                </button>
+            </div>
+        </Overlay>
+    )
+
 }
 
 export default Etiqueta

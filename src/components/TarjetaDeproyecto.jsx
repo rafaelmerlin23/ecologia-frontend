@@ -6,7 +6,8 @@ import EditarProyecto from './EditarProyecto'
 import { Link } from 'react-router-dom'
 import { useAuth } from '../AuthProvider'
 import { handleDelete } from '../helpers/handleDelete'
-import ImagenTarjeta from './imagenes/ImagenTarjeta'
+import TarjetaEnvoltorio from './TarjetaEnvoltorio'
+import BotonesTarjeta from './BotonesTarjeta'
 
 function TarjetaDeproyecto({ LinkImagen, nombre, fecha, description, indice }) {
 
@@ -51,19 +52,18 @@ function TarjetaDeproyecto({ LinkImagen, nombre, fecha, description, indice }) {
     setClaseContenedor("")
   }
 
-  const handleDeleteProject = () =>{
+  const handleDeleteProject = () => {
     const formData = new FormData();
     formData.append('project_id', indice);
     const endPoint = 'pictures/delete_project'
-    
-    handleDelete(endPoint,formData,token,()=>{
+
+    handleDelete(endPoint, formData, token, () => {
       refreshProjects()
     })
   }
 
   return (
     <>
-
       <EditarProyecto isActive={esActivaEditar} cerrarEditar={cerrarOverlayEditar} />
       <Eliminar
         peticion={handleDeleteProject}
@@ -71,25 +71,20 @@ function TarjetaDeproyecto({ LinkImagen, nombre, fecha, description, indice }) {
         objetoEliminar={"Proyecto"}
         cerrarOverlay={cerrarOverlayEliminar}
         esActiva={esActicva}
-        proyecto={{ informacionPrimaria: nombre, informacionSecundaria: fecha }} />
-        <Link onClick={handleProjectInformation} to={`/proyectos/${nombre}/puntos`}>
-        <div className="min-h-[5rem] aspect-[12/10] bg-blue-200 bg-opacity-100 my-20 ">
-        <ImagenTarjeta link={LinkImagen} />
-      <div className='flex items-center justify-center space-x-2 pt-6 '>
-        <button onClick={(e)=>abrirOverlayEditar(e)}><FontAwesomeIcon className='text-2xl bg-gray-950 p-2 pl-6 pr-6 rounded-2xl' icon={faPen} /></button>
-        <button onClick={(e)=>abrirOverlayEliminar(e)}><FontAwesomeIcon className='text-2xl bg-red-800 p-2 pr-6  pl-6 rounded-2xl' icon={faTrash} /> </button>
-      </div>
-      <div className="flex flex-col justify-between p-4 leading-normal md:text-lg overflow-hidden">
-        <h5 className="mb-2 text-xl md:text-2xl font-bold tracking-tight text-gray-900 dark:text-white truncate">{nombre}</h5>
-        <div className='flex items-center space-x-2 mt-2 mb-4'>
-          <FontAwesomeIcon className='h-5 w-5 mr-2' icon={faCalendar} />
-          <p className="font-normal text-gray-700 dark:text-gray-400 text-center truncate">{fecha}</p>
-        </div>
-      </div>
-    </div>
-
-        </Link>
-
+        proyecto={{ informacionPrimaria: nombre, informacionSecundaria: fecha }}
+      />
+      <Link onClick={handleProjectInformation} to={`/proyectos/${nombre}/puntos`}>
+        <TarjetaEnvoltorio imagen={LinkImagen}>
+          <BotonesTarjeta openDelete={abrirOverlayEliminar} openEdit={abrirOverlayEditar} />
+          <div className="flex flex-col justify-between p-4 leading-normal md:text-lg overflow-hidden">
+            <h5 className="text-center mb-2 text-xl md:text-2xl font-bold tracking-tight text-gray-900 dark:text-white truncate">{nombre}</h5>
+            <div className='justify-center flex items-center space-x-2 mt-2 mb-4'>
+              <FontAwesomeIcon className='h-5 w-5 mr-2' icon={faCalendar} />
+              <p className="font-normal text-gray-700 dark:text-gray-400 text-center truncate">{fecha}</p>
+            </div>
+          </div>
+        </TarjetaEnvoltorio>
+      </Link>
     </>
   )
 }

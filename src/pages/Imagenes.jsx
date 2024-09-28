@@ -5,11 +5,13 @@ import SubirImagenes from "../components/imagenes/SubirImagenes";
 import { useAuth } from "../AuthProvider";
 import prefixUrl from "../helpers/ip";
 import GridImagenes from "../components/imagenes/GridImagenes";
+import loading from '../assets/loading.gif'
 
 function Imagenes() {
   const [isActiveUploadImages, setIsActiveUploadImages] = useState(false);
-  const { setPageImage,pageImage,images, setImages, shouldRefresh, userData, albumInformation } = useAuth()
+  const { setPageImage, pageImage, images, setImages, shouldRefresh, userData, albumInformation } = useAuth()
   const [isNextPage, setIsNextPage] = useState(false)
+  const [isLoadingImage, setIsLoadingImage] = useState(false)
   const token = userData.token
 
   const quantity = 20
@@ -17,13 +19,13 @@ function Imagenes() {
 
   const handleNext = () => {
     if (isNextPage) {
-      setPageImage((pageImage) => pageImage+1)
+      setPageImage((pageImage) => pageImage + 1)
     }
   }
 
   const handlePrevious = () => {
     if (pageImage !== 1) {
-      setPageImage((pageImage) => pageImage-1)
+      setPageImage((pageImage) => pageImage - 1)
     }
   }
 
@@ -35,6 +37,7 @@ function Imagenes() {
   };
 
   useEffect(() => {
+    setIsLoadingImage(false)
     // let getImages = []
     // for (let i = 0; i < 20; i++) {
     //   getImages.push({ id: i, date: '21/12/2024', link: imagenStock })
@@ -46,7 +49,7 @@ function Imagenes() {
       y otra con la siguiente para comprobar si existen datos y poder dibujar el boton de siguiente
       de lo contrario no se dibujará    
     */
-    
+
 
 
     fetch(`${prefixUrl}pictures/show_picture_from_album?page=${pageImage}&quantity=${quantity}&album_id=${albumInformation.index}`, {
@@ -58,14 +61,15 @@ function Imagenes() {
       .then((res) => res.json())
       .then((data) => {
         if (data && data.status == 'success') {
-          const newImages = data.response.map((response)=>(
+          const newImages = data.response.map((response) => (
             {
-              link:response[0],
-              id:response[1],
-              date:response[2],
+              link: response[0],
+              id: response[1],
+              date: response[2],
             }
           ))
           setImages(newImages)
+          setIsLoadingImage(true)
         }
 
       })
@@ -73,37 +77,37 @@ function Imagenes() {
         console.error('Error:', error);
       });
 
-      fetch(`${prefixUrl}pictures/show_picture_from_album?page=${pageImage+1}&quantity=${quantity}&album_id=${albumInformation.index}`, {
-        method: 'GET',
-        headers: {
-          'Authorization': token // Envía el token en el encabezado Authorization
-        }
-      })
-        .then((res) => res.json())
-        .then((data) => {
-          console.log('Respuesta del servidor:', data);
-          if (data && data.status == 'success') {
-            if(data.response.length === 0){
-              setIsNextPage(false)
-            }else{
-              setIsNextPage(true)
-            }
+    fetch(`${prefixUrl}pictures/show_picture_from_album?page=${pageImage + 1}&quantity=${quantity}&album_id=${albumInformation.index}`, {
+      method: 'GET',
+      headers: {
+        'Authorization': token // Envía el token en el encabezado Authorization
+      }
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        console.log('Respuesta del servidor:', data);
+        if (data && data.status == 'success') {
+          if (data.response.length === 0) {
+            setIsNextPage(false)
+          } else {
+            setIsNextPage(true)
           }
-  
-        })
-        .catch((error) => {
-          console.error('Error:', error);
-        });
-      document.body.className = ' bg-gradient-to-r from-gray-900 to-blue-gray-950 ';
-      return () => {
-        document.body.className = 'bg-black';
-      };
-    
-  }, [pageImage,shouldRefresh]);
+        }
 
-  useEffect(()=>{
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+      });
+    document.body.className = ' bg-gradient-to-r from-gray-900 to-blue-gray-950 ';
+    return () => {
+      document.body.className = 'bg-black';
+    };
+
+  }, [pageImage, shouldRefresh]);
+
+  useEffect(() => {
     setPageImage(1)
-  },[])
+  }, [])
 
   return (
     <>
@@ -111,8 +115,11 @@ function Imagenes() {
         closeOverlay={closeImageOverlay}
         isActive={isActiveUploadImages}
       />
-      {
-        images.length > 0 ?
+      {!isLoadingImage ?
+        <div className="mt-48 flex justify-center items-center ">
+          <p className="text-3xl">Cargando...</p>
+        </div>
+        : (images.length > 0 ?
           <div className=" flex flex-col items-center justify-center mt-20">
 
             <button
@@ -153,7 +160,7 @@ function Imagenes() {
             </button>
 
           </div>
-      }
+        )}
 
     </>
   );
