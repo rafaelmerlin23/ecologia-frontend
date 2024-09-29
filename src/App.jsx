@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes, Navigate, useLocation } from 'react-router-dom';
 import Login from './pages/auth/Login';
 import Proyectos from './pages/Proyectos';
 import Puntos from './pages/Puntos';
@@ -8,11 +8,11 @@ import Imagenes from './pages/Imagenes';
 import CreateAccount from './pages/auth/CreateAccount';
 import NavBarImagenes from './components/imagenes/NavBarImagenes';
 import CategoriaEtiqueta from './pages/CategoriaEtiqueta';
-import Etiquetador from './components/imagenes/Etiquetador';
 
 function PrivateRoute({ element, ...rest }) {
   const { isAuthenticated } = useAuth();
-  return isAuthenticated ? element : <Navigate to="/login" />;
+  const location = useLocation()
+  return isAuthenticated ? element : <Navigate to={location} />;
 }
 
 function App() {

@@ -1,4 +1,4 @@
-import React, { createContext, useState, useContext } from 'react'
+import React, { createContext, useState, useContext, useEffect, useMemo } from 'react'
 
 const AuthContext = createContext()
 
@@ -25,16 +25,16 @@ export const AuthProvider = ({ children }) => {
 
 
     const [fields, setFields] = useState([])
-    
+
     const [isModalCategoryDeleteActive, setIsModalCategoryDeleteActive] = useState(true)
-    
+
     const [image, setImage] = useState(null);
-    
-    const [userName,setUserName] = useState(null) 
-    
+
+    const [userName, setUserName] = useState(null)
+
     const [pageImage, setPageImage] = useState(1)
 
-    const [cardImagePage,setCardImagePage] = useState(1)
+    const [cardImagePage, setCardImagePage] = useState(1)
 
 
     const refreshProjects = () => {
@@ -44,13 +44,27 @@ export const AuthProvider = ({ children }) => {
     const login = (data) => {
         setIsAuthenticated(true)
         setUserData(data)
+        localStorage.setItem('isAuthenticated', 'true')
+        localStorage.setItem('userData', JSON.stringify(data))
     }
     const logout = () => {
         setIsAuthenticated(false)
         setUserData(null)
+        localStorage.removeItem('isAuthenticated');
+        localStorage.removeItem('userData');
     }
 
+    useEffect(() => {
+        const storedIsAuthenticated = localStorage.getItem('isAuthenticated')
+        const storedUserData = localStorage.getItem('userData')
+        if (storedIsAuthenticated === 'true' && storedUserData) {
+            setIsAuthenticated(true)
+            setUserData(JSON.parse(storedUserData))
+        }
 
+    }, [])
+
+    const memoizedUserData = useMemo(() => userData, [userData])
 
 
 
@@ -82,12 +96,12 @@ export const AuthProvider = ({ children }) => {
             , setIsModalCategoryDeleteActive
             , image
             , setImage
-            ,setUserName
-            ,userName
-            ,pageImage
-            ,setPageImage
-            ,cardImagePage
-            ,setCardImagePage
+            , setUserName
+            , userName
+            , pageImage
+            , setPageImage
+            , cardImagePage
+            , setCardImagePage
 
         }}>
             {children}
