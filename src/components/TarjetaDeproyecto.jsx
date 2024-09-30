@@ -73,18 +73,23 @@ function TarjetaDeproyecto({ LinkImagen, nombre, fecha, description, indice }) {
         esActiva={esActicva}
         proyecto={{ informacionPrimaria: nombre, informacionSecundaria: fecha }}
       />
-      <Link onClick={handleProjectInformation} to={`/proyectos/${nombre}/puntos`}>
-        <TarjetaEnvoltorio imagen={LinkImagen}>
-          <BotonesTarjeta openDelete={abrirOverlayEliminar} openEdit={abrirOverlayEditar} />
-          <div className="flex flex-col justify-between p-4 leading-normal md:text-lg overflow-hidden">
-            <h5 className="text-center mb-2 text-xl md:text-2xl font-bold tracking-tight text-gray-900 dark:text-white truncate">{nombre}</h5>
-            <div className='justify-center flex items-center space-x-2 mt-2 mb-4'>
-              <FontAwesomeIcon className='h-5 w-5 mr-2' icon={faCalendar} />
-              <p className="font-normal text-gray-700 dark:text-gray-400 text-center truncate">{fecha}</p>
-            </div>
+      <Link onClick={handleProjectInformation} to={`/proyectos/${indice}/puntos`}>
+      <TarjetaEnvoltorio imagen={LinkImagen}>
+        <BotonesTarjeta openDelete={abrirOverlayEliminar} openEdit={abrirOverlayEditar} />
+        <div className="flex flex-col justify-between p-4 leading-normal md:text-lg overflow-hidden">
+          <h5 className="text-center mb-2 text-xl md:text-2xl font-bold tracking-tight text-gray-900 dark:text-white truncate">
+            {nombre}
+          </h5>
+          <div className='justify-center flex items-center space-x-2 mt-2 mb-4'>
+            <FontAwesomeIcon className='h-5 w-5 mr-2' icon={faCalendar} />
+            <p className="font-normal text-gray-700 dark:text-gray-400 text-center truncate">
+              {fecha}
+            </p>
           </div>
-        </TarjetaEnvoltorio>
-      </Link>
+        </div>
+      </TarjetaEnvoltorio>
+    </Link>
+
     </>
   )
 }

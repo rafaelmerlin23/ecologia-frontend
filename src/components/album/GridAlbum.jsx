@@ -4,24 +4,26 @@ import Grid from "../Grid"
 import TarjetaAlbum from "./TarjetaAlbum"
 import placeHolderAlbum from '../../assets/place_holder_album.jpg'
 import handleGet from "../../helpers/handleGet"
+import { useParams } from "react-router-dom"
 
 export const GridAlbum = () => {
-  const { locationInformation, userData, shouldRefresh } = useAuth()
+  const { setLocationInformation, userData, shouldRefresh } = useAuth()
   const token = userData.token
   const [page, setPage] = useState(1)
   const [quantity, setquantity] = useState(50)
   const [albumsInformation, setAlbumsInformation] = useState([])
   const image = 'https://insideclimatenews.org/wp-content/uploads/2024/02/US-Forest-Service_Prescribed-Burn_Oregon-2048x1366.jpg'
-
+  const {puntoID} = useParams();  // Accede al proyectoId desde la URL
+  
   useEffect(() => {
 
     const fetchData = async () => {
+      setLocationInformation((LocationInformation)=>({...LocationInformation,index:puntoID}))
       try {
 
-        const endPoint = `pictures/show_albums?page=${page}&quantity=${quantity}&location_id=${locationInformation.index}`;
+        const endPoint = `pictures/show_albums?page=${page}&quantity=${quantity}&location_id=${puntoID}`;
         // Hacer la petición GET principal
         const response = await handleGet(endPoint, token);
-        console.log(response)
 
         if (response && response.length > 0) {
           const newAlbumInformation = [];

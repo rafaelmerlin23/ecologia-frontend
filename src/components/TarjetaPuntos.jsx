@@ -67,7 +67,7 @@ function TarjetaPuntos({ index, nombre, coordenadas, imagen }) {
         cerrarOverlay={cerrarOverlayEliminar}
         esActiva={esActivoOverlay}
         proyecto={{ informacionPrimaria: nombre, informacionSecundaria: coordenadas }}></Eliminar>
-      <Link onClick={handleLocationInformation} to={`${nombre}/albumes`}>
+      <Link onClick={handleLocationInformation} to={`${index}/albumes`}>
         <TarjetaEnvoltorio imagen={imagen}>
           <BotonesTarjeta openDelete={abrirOverlayEliminar} openEdit={openEditOverlay} />
           <div className="flex flex-col justify-between p-4 leading-normal md:text-lg">

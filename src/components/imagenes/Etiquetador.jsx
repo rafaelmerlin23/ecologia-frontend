@@ -196,8 +196,12 @@ export const Etiquetador = ({ isActive, handleClose }) => {
 
 
     return (
-        <div className=' fixed z-40 inset-0 bg-black bg-opacity-30 backdrop-blur-sm flex justify-center items-center'>
-            <div className="bg-zinc-900 border border-gray-300 p-10  rounded-3xl flex justify-center items-center">
+        <div 
+        onClick={handleClose}
+        className=' fixed z-40 inset-0 bg-black bg-opacity-30 backdrop-blur-sm flex justify-center items-center'>
+            <div 
+             onClick={(e) => e.stopPropagation()}
+            className="bg-zinc-900 border border-gray-300 p-10  rounded-3xl flex justify-center items-center">
                 <button onClick={handleClose} className=' absolute top-2 right-2 text-white text-xl hover:opacity-70'>
                     x
                 </button>
@@ -215,7 +219,7 @@ export const Etiquetador = ({ isActive, handleClose }) => {
                     <ModalIMagen handleClose={handleCloseModal} image={image} isActive={isModalActive} />
 
                     {/* Fila para la imagen y el select */}
-                    <div className=" flex justify-center items-center gap-x-10 sm:flex-col flex-col md:flex-row lg:flex-row xl:flex-row">
+                    <div className=" flex justify-center items-center gap-x-10 sm:flex-col flex-col md:flex-col lg:flex-row xl:flex-row">
                         <div onClick={handleOpenModal} className=" w-3/5 h-60  min-h-[30rem] bg-gray-200 flex items-center justify-center hover:cursor-pointer">
                             {image.link ? (
                                 <img className=" object-cover w-full h-full" src={image.link} alt="sin" />
@@ -223,8 +227,8 @@ export const Etiquetador = ({ isActive, handleClose }) => {
                                 <p className="text-gray-500">No Image Available</p>
                             )}
                         </div>
-                        <div className="inline-block min-h-[30rem] w-0.5 bg-zinc-600"></div>
-                        <div className="flex-col  lg:self-start xl:self-start md:self-start sm:flex sm:justify-center sm-items-center sm:flex">
+                        <div className="sm:invisible visible lg:visible md:visible xl:visible inline-block xl:min-h-[30rem] w-0.5 bg-zinc-600"></div>
+                        <div className="flex-col  lg:self-start xl:self-start sm:flex sm:flex sm:justify-center sm-items-center sm:flex">
                             <select onChange={(e) => handleTags(e.target.value)} about="hola" className="text-gray-700">
                                 {categories.map((category) => (
                                     <option value={category.id} className="text-gray-700" key={category.id * 10}>

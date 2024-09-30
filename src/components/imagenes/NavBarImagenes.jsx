@@ -1,12 +1,11 @@
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft, faImage, faTag } from '@fortawesome/free-solid-svg-icons';
 import { Outlet, Link } from 'react-router-dom';
 
 export const NavBarImagenes = () => {
     const navigate = useNavigate();
-
-
+    const {puntoID,proyectoId } = useParams()
 
     return (
         <div className="">
@@ -14,7 +13,7 @@ export const NavBarImagenes = () => {
                 id="navbar-image"
                 className="fixed top-5 left-0 w-full z-30 flex justify-center items-center flex-col p-0 m-0">
                 <ul className='fixed top-5 left-5 px-2 py-1.5 rounded-full bg-blue-700 hover:bg-blue-600'>
-                    <Link className="w-full h-full flex justify-center items-center" to={-1}>
+                    <Link className="w-full h-full flex justify-center items-center" to={`/proyectos/${proyectoId}/puntos/${puntoID}/albumes/`}>
                         <FontAwesomeIcon icon={faArrowLeft} />
                     </Link>
                 </ul>

@@ -69,7 +69,7 @@ export const TarjetaAlbum = ({ album }) => {
     <>
       <EditarAlbum closeEdit={cerrarOverlayEditar} isActive={isEditActive} ></EditarAlbum>
       <Eliminar peticion={handleDeleteAlbum} iconoInformacionSecundaria={faCalendar} objetoEliminar={"Album"} cerrarOverlay={cerrarOverlayEliminar} esActiva={isDeleteActive} proyecto={{ informacionPrimaria: album.name, informacionSecundaria: album.date }} />
-      <Link onClick={handleAlbumInformation} to={`${album.name}/navbar-imagenes/imagenes`}  >
+      <Link onClick={handleAlbumInformation} to={`${album.index}/navbar-imagenes/imagenes`}  >
         <TarjetaEnvoltorio imagen={album.image}>
           <BotonesTarjeta openDelete={abrirOverlayEliminar} openEdit={abrirOverlayEditar} />
           <div className="text-center flex flex-col justify-between p-4 leading-normal md:text-lg">

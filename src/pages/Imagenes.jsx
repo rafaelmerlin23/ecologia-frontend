@@ -6,13 +6,16 @@ import { useAuth } from "../AuthProvider";
 import prefixUrl from "../helpers/ip";
 import GridImagenes from "../components/imagenes/GridImagenes";
 import loading from '../assets/loading.gif'
+import { useParams } from "react-router-dom";
 
 function Imagenes() {
   const [isActiveUploadImages, setIsActiveUploadImages] = useState(false);
-  const { setPageImage, pageImage, images, setImages, shouldRefresh, userData, albumInformation } = useAuth()
+  const { setPageImage, pageImage, images, setImages, shouldRefresh, userData, setAlbumInformation } = useAuth()
   const [isNextPage, setIsNextPage] = useState(false)
   const [isLoadingImage, setIsLoadingImage] = useState(false)
   const token = userData.token
+
+  const {albumID} = useParams()
 
   const quantity = 20
 
@@ -37,6 +40,8 @@ function Imagenes() {
   };
 
   useEffect(() => {
+    
+    setAlbumInformation((albumInformation)=>({...albumInformation,index:albumID}))
     setIsLoadingImage(false)
     // let getImages = []
     // for (let i = 0; i < 20; i++) {
@@ -52,7 +57,7 @@ function Imagenes() {
 
 
 
-    fetch(`${prefixUrl}pictures/show_picture_from_album?page=${pageImage}&quantity=${quantity}&album_id=${albumInformation.index}`, {
+    fetch(`${prefixUrl}pictures/show_picture_from_album?page=${pageImage}&quantity=${quantity}&album_id=${albumID}`, {
       method: 'GET',
       headers: {
         'Authorization': token // Envía el token en el encabezado Authorization
@@ -77,7 +82,7 @@ function Imagenes() {
         console.error('Error:', error);
       });
 
-    fetch(`${prefixUrl}pictures/show_picture_from_album?page=${pageImage + 1}&quantity=${quantity}&album_id=${albumInformation.index}`, {
+    fetch(`${prefixUrl}pictures/show_picture_from_album?page=${pageImage + 1}&quantity=${quantity}&album_id=${albumID}`, {
       method: 'GET',
       headers: {
         'Authorization': token // Envía el token en el encabezado Authorization
