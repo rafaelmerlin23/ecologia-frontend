@@ -5,8 +5,7 @@ import SubirImagenes from "../components/imagenes/SubirImagenes";
 import { useAuth } from "../AuthProvider";
 import prefixUrl from "../helpers/ip";
 import GridImagenes from "../components/imagenes/GridImagenes";
-import loading from '../assets/loading.gif'
-import { useParams } from "react-router-dom";
+import { useParams, useSearchParams } from "react-router-dom";
 
 function Imagenes() {
   const [isActiveUploadImages, setIsActiveUploadImages] = useState(false);
@@ -14,6 +13,7 @@ function Imagenes() {
   const [isNextPage, setIsNextPage] = useState(false)
   const [isLoadingImage, setIsLoadingImage] = useState(false)
   const token = userData.token
+  const [searchParams,setSearchParams] = useSearchParams()
 
   const {albumID} = useParams()
 
@@ -40,7 +40,7 @@ function Imagenes() {
   };
 
   useEffect(() => {
-    
+    setSearchParams({page:1})
     setAlbumInformation((albumInformation)=>({...albumInformation,index:albumID}))
     setIsLoadingImage(false)
     // let getImages = []
