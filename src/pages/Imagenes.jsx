@@ -6,30 +6,48 @@ import { useAuth } from "../AuthProvider";
 import prefixUrl from "../helpers/ip";
 import GridImagenes from "../components/imagenes/GridImagenes";
 import { useParams, useSearchParams } from "react-router-dom";
+import { Paginacion } from "../components/imagenes/Paginacion";
+import handleGetData from "../helpers/handleGetData";
 
 function Imagenes() {
   const [isActiveUploadImages, setIsActiveUploadImages] = useState(false);
-  const { setPageImage, pageImage, images, setImages, shouldRefresh, userData, setAlbumInformation } = useAuth()
-  const [isNextPage, setIsNextPage] = useState(false)
+  const {
+    setImage
+    , cardImagePage
+    , isTaggerActive
+    , setIsTaggerActive
+    , quantityImagePerPage
+    , setPageImage
+    , pageImage
+    , images
+    , setImages
+    , shouldRefresh
+    , userData
+    , albumInformation
+    , setAlbumInformation } = useAuth()
   const [isLoadingImage, setIsLoadingImage] = useState(false)
   const token = userData.token
-  const [searchParams,setSearchParams] = useSearchParams()
-
-  const {albumID} = useParams()
-
-  const quantity = 20
+  const [searchParams, setSearchParams] = useSearchParams()
+  const [maxPage, setMaxPage] = useState(1)
+  const { albumID } = useParams()
 
 
   const handleNext = () => {
-    if (isNextPage) {
-      setPageImage((pageImage) => pageImage + 1)
-    }
+    const newPage = Number(pageImage) + 1;
+    setSearchParams(params => {
+      params.set("page", newPage);
+      return params;
+    });
+    setPageImage(newPage); // Usa el nuevo número de página aquí
   }
 
   const handlePrevious = () => {
-    if (pageImage !== 1) {
-      setPageImage((pageImage) => pageImage - 1)
-    }
+    const newPage = Number(pageImage) - 1;
+    setSearchParams(params => {
+      params.set("page", newPage);
+      return params;
+    });
+    setPageImage(newPage); // Usa el nuevo número de página aquí
   }
 
   const openImageOverlay = () => {
@@ -39,25 +57,46 @@ function Imagenes() {
     setIsActiveUploadImages(false)
   };
 
+  const handleTagger = () => {
+    console.log(cardImagePage)
+    const endPoint = `pictures/show_picture_from_album?page=${searchParams.get('image-page')}&quantity=${1}&album_id=${albumID}`
+
+    handleGetData(endPoint, token).then((data) => {
+      if (data && data.status == 'success') {
+        const newImages = data.response.map((response) => (
+          {
+            link: response[0],
+            id: response[1],
+            date: response[2],
+          }
+        ))
+        setImage(newImages[0])
+        setIsTaggerActive(true)
+      }
+    }).catch((error) => {
+      console.error('Error:', error);
+    });
+  }
+
   useEffect(() => {
-    setSearchParams({page:1})
-    setAlbumInformation((albumInformation)=>({...albumInformation,index:albumID}))
+    if (searchParams.get('is-active-tagger')) {
+      handleTagger()
+    }
+    // Actualizar los parámetros de búsqueda si es necesario
+    const currentPage = Number(searchParams.get("page")) || 1; // Usa un valor por defecto
+    setPageImage(currentPage)
+
+    // Actualiza los parámetros de búsqueda si es necesario
+    setSearchParams(params => {
+      params.set("page", currentPage);
+      return params;
+    });
+
+    setAlbumInformation((albumInformation) => ({ ...albumInformation, index: albumID }))
     setIsLoadingImage(false)
-    // let getImages = []
-    // for (let i = 0; i < 20; i++) {
-    //   getImages.push({ id: i, date: '21/12/2024', link: imagenStock })
-    // }
-
-    // setImages(getImages)
-    /*
-      esto podria ir dentro de la peticion serian dos peticiones una con la pagina que quieres
-      y otra con la siguiente para comprobar si existen datos y poder dibujar el boton de siguiente
-      de lo contrario no se dibujará    
-    */
 
 
-
-    fetch(`${prefixUrl}pictures/show_picture_from_album?page=${pageImage}&quantity=${quantity}&album_id=${albumID}`, {
+    fetch(`${prefixUrl}pictures/show_picture_from_album?page=${searchParams.get('page')}&quantity=${quantityImagePerPage}&album_id=${albumID}`, {
       method: 'GET',
       headers: {
         'Authorization': token // Envía el token en el encabezado Authorization
@@ -66,6 +105,7 @@ function Imagenes() {
       .then((res) => res.json())
       .then((data) => {
         if (data && data.status == 'success') {
+          setMaxPage(data.total_pages)
           const newImages = data.response.map((response) => (
             {
               link: response[0],
@@ -82,37 +122,15 @@ function Imagenes() {
         console.error('Error:', error);
       });
 
-    fetch(`${prefixUrl}pictures/show_picture_from_album?page=${pageImage + 1}&quantity=${quantity}&album_id=${albumID}`, {
-      method: 'GET',
-      headers: {
-        'Authorization': token // Envía el token en el encabezado Authorization
-      }
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        console.log('Respuesta del servidor:', data);
-        if (data && data.status == 'success') {
-          if (data.response.length === 0) {
-            setIsNextPage(false)
-          } else {
-            setIsNextPage(true)
-          }
-        }
 
-      })
-      .catch((error) => {
-        console.error('Error:', error);
-      });
     document.body.className = ' bg-gradient-to-r from-gray-900 to-blue-gray-950 ';
     return () => {
       document.body.className = 'bg-black';
     };
 
-  }, [pageImage, shouldRefresh]);
+  }, [shouldRefresh, pageImage]);
 
-  useEffect(() => {
-    setPageImage(1)
-  }, [])
+
 
   return (
     <>
@@ -140,18 +158,7 @@ function Imagenes() {
               </p>
             </button>
             <GridImagenes images={images} />
-            {pageImage === 1 && !isNextPage ? "" : <footer className="mb-10 mt-6 flex bg-blue-700 px-6 flex-row rounded-full">
-              {pageImage !== 1 ? <button onClick={handlePrevious} className="p-0 m-0 pr-2">
-                <FontAwesomeIcon className="pr-2" icon={faLessThan} />
-                Ant
-              </button> : ""}
-              <p>|</p>
-              {isNextPage ?
-                <button onClick={handleNext} className="p-0 m-0 pl-2">
-                  Sig
-                  <FontAwesomeIcon className="pl-2" icon={faGreaterThan} />
-                </button> : ""}
-            </footer>}
+            <Paginacion handleNext={handleNext} handlePrevious={handlePrevious} maxPage={maxPage} />
           </div >
 
           : <div

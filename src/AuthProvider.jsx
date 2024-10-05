@@ -36,6 +36,11 @@ export const AuthProvider = ({ children }) => {
 
     const [cardImagePage, setCardImagePage] = useState(1)
 
+    const quantityImagePerPage = 4
+
+    const [isTaggerActive, setIsTaggerActive] = useState(false)
+
+
 
     const refreshProjects = () => {
         setShouldRefresh(prev => !prev);
@@ -102,6 +107,9 @@ export const AuthProvider = ({ children }) => {
             , setPageImage
             , cardImagePage
             , setCardImagePage
+            , quantityImagePerPage
+            , isTaggerActive
+            , setIsTaggerActive
 
         }}>
             {children}

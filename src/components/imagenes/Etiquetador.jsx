@@ -5,10 +5,11 @@ import ModalIMagen from "./ModalIMagen";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowDown, faGreaterThan, faLessThan } from "@fortawesome/free-solid-svg-icons"
 import { useNavigate } from "react-router-dom";
+import handleGetData from "../../helpers/handleGetData";
 import handleGet from "../../helpers/handleGet";
 
 export const Etiquetador = ({ isActive, handleClose }) => {
-    if (!isActive) return null
+
     const navigate = useNavigate()
     const { cardImagePage, setCardImagePage, setImage, image, userData, userName, albumInformation } = useAuth()
     const [raiting, setRaiting] = useState(1.0)
@@ -19,6 +20,38 @@ export const Etiquetador = ({ isActive, handleClose }) => {
     const [tagsSelected, setTagsSelected] = useState([])
     const [isNextPage, setIsNextPage] = useState(true)
     const [categorySelected, setCategorySelected] = useState(null)
+    const [maxPage, setMaxPage] = useState(1)
+
+    useEffect(() => {
+        document.body.className = ' bg-gradient-to-r from-gray-900 to-blue-gray-950';
+
+        // conseguir el numero de la ultima pagina 
+        const endPointPage = `pictures/show_picture_from_album?page=${cardImagePage}&quantity=${1}&album_id=${albumInformation.index}`
+        handleGetData(endPointPage, token).then((data) => setMaxPage(data.total_pages))
+        handleIsNextPage()
+
+        const endPointCategories = `pictures/show_categories?page=${1}}&quantity=${100}`
+
+        //obtener categorias
+        handleGetData(endPointCategories, token).then(
+            (data) => {
+                if (data && data.status == 'success') {
+                    let newFields = []
+                    data.response.forEach(category => {
+                        if (category[0] != 1) {
+                            newFields.push({ field: category[1], id: category[0] })
+                        }
+                    });
+                    setCategories(newFields)
+                    handleTags(newFields[0].id)
+                }
+            }
+        ).catch((error) => console.error(error))
+
+
+
+    }, [cardImagePage]);
+
 
     const handleClick = () => {
         // Aquí puedes realizar alguna lógica antes de redirigir
@@ -26,62 +59,32 @@ export const Etiquetador = ({ isActive, handleClose }) => {
     };
 
     const handleNext = () => {
-        fetch(`${prefixUrl}pictures/show_picture_from_album?page=${cardImagePage + 1}&quantity=${1}&album_id=${albumInformation.index}`, {
-            method: 'GET',
-            headers: {
-                'Authorization': token // Envía el token en el encabezado Authorization
+        const endPoint = `pictures/show_picture_from_album?page=${cardImagePage + 1}&quantity=${1}&album_id=${albumInformation.index}`
+
+        handleGetData(endPoint, token).then((data) => {
+            if (data && data.status == 'success') {
+                const newImages = data.response.map((response) => (
+                    {
+                        link: response[0],
+                        id: response[1],
+                        date: response[2],
+                    }
+                ))
+                setImage(newImages[0])
+                setCardImagePage((CardImagePage) => CardImagePage + 1)
+                handleIsNextPage(2)
             }
-        })
-            .then((res) => res.json())
-            .then((data) => {
-                if (data && data.status == 'success') {
-                    const newImages = data.response.map((response) => (
-                        {
-                            link: response[0],
-                            id: response[1],
-                            date: response[2],
-
-                        }
-                    ))
-                    setImage(newImages[0])
-                    setCardImagePage((CardImagePage) => CardImagePage + 1)
-                    handleIsNextPage(2)
-
-                }
-
-            })
-            .catch((error) => {
-                console.error('Error:', error);
-            });
+        }).catch((error) => {
+            console.error('Error:', error);
+        });
     }
 
-    const handleIsNextPage = (step) => {
-        fetch(`${prefixUrl}pictures/show_picture_from_album?page=${cardImagePage + step}&quantity=${1}&album_id=${albumInformation.index}`, {
-            method: 'GET',
-            headers: {
-                'Authorization': token // Envía el token en el encabezado Authorization
-            }
-        })
-            .then((res) => res.json())
-            .then((data) => {
-                if (data && data.status == 'success') {
-                    const newImages = data.response.map((response) => (
-                        {
-                            link: response[0],
-                            id: response[1],
-                            date: response[2],
-                        }
-                    ))
-                    if (newImages.length === 0) {
-                        setIsNextPage(false)
-                    } else {
-                        setIsNextPage(true)
-                    }
-                }
-            })
-            .catch((error) => {
-                console.error('Error:', error);
-            });
+    const handleIsNextPage = () => {
+        if (cardImagePage < maxPage) {
+            setIsNextPage(true)
+        } else {
+            setIsNextPage(false)
+        }
     }
 
     const handlePrevious = async () => {
@@ -143,65 +146,33 @@ export const Etiquetador = ({ isActive, handleClose }) => {
 
     const handleTags = (id) => {
         setCategorySelected(id)
-        fetch(`${prefixUrl}pictures/show_tags?page=${1}&quantity=${13}&category_id=${id}`, {
-            method: 'GET',
-            headers: {
-                'Authorization': token // Envía el token en el encabezado Authorization
+        const endPoint = `pictures/show_tags?page=${1}&quantity=${13}&category_id=${id}`
+        handleGetData(endPoint, token).then((data) => {
+            if (data && data.status === 'success') {
+                const newTags = data.response.map((tag) => ({
+                    name: tag[1], // El nombre de la etiqueta está en el índice 1
+                    idTag: tag[0],
+                    isSelect: false // El tag_id está en el índice 0
+                }));
+                setTags(newTags);
             }
-        })
-            .then((res) => res.json())
-            .then((data) => {
-                if (data && data.status === 'success') {
-                    const newTags = data.response.map((tag) => ({
-                        name: tag[1], // El nombre de la etiqueta está en el índice 1
-                        idTag: tag[0],
-                        isSelect: false // El tag_id está en el índice 0
-                    }));
-                    setTags(newTags);
-                }
-            })
-            .catch((error) => {
-                console.error('Error:', error);
-            });
+        }
+        ).catch((error) => {
+            console.error('Error:', error);
+        });
     }
+    if (!isActive) return null
 
 
-    useEffect(() => {
-        handleIsNextPage(1)
-        document.body.className = ' bg-gradient-to-r from-gray-900 to-blue-gray-950';
-        fetch(`${prefixUrl}pictures/show_categories?page=${1}}&quantity=${100}`, {
-            method: 'GET',
-            headers: {
-                'Authorization': token // Envía el token en el encabezado Authorization
-            }
-        })
-            .then((res) => res.json())
-            .then((data) => {
-                if (data && data.status == 'success') {
-                    let newFields = []
-                    data.response.forEach(category => {
-                        if (category[0] != 1) {
-                            newFields.push({ field: category[1], id: category[0] })
-                        }
-                    });
-                    setCategories(newFields)
-                    handleTags(newFields[0].id)
-                }
-            })
-            .catch((error) => {
-                console.error('Error:', error);
-            });
-
-    }, []);
 
 
     return (
-        <div 
-        onClick={handleClose}
-        className=' fixed z-40 inset-0 bg-black bg-opacity-30 backdrop-blur-sm flex justify-center items-center'>
-            <div 
-             onClick={(e) => e.stopPropagation()}
-            className="bg-zinc-900 border border-gray-300 p-10  rounded-3xl flex justify-center items-center">
+        <div
+            onClick={handleClose}
+            className=' fixed z-40 inset-0 bg-black bg-opacity-30 backdrop-blur-sm flex justify-center items-center'>
+            <div
+                onClick={(e) => e.stopPropagation()}
+                className="bg-zinc-900 border border-gray-300 p-10  rounded-3xl flex justify-center items-center">
                 <button onClick={handleClose} className=' absolute top-2 right-2 text-white text-xl hover:opacity-70'>
                     x
                 </button>

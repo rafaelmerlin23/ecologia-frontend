@@ -1,27 +1,41 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
 import { useAuth } from "../../AuthProvider";
 import { handleDateTime } from "../../helpers/formatDate";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {faCalendar} from '@fortawesome/free-solid-svg-icons';
+import { faCalendar } from '@fortawesome/free-solid-svg-icons';
 import Etiquetador from "./Etiquetador";
+import { useSearchParams } from "react-router-dom";
 
-export const TarjetaImagen = ({ image,index }) => {
+export const TarjetaImagen = ({ image, index }) => {
     const [isHover, setIsHover] = useState(false);
-    const { setImage,pageImage,setCardImagePage } = useAuth()
-    const [isTaggerActive,setIsTaggerActive] = useState(false)
+    const { isTaggerActive, setIsTaggerActive, setImage, pageImage, setCardImagePage, quantityImagePerPage } = useAuth()
+    const [SearchParams, setSearchParams] = useSearchParams()
 
     const handleMouseEnter = () => {
         setIsHover(true)
     }
 
-    const handlecloseTagger = () =>setIsTaggerActive(false)
+    const handlecloseTagger = () => {
+        setSearchParams((prev) => {
+            prev.delete('is-active-tagger')
+            prev.delete('image-page')
+            return prev
+        })
+        setIsTaggerActive(false)
+    }
 
-    const handleOpenTagger = () =>setIsTaggerActive(true)
+    const handleOpenTagger = () => setIsTaggerActive(true)
 
 
     const handleInitImage = () => {
-        setCardImagePage(((index+1) + (pageImage-1)*20))
+        const pageImageNumber = (index + 1) + (pageImage - 1) * quantityImagePerPage
+        setSearchParams(prev => {
+            prev.set("page", SearchParams.get("page"))
+            prev.set("is-active-tagger", true)
+            prev.set("image-page", pageImageNumber)
+            return prev
+        })
+        setCardImagePage(pageImageNumber)
         setImage(image)
         handleOpenTagger()
     }
@@ -35,25 +49,25 @@ export const TarjetaImagen = ({ image,index }) => {
             {!isHover ?
                 <img onMouseEnter={handleMouseEnter} src={image.link} alt="burning" className="object-cover w-full h-full aspect-[16/9]" />
                 :
-                <Link onClick={handleInitImage}>
-                <div className="relative w-full h-48 min-h-[12rem] bg-gray-200 flex items-center justify-center aspect-[16/9]" onMouseLeave={handleMouseLeave}>
-                    {image.link ? (
-                    <img src={image.link} alt="burning" className="object-cover w-full h-full" />
-                    ) : (
-                    <div className="flex items-center justify-center w-full h-full">
-                        <p className="text-gray-500">No Image Available</p>
-                    </div>
-                    )}
-                    <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-                        <div className='mt-2 flex flex-row justify-center items-center gap-2'>
-                            < FontAwesomeIcon className='text-1xl' icon={faCalendar}/>
-                            <p className='font-bold text-2xl text-white'>
-                            {handleDateTime(image.date)}
-                            </p>
+                <div onClick={handleInitImage} className="hover:cursor-pointer">
+                    <div className="relative w-full h-48 min-h-[12rem] bg-gray-200 flex items-center justify-center aspect-[16/9]" onMouseLeave={handleMouseLeave}>
+                        {image.link ? (
+                            <img src={image.link} alt="burning" className="object-cover w-full h-full" />
+                        ) : (
+                            <div className="flex items-center justify-center w-full h-full">
+                                <p className="text-gray-500">No Image Available</p>
+                            </div>
+                        )}
+                        <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+                            <div className='mt-2 flex flex-row justify-center items-center gap-2'>
+                                < FontAwesomeIcon className='text-1xl' icon={faCalendar} />
+                                <p className='font-bold text-2xl text-white'>
+                                    {handleDateTime(image.date)}
+                                </p>
+                            </div>
                         </div>
                     </div>
                 </div>
-                </Link>
             }
         </>
     )
