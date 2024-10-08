@@ -36,7 +36,7 @@ export const Paginacion = ({ handleNext, handlePrevious, maxPage }) => {
 
 
     return (
-        <div >
+        <div className="mb-10">
             {maxPage !== 1 ? <div className="flex gap-2">
                 <button
                     className={arrowsButtonStyle}

@@ -35,7 +35,7 @@ const Proyectos = () => {
       <CrearProyecto isActive={isActiveCreateOverlay} closeCreateProject={closeCreateProject}></CrearProyecto>
       <div className=' bg-transparent p-6 flex items-center justify-center h.screen
        '>
-        <button id='boton_de_crear' onClick={openCreateProject} className='flex items-center justify-center bg-gradient-to-r from-sky-900 to-sky-950 rounded-2xl w-1/2 py-5 text-3xl font-bold hover:opacity-70 transition duration-200 ease-in-out mt-10'>Agregar Proyecto</button>
+        <button id='boton_de_crear' onClick={openCreateProject} className='flex items-center justify-center bg-gradient-to-r from-sky-900 to-sky-950 rounded-2xl w-1/2 py-5 text-3xl font-bold hover:opacity-70 transition duration-200 ease-in-out '>Agregar Proyecto</button>
       </div>
       <GridProyecto />
     </>

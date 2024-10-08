@@ -1,56 +1,70 @@
-import { useState } from "react";
+import { useEffect, useState,useRef } from "react";
 import { useAuth } from "../../AuthProvider";
 import { handleDateTime } from "../../helpers/formatDate";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCalendar } from '@fortawesome/free-solid-svg-icons';
-import Etiquetador from "./Etiquetador";
 import { useSearchParams } from "react-router-dom";
 
 export const TarjetaImagen = ({ image, index }) => {
     const [isHover, setIsHover] = useState(false);
-    const { isTaggerActive, setIsTaggerActive, setImage, pageImage, setCardImagePage, quantityImagePerPage } = useAuth()
-    const [SearchParams, setSearchParams] = useSearchParams()
+    const containerRef = useRef(null); // Usamos useRef para acceder al contenedor
+    const { setIsTaggerActive, setImage, pageImage, setCardImagePage, quantityImagePerPage } = useAuth();
+    const [SearchParams, setSearchParams] = useSearchParams();
 
-    const handleMouseEnter = () => {
-        setIsHover(true)
-    }
+    const handleMouseOver = () => {
+        setIsHover(true);
+    };
 
-    const handlecloseTagger = () => {
-        setSearchParams((prev) => {
-            prev.delete('is-active-tagger')
-            prev.delete('image-page')
-            return prev
-        })
-        setIsTaggerActive(false)
-    }
+    const handleMouseOut = () => {
+        setIsHover(false);
+    };
 
-    const handleOpenTagger = () => setIsTaggerActive(true)
-
+    const handleOpenTagger = () => setIsTaggerActive(true);
 
     const handleInitImage = () => {
-        const pageImageNumber = (index + 1) + (pageImage - 1) * quantityImagePerPage
-        setSearchParams(prev => {
-            prev.set("page", SearchParams.get("page"))
-            prev.set("is-active-tagger", true)
-            prev.set("image-page", pageImageNumber)
-            return prev
-        })
-        setCardImagePage(pageImageNumber)
-        setImage(image)
-        handleOpenTagger()
-    }
+        const pageImageNumber = (index + 1) + (pageImage - 1) * quantityImagePerPage;
+        setSearchParams((prev) => {
+            prev.set("page", SearchParams.get("page"));
+            prev.set("is-active-tagger", true);
+            prev.set("image-page", pageImageNumber);
+            return prev;
+        });
+        setCardImagePage(pageImageNumber);
+        setImage(image);
+        handleOpenTagger();
+    };
 
-    const handleMouseLeave = () => {
-        setIsHover(false)
-    }
+    // Agregamos el EventListener en el montaje del componente
+    useEffect(() => {
+        const handleMouseMove = (event) => {
+            if (containerRef.current && !containerRef.current.contains(event.target)) {
+                setIsHover(false); // Si el mouse está fuera del contenedor, desactivamos el hover
+            }
+        };
+
+        window.addEventListener("mousemove", handleMouseMove);
+
+        // Limpiamos el EventListener al desmontar el componente
+        return () => {
+            window.removeEventListener("mousemove", handleMouseMove);
+        };
+    }, []);
+
     return (
-        <>
-            <Etiquetador handleClose={handlecloseTagger} isActive={isTaggerActive}></Etiquetador>
-            {!isHover ?
-                <img onMouseEnter={handleMouseEnter} src={image.link} alt="burning" className="object-cover w-full h-full aspect-[16/9]" />
-                :
+        <div 
+            ref={containerRef} // Añadimos el ref al contenedor
+            onMouseOver={handleMouseOver} 
+            onMouseOut={handleMouseOut} 
+            className="relative w-full h-full">
+            {!isHover ? (
+                <img
+                    src={image.link}
+                    alt="burning"
+                    className="object-cover w-full h-full aspect-[16/9]"
+                />
+            ) : (
                 <div onClick={handleInitImage} className="hover:cursor-pointer">
-                    <div className="relative w-full h-48 min-h-[12rem] bg-gray-200 flex items-center justify-center aspect-[16/9]" onMouseLeave={handleMouseLeave}>
+                    <div className="relative w-full h-48 min-h-[12rem] bg-gray-200 flex items-center justify-center aspect-[16/9]">
                         {image.link ? (
                             <img src={image.link} alt="burning" className="object-cover w-full h-full" />
                         ) : (
@@ -59,18 +73,19 @@ export const TarjetaImagen = ({ image, index }) => {
                             </div>
                         )}
                         <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-                            <div className='mt-2 flex flex-row justify-center items-center gap-2'>
-                                < FontAwesomeIcon className='text-1xl' icon={faCalendar} />
-                                <p className='font-bold text-2xl text-white'>
+                            <div className="mt-2 flex flex-row justify-center items-center gap-2">
+                                <FontAwesomeIcon className="text-1xl" icon={faCalendar} />
+                                <p className="font-bold text-2xl text-white">
                                     {handleDateTime(image.date)}
                                 </p>
                             </div>
                         </div>
                     </div>
                 </div>
-            }
-        </>
-    )
-}
+            )}
+        </div>
+    );
+};
+
 
 export default TarjetaImagen;

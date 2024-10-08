@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faLocationDot } from "@fortawesome/free-solid-svg-icons"
 import Eliminar from './Eliminar'
@@ -11,16 +11,20 @@ import BotonesTarjeta from './BotonesTarjeta'
 
 function TarjetaPuntos({ index, nombre, coordenadas, imagen }) {
 
+  
 
 
   const [esActivoOverlay, setEsActivoOverlay] = useState(false)
 
   const [isEditActive, setIsEditActive] = useState(false)
 
-
-  const { setLocationInformation, locationInformation, userData, refreshProjects } = useAuth()
+  const { setBackRoute,setLocationInformation, locationInformation, userData, refreshProjects } = useAuth()
 
   const token = userData.token
+
+  useEffect(()=>{
+    setBackRoute(`/proyectos/`)
+  },[])
 
   const handleLocationInformation = () => {
     setLocationInformation({ index: index, name: nombre, coordinates: coordenadas, image: imagen })

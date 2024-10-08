@@ -11,13 +11,17 @@ import BotonesTarjeta from './BotonesTarjeta'
 
 function TarjetaDeproyecto({ LinkImagen, nombre, fecha, description, indice }) {
 
-  const { userData, setProjectInformation, projectInformation, refreshProjects } = useAuth()
+  const { setBackRoute,userData, setProjectInformation, projectInformation, refreshProjects } = useAuth()
   const token = userData.token
 
   const handleProjectInformation = () => {
     setProjectInformation({ index: indice, name: nombre, description: description, date: fecha })
     console.log(projectInformation)
   }
+
+  useEffect(()=>{
+    setBackRoute('/')
+  },[])
 
   const [esActicva, setEsActiva] = useState(false)
 

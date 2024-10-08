@@ -1,24 +1,26 @@
-import { useState } from "react"
-import { faCalendar, faTrash, faPen } from "@fortawesome/free-solid-svg-icons"
+import { useEffect, useState } from "react"
+import { faCalendar } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useAuth } from "../../AuthProvider"
 import Eliminar from "../Eliminar"
-import { Link } from "react-router-dom"
+import { Link, useParams } from "react-router-dom"
 import { EditarAlbum } from "./EditarAlbum"
 import { handleDelete } from "../../helpers/handleDelete"
-import ImagenTarjeta from "../imagenes/ImagenTarjeta"
 import TarjetaEnvoltorio from "../TarjetaEnvoltorio"
 import BotonesTarjeta from "../BotonesTarjeta"
-
 export const TarjetaAlbum = ({ album }) => {
-  const { setAlbumInformation, userData, refreshProjects, setImages } = useAuth()
-
+  const { setBackRoute,setAlbumInformation, userData, refreshProjects, setImages } = useAuth()
+  const {puntoID} = useParams()
   const token = userData.token
 
   const handleAlbumInformation = () => {
     setImages([])
     setAlbumInformation(album)
   }
+
+  useEffect(()=>{
+   setBackRoute(`/proyectos/${puntoID}/puntos`)
+  },[])
 
   const [isDeleteActive, setIsDeleteActive] = useState(false)
 

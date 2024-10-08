@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Route, Routes, Navigate, useLocation } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes, Navigate, useLocation, Link } from 'react-router-dom';
 import Login from './pages/auth/Login';
 import Proyectos from './pages/Proyectos';
 import Puntos from './pages/Puntos';
@@ -8,6 +8,8 @@ import Imagenes from './pages/Imagenes';
 import CreateAccount from './pages/auth/CreateAccount';
 import NavBarImagenes from './components/imagenes/NavBarImagenes';
 import CategoriaEtiqueta from './pages/CategoriaEtiqueta';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 
 function PrivateRoute({ element, ...rest }) {
   const { isAuthenticated } = useAuth();
@@ -16,9 +18,11 @@ function PrivateRoute({ element, ...rest }) {
 }
 
 function App() {
+
   return (
     <Router>
       <AuthProvider>
+        <Navigation/>
         <Routes>
           <Route path="/login" element={<Login />} />
           <Route path="/crear_cuenta" element={<CreateAccount />} />
@@ -41,18 +45,17 @@ function App() {
 
 export default App
 
-// function Navigation(){
-//   return (
-//     <>
-
-//     <nav className=''>
-//       <ul>
-//         <li>
-//         <Link to="proyectos"> proyectos </Link>
-//         </li>
-
-//       </ul>
-//     </nav>
-//     </>
-//   )
-// }
+function Navigation(){
+  const { backRoute } = useAuth();
+  return (
+    <>
+      <nav>
+      <ul className='fixed top-5 left-5 px-2 py-2 rounded-full bg-blue-700 hover:bg-blue-600'>
+            <Link className="w-full h-full flex justify-center items-center" to={backRoute}>
+                <FontAwesomeIcon icon={faArrowLeft} />
+            </Link>
+      </ul>
+      </nav>
+    </>
+  )
+}

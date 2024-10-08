@@ -12,7 +12,7 @@ export const NavBarImagenes = () => {
             <nav
                 id="navbar-image"
                 className="fixed top-5 left-0 w-full z-30 flex justify-center items-center flex-col p-0 m-0">
-                <ul className='fixed top-5 left-5 px-2 py-1.5 rounded-full bg-blue-700 hover:bg-blue-600'>
+                <ul className='fixed top-5 left-5 px-2 py-2 rounded-full bg-blue-700 hover:bg-blue-600'>
                     <Link className="w-full h-full flex justify-center items-center" to={`/proyectos/${proyectoId}/puntos/${puntoID}/albumes/`}>
                         <FontAwesomeIcon icon={faArrowLeft} />
                     </Link>

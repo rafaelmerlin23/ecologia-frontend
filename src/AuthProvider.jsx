@@ -36,9 +36,11 @@ export const AuthProvider = ({ children }) => {
 
     const [cardImagePage, setCardImagePage] = useState(1)
 
-    const quantityImagePerPage = 4
+    const quantityImagePerPage = 20 
 
     const [isTaggerActive, setIsTaggerActive] = useState(false)
+
+    const [backRoute,setBackRoute] = useState(-1)
 
 
 
@@ -110,6 +112,8 @@ export const AuthProvider = ({ children }) => {
             , quantityImagePerPage
             , isTaggerActive
             , setIsTaggerActive
+            ,backRoute
+            ,setBackRoute
 
         }}>
             {children}
