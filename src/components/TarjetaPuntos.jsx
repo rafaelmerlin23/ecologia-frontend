@@ -18,17 +18,14 @@ function TarjetaPuntos({ index, nombre, coordenadas, imagen }) {
 
   const [isEditActive, setIsEditActive] = useState(false)
 
-  const { setBackRoute,setLocationInformation, locationInformation, userData, refreshProjects } = useAuth()
+  const {setLocationInformation, locationInformation, userData, refreshProjects } = useAuth()
 
   const token = userData.token
 
-  useEffect(()=>{
-    setBackRoute(`/proyectos/`)
-  },[])
+ 
 
   const handleLocationInformation = () => {
     setLocationInformation({ index: index, name: nombre, coordinates: coordenadas, image: imagen })
-    console.log(locationInformation)
   }
 
   const openEditOverlay = (e) => {

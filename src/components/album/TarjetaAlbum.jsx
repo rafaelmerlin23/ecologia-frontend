@@ -1,16 +1,16 @@
-import { useEffect, useState } from "react"
+import {  useState } from "react"
 import { faCalendar } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useAuth } from "../../AuthProvider"
 import Eliminar from "../Eliminar"
-import { Link, useParams } from "react-router-dom"
+import { Link} from "react-router-dom"
 import { EditarAlbum } from "./EditarAlbum"
 import { handleDelete } from "../../helpers/handleDelete"
 import TarjetaEnvoltorio from "../TarjetaEnvoltorio"
 import BotonesTarjeta from "../BotonesTarjeta"
 export const TarjetaAlbum = ({ album }) => {
-  const { setBackRoute,setAlbumInformation, userData, refreshProjects, setImages } = useAuth()
-  const {puntoID} = useParams()
+  const {setAlbumInformation, userData, refreshProjects, setImages } = useAuth()
+  
   const token = userData.token
 
   const handleAlbumInformation = () => {
@@ -18,9 +18,7 @@ export const TarjetaAlbum = ({ album }) => {
     setAlbumInformation(album)
   }
 
-  useEffect(()=>{
-   setBackRoute(`/proyectos/${puntoID}/puntos`)
-  },[])
+  
 
   const [isDeleteActive, setIsDeleteActive] = useState(false)
 

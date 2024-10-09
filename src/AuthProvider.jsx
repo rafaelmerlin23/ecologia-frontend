@@ -40,7 +40,7 @@ export const AuthProvider = ({ children }) => {
 
     const [isTaggerActive, setIsTaggerActive] = useState(false)
 
-    const [backRoute,setBackRoute] = useState(-1)
+    const [backRoute,setBackRoute] = useState('/proyectos')
 
 
 

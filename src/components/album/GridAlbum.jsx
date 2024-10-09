@@ -7,16 +7,15 @@ import handleGet from "../../helpers/handleGet"
 import { useParams } from "react-router-dom"
 
 export const GridAlbum = () => {
-  const { setLocationInformation, userData, shouldRefresh } = useAuth()
+  const {setBackRoute, setLocationInformation, userData, shouldRefresh } = useAuth()
   const token = userData.token
-  const [page, setPage] = useState(1)
-  const [quantity, setquantity] = useState(50)
+  const [page] = useState(1)
+  const [quantity] = useState(50)
   const [albumsInformation, setAlbumsInformation] = useState([])
-  const image = 'https://insideclimatenews.org/wp-content/uploads/2024/02/US-Forest-Service_Prescribed-Burn_Oregon-2048x1366.jpg'
-  const {puntoID} = useParams();  // Accede al proyectoId desde la URL
+  const { proyectoId,puntoID } = useParams()
   
   useEffect(() => {
-
+    setBackRoute(`/proyectos/${proyectoId}/puntos/`)
     const fetchData = async () => {
       setLocationInformation((LocationInformation)=>({...LocationInformation,index:puntoID}))
       try {

@@ -8,14 +8,15 @@ import handleGet from '../helpers/handleGet'
 
 function GridPunto() {
   const [locationsInformation, setLocationsInformation] = useState([])
-  const { userData, shouldRefresh,projectInformation,setProjectInformation } = useAuth()
+  const { setBackRoute,userData, shouldRefresh,projectInformation,setProjectInformation } = useAuth()
   const token = userData.token
 
   // Usar useSearchParams para obtener los parámetros de la URL
   const { proyectoId } = useParams();  // Accede al proyectoId desde la URL
 
   useEffect(() => {
-    console.log(proyectoId)
+    setBackRoute('/proyectos')
+    
     const fetchData = async () => {
       setProjectInformation((projectInformation)=>({...projectInformation,index:proyectoId}))
       try {
@@ -23,7 +24,6 @@ function GridPunto() {
         let endPoint = `pictures/show_locations?project_id=${proyectoId}`;
 
         const response = await handleGet(endPoint, token);
-        console.log(response);
 
         if (response && response.length > 0) {
           const newLocationInformation = [];

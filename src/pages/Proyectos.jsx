@@ -10,13 +10,9 @@ const Proyectos = () => {
   const [isActiveCreateOverlay, setIsActiveCreateOverlay] = useState(false)
 
   const openCreateProject = () => {
-    const buttonCreateProject = document.getElementById('boton_de_crear')
-    buttonCreateProject.className = "flex items-center justify-center bg-gradient-to-r from-sky-900 to-sky-950 rounded-2xl w-1/2 py-5 text-3xl font-bold mt-10"
     setIsActiveCreateOverlay(true)
   }
   const closeCreateProject = () => {
-    const buttonCreateProject = document.getElementById('boton_de_crear')
-    buttonCreateProject.className = "flex items-center justify-center bg-gradient-to-r from-sky-900 to-sky-950 rounded-2xl w-1/2 py-5 text-3xl font-bold hover:opacity-70 transition duration-200 ease-in-out mt-10"
     setIsActiveCreateOverlay(false)
   }
 

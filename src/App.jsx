@@ -10,6 +10,7 @@ import NavBarImagenes from './components/imagenes/NavBarImagenes';
 import CategoriaEtiqueta from './pages/CategoriaEtiqueta';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
+import { useEffect } from 'react';
 
 function PrivateRoute({ element, ...rest }) {
   const { isAuthenticated } = useAuth();
@@ -46,7 +47,11 @@ function App() {
 export default App
 
 function Navigation(){
+  const location = useLocation();
+  const { hash, pathname, search } = location;
   const { backRoute } = useAuth();
+ 
+  if(pathname === "/login"|| pathname === "/proyectos/" ||pathname === "/proyectos" ) return null 
   return (
     <>
       <nav>
