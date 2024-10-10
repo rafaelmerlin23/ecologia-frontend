@@ -12,7 +12,7 @@ function Grid({ children }) {
         let gridColsClass = '';
         if (numElementos === 1) gridColsClass = 'grid-cols-1 w-[500px]';
         else if (numElementos === 2) gridColsClass = 'w-[1000px] xl:grid-cols-2 lg:grid-cols-2 md:grid-cols-2 sm:grid-cols-1';
-        else if (numElementos === 3) gridColsClass = 'xl:grid-cols-3 lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1';
+        else if (numElementos === 3) gridColsClass = 'w-[1500px] xl:grid-cols-3 lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1';
         else if (numElementos === 4) gridColsClass = 'xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 ';
         else gridColsClass = `grid-cols-${numElementos > 4 ? 5 : numElementos}`;
 

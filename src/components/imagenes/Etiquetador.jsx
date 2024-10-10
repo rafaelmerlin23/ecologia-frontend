@@ -145,8 +145,11 @@ export const Etiquetador = ({ isActive, handleClose }) => {
 
     }
 
-    const handleRaitingChage=(newRaiting)=>{
-        
+    const handleRaitingsChage=(index,e)=>{
+        const {value} = e.target
+        const newRaitings = [...raitings]
+        newRaitings[index] = value
+        setRaitings(newRaitings) 
     }
 
     const addRaiting = () =>{
