@@ -21,6 +21,7 @@ export const Etiquetador = ({ isActive, handleClose }) => {
     const [isNextPage, setIsNextPage] = useState(true)
     const [categorySelected, setCategorySelected] = useState(null)
     const [maxPage, setMaxPage] = useState(1)
+    const [raitings,setRaitings] = useState([])
 
     useEffect(() => {
         document.body.className = ' bg-gradient-to-r from-gray-900 to-blue-gray-950';
@@ -144,6 +145,14 @@ export const Etiquetador = ({ isActive, handleClose }) => {
 
     }
 
+    const handleRaitingChage=(newRaiting)=>{
+        
+    }
+
+    const addRaiting = () =>{
+        setRaitings((raitings)=>[...raitings,0])
+    }
+
     const handleTags = (id) => {
         setCategorySelected(id)
         const endPoint = `pictures/show_tags?page=${1}&quantity=${13}&category_id=${id}`
@@ -209,12 +218,27 @@ export const Etiquetador = ({ isActive, handleClose }) => {
                             </select>
                             <div className="pt-4 flex flex-col gap-y-2 ">
                                 {tags.length > 0 ? tags.map((tag) => (
+                                    <div className="">
                                     <button
                                         onClick={(e) => handleSelect(e, tag)}
-                                        className={`px-4 ${tag.isSelect ? "bg-green-700" : "bg-gray-700"} rounded-full border border-gray-600 hover:brightness-75`}
+                                        className={`w-[100%] px-4 ${tag.isSelect ? "bg-green-700" : "bg-gray-700"} rounded-full border border-gray-600 hover:brightness-75`}
                                         key={tag.idTag * 3}>
                                         {tag.name}
                                     </button>
+                                    {tag.isSelect?
+                                    <div className="flex justify-center items-center flex-col">
+                                        <p>Selecciona la calificacion de la etiqueta:  <span className="text-sky-300">{raiting}</span></p>
+                                        <input
+                                        value={raiting}
+                                        onChange={(e) => setRaiting(e.target.value)}
+                                        type="range"
+                                        step="0.5"
+                                        max={3}
+                                        min={1}
+                                    />
+                                    </div>
+                                    :""}
+                                    </div>
                                 )) :
                                     <div className="flex justify-center items-center flex-col">
                                         <p>Categoria sin etiquetas.</p>
@@ -226,16 +250,7 @@ export const Etiquetador = ({ isActive, handleClose }) => {
                         </div>
                     </div>
                     <div className="flex flex-col items-center ">
-                        <p>Rating: <span>{raiting}</span></p>
-                        <input
-                            value={raiting}
-                            onChange={(e) => setRaiting(e.target.value)}
-                            type="range"
-                            step="0.5"
-                            max={3}
-                            min={1}
-                            className="w-64" /* Controla el ancho del slider */
-                        />
+                       
                         <p>Usuario: <span className="text-sky-300">{userName}</span></p>
                     </div>
                     <div>
