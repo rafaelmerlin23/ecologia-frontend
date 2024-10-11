@@ -11,8 +11,7 @@ import handleGet from "../../helpers/handleGet";
 export const Etiquetador = ({ isActive, handleClose }) => {
 
     const navigate = useNavigate()
-    const { cardImagePage, setCardImagePage, setImage, image, userData, userName, albumInformation } = useAuth()
-    const [raiting, setRaiting] = useState(1.0)
+    const { cardImagePage, setCardImagePage, setImage, image, userData, albumInformation } = useAuth()
     const token = userData.token
     const [categories, setCategories] = useState([])
     const [tags, setTags] = useState([])
@@ -21,15 +20,19 @@ export const Etiquetador = ({ isActive, handleClose }) => {
     const [isNextPage, setIsNextPage] = useState(true)
     const [categorySelected, setCategorySelected] = useState(null)
     const [maxPage, setMaxPage] = useState(1)
-    const [raitings,setRaitings] = useState([])
+    const userName = userData.userName
+    const userID = userData.decoded.user_id
 
     useEffect(() => {
         document.body.className = ' bg-gradient-to-r from-gray-900 to-blue-gray-950';
+        
 
         // conseguir el numero de la ultima pagina 
         const endPointPage = `pictures/show_picture_from_album?page=${cardImagePage}&quantity=${1}&album_id=${albumInformation.index}`
-        handleGetData(endPointPage, token).then((data) => setMaxPage(data.total_pages))
-        handleIsNextPage()
+        handleGetData(endPointPage, token).then((data) => {
+            setMaxPage(data.total_pages)
+            handleIsNextPage()           
+        })
 
         const endPointCategories = `pictures/show_categories?page=${1}}&quantity=${100}`
 
@@ -117,7 +120,8 @@ export const Etiquetador = ({ isActive, handleClose }) => {
                 newTags.push({
                     name: tagEach.name, // El nombre de la etiqueta está en el índice 1
                     idTag: tagEach.idTag,
-                    isSelect: !tagEach.isSelect
+                    isSelect: !tagEach.isSelect,
+                    rating: tagEach.rating
                 })
             } else {
                 newTags.push(tagEach)
@@ -142,39 +146,102 @@ export const Etiquetador = ({ isActive, handleClose }) => {
     }
 
     const onLabel = () => {
-
+        for(let tag of tags){
+            if(tag.isSelect){
+                const formData = new FormData();
+                formData.append('picture_id', image.id);
+                formData.append('user_id', userID);
+                formData.append('tag_id', tag.idTag);
+                formData.append('rating_score', tag.rating);
+                
+                // Hacer la petición POST
+                fetch(`${prefixUrl}miscellaneous/create_rating`, {
+                  method: 'POST',
+                  headers: {
+                    'Authorization': token 
+                  },
+                  body: formData 
+                })
+                  .then((res) => res.json())
+                  .then((data) => {
+                    console.log('Respuesta del servidor:', data);
+                    if (data && data.status === 'success') {
+                      console.log(data);
+                    }
+                  })
+                  .catch((error) => {
+                    console.error('Error:', error);
+                  });
+            }
+        }
     }
 
-    const handleRaitingChage=(newRaiting)=>{
-        
-    }
+    const handleRatingChange = (e, tagIndex) => {
+        const newTags = tags.map((tag, index) => {
+          if (index === tagIndex) {
+            return {
+              ...tag, 
+              rating: e.target.value, 
+            };
+          }
+          return tag;
+        });
+      
+        setTags(newTags); 
+      };
+      
+    
 
-    const addRaiting = () =>{
-        setRaitings((raitings)=>[...raitings,0])
-    }
-
-    const handleTags = (id) => {
-        setCategorySelected(id)
-        const endPoint = `pictures/show_tags?page=${1}&quantity=${13}&category_id=${id}`
+    
+      const handleTags = (id) => {
+        setCategorySelected(id);
+        const endPoint = `pictures/show_tags?page=${1}&quantity=${13}&category_id=${id}`;
+    
         handleGetData(endPoint, token).then((data) => {
             if (data && data.status === 'success') {
                 const newTags = data.response.map((tag) => ({
                     name: tag[1], // El nombre de la etiqueta está en el índice 1
                     idTag: tag[0],
-                    isSelect: false // El tag_id está en el índice 0
+                    isSelect: false, // El tag_id está en el índice 0
+                    rating: 2,
                 }));
-                setTags(newTags);
+    
+                // Ahora, obtenemos las calificaciones de las imágenes
+                handleGetData(`miscellaneous/show_ratings_from_picture?picture_id=${image.id}`, token).then((data) => {
+                    if (data.response.length !== 0) {
+                        console.log(data.response)
+                        // Crear un objeto para las calificaciones, donde la clave es el idTag
+                        const ratingsMap = {};
+                        data.response.forEach((rating) => {
+                            ratingsMap[rating[4]] = rating[2]; // rating[4] es idTag y rating[2] es el score
+                        });
+    
+                        // Actualizar el estado de los tags con calificaciones
+                        const updatedTags = newTags.map((tag) => {
+                            if (ratingsMap[tag.idTag]) {
+                                return {
+                                    ...tag,
+                                    isSelect: true,
+                                    rating: ratingsMap[tag.idTag], // Establecer la calificación si existe
+                                };
+                            }
+                            return tag;
+                        });
+    
+                        setTags(updatedTags); // Actualiza el estado una sola vez
+                    } else {
+                        // Si no hay ratings, solo actualiza los tags
+                        setTags(newTags);
+                    }
+                });
             }
-        }
-        ).catch((error) => {
+        }).catch((error) => {
             console.error('Error:', error);
         });
-    }
+    };
+    
+    
     if (!isActive) return null
-
-
-
-
     return (
         <div
             onClick={handleClose}
@@ -217,7 +284,7 @@ export const Etiquetador = ({ isActive, handleClose }) => {
                                 ))}
                             </select>
                             <div className="pt-4 flex flex-col gap-y-2 ">
-                                {tags.length > 0 ? tags.map((tag) => (
+                                {tags.length > 0 ? tags.map((tag,index) => (
                                     <div className="">
                                     <button
                                         onClick={(e) => handleSelect(e, tag)}
@@ -227,14 +294,14 @@ export const Etiquetador = ({ isActive, handleClose }) => {
                                     </button>
                                     {tag.isSelect?
                                     <div className="flex justify-center items-center flex-col">
-                                        <p>Selecciona la calificacion de la etiqueta:  <span className="text-sky-300">{raiting}</span></p>
+                                        <p>Selecciona la calificacion de la etiqueta:  <span className="text-sky-300">{tags[index].rating}</span></p>
                                         <input
-                                        value={raiting}
-                                        onChange={(e) => setRaiting(e.target.value)}
+                                        onChange={(e)=>handleRatingChange(e,index)}
+                                        value={tags[index].rating}
                                         type="range"
                                         step="0.5"
                                         max={3}
-                                        min={1}
+                                        min={0}
                                     />
                                     </div>
                                     :""}
@@ -254,7 +321,7 @@ export const Etiquetador = ({ isActive, handleClose }) => {
                         <p>Usuario: <span className="text-sky-300">{userName}</span></p>
                     </div>
                     <div>
-                        <button className="bg-cyan-500 text-black py-1 px-4 rounded-full">
+                        <button onClick={onLabel} className="bg-cyan-500 text-black py-1 px-4 rounded-full">
                             Guardar
                         </button>
                     </div>
