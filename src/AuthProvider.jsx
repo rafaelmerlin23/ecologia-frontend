@@ -1,4 +1,5 @@
 import React, { createContext, useState, useContext, useEffect, useMemo } from 'react'
+import {jwtDecode} from 'jwt-decode'
 
 const AuthContext = createContext()
 
@@ -36,7 +37,7 @@ export const AuthProvider = ({ children }) => {
 
     const [cardImagePage, setCardImagePage] = useState(1)
 
-    const quantityImagePerPage = 20 
+    const quantityImagePerPage = 4 
 
     const [isTaggerActive, setIsTaggerActive] = useState(false)
 
@@ -48,8 +49,13 @@ export const AuthProvider = ({ children }) => {
         setShouldRefresh(prev => !prev);
     };
 
-    const login = (data) => {
+    const login = (data,user) => {
+        const token = data.token
+        const decoded = jwtDecode(token)
         setIsAuthenticated(true)
+        data.decoded = decoded
+        data.userName = user
+        console.log(data)
         setUserData(data)
         localStorage.setItem('isAuthenticated', 'true')
         localStorage.setItem('userData', JSON.stringify(data))

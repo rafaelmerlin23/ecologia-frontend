@@ -28,7 +28,7 @@ function Login() {
                 console.log('Respuesta del servidor:', data);
                 if (data && data.status === 'success') {
                     setResponse(data);
-                    login(data);
+                    login(data,usuario);
                     setUserName(usuario);
 
                     // Redirige a la ruta original o a /proyectos si no hay ruta guardada
