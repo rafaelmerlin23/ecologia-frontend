@@ -54,7 +54,7 @@ export const Etiquetador = ({ isActive, handleClose }) => {
 
 
 
-    }, [cardImagePage]);
+    }, [cardImagePage,tags]);
 
 
     const handleClick = () => {
