@@ -25,13 +25,13 @@ export const Etiquetador = ({ isActive, handleClose }) => {
 
     useEffect(() => {
         document.body.className = ' bg-gradient-to-r from-gray-900 to-blue-gray-950';
-        
+
 
         // conseguir el numero de la ultima pagina 
         const endPointPage = `pictures/show_picture_from_album?page=${cardImagePage}&quantity=${1}&album_id=${albumInformation.index}`
         handleGetData(endPointPage, token).then((data) => {
             setMaxPage(data.total_pages)
-            handleIsNextPage()           
+            handleIsNextPage()
         })
 
         const endPointCategories = `pictures/show_categories?page=${1}}&quantity=${100}`
@@ -54,7 +54,7 @@ export const Etiquetador = ({ isActive, handleClose }) => {
 
 
 
-    }, [cardImagePage,tags]);
+    }, [cardImagePage, categorySelected]);
 
 
     const handleClick = () => {
@@ -146,109 +146,112 @@ export const Etiquetador = ({ isActive, handleClose }) => {
     }
 
     const onLabel = () => {
-        for(let tag of tags){
-            if(tag.isSelect){
+        const ratingEndPoint = `miscellaneous/show_ratings_from_picture?picture_id=${image.id}`
+        handleGetData(ratingEndPoint, token)
+            .then((data) => {
+
+            })
+
+        tags.forEach((tag) => {
+            if (tag.isSelect) {
                 const formData = new FormData();
                 formData.append('picture_id', image.id);
                 formData.append('user_id', userID);
                 formData.append('tag_id', tag.idTag);
                 formData.append('rating_score', tag.rating);
-                
+
                 // Hacer la petición POST
                 fetch(`${prefixUrl}miscellaneous/create_rating`, {
-                  method: 'POST',
-                  headers: {
-                    'Authorization': token 
-                  },
-                  body: formData 
+                    method: 'POST',
+
+                    headers: {
+                        'Authorization': token // Envía el token en el encabezado Authorization
+                    },
+                    body: formData // Enviamos el FormData
+
+
                 })
-                  .then((res) => res.json())
-                  .then((data) => {
-                    console.log('Respuesta del servidor:', data);
-                    if (data && data.status === 'success') {
-                      console.log(data);
-                    }
-                  })
-                  .catch((error) => {
-                    console.error('Error:', error);
-                  });
+                    .then((res) => res.json())
+                    .then((data) => {
+                        console.log('Respuesta del servidor:', data);
+                        if (data && data.status == 'success') {
+
+
+                        }
+
+                    })
+                    .catch((error) => {
+                        console.error('Error:', error);
+                    });
+
             }
-        }
+        })
+
     }
 
     const handleRatingChange = (e, tagIndex) => {
         const newTags = tags.map((tag, index) => {
-          if (index === tagIndex) {
-            return {
-              ...tag, 
-              rating: e.target.value, 
-            };
-          }
-          return tag;
-        });
-      
-        setTags(newTags); 
-      };
-      
-    
-
-    
-      const handleTags = (id) => {
-        setCategorySelected(id);
-        const endPoint = `pictures/show_tags?page=${1}&quantity=${13}&category_id=${id}`;
-    
-        handleGetData(endPoint, token).then((data) => {
-            if (data && data.status === 'success') {
-                const newTags = data.response.map((tag) => ({
-                    name: tag[1], // El nombre de la etiqueta está en el índice 1
-                    idTag: tag[0],
-                    isSelect: false, // El tag_id está en el índice 0
-                    rating: 2,
-                }));
-    
-                // Ahora, obtenemos las calificaciones de las imágenes
-                handleGetData(`miscellaneous/show_ratings_from_picture?picture_id=${image.id}`, token).then((data) => {
-                    if (data.response.length !== 0) {
-                        console.log(data.response)
-                        // Crear un objeto para las calificaciones, donde la clave es el idTag
-                        const ratingsMap = {};
-                        data.response.forEach((rating) => {
-                            ratingsMap[rating[4]] = rating[2]; // rating[4] es idTag y rating[2] es el score
-                        });
-    
-                        // Actualizar el estado de los tags con calificaciones
-                        const updatedTags = newTags.map((tag) => {
-                            if (ratingsMap[tag.idTag]) {
-                                return {
-                                    ...tag,
-                                    isSelect: true,
-                                    rating: ratingsMap[tag.idTag], // Establecer la calificación si existe
-                                };
-                            }
-                            return tag;
-                        });
-    
-                        setTags(updatedTags); // Actualiza el estado una sola vez
-                    } else {
-                        // Si no hay ratings, solo actualiza los tags
-                        setTags(newTags);
-                    }
-                });
+            if (index === tagIndex) {
+                return {
+                    ...tag,
+                    rating: e.target.value,
+                };
             }
-        }).catch((error) => {
-            console.error('Error:', error);
+            return tag;
         });
+
+        setTags(newTags);
     };
-    
-    
+
+
+
+
+    const handleTags = (id) => {
+        let newTags = []
+        const endPointTags = `pictures/show_tags?category_id=${id}`
+        handleGetData(endPointTags, token).then(
+            (data) => {
+                newTags = data.response.map((informacion) => ({
+                    name: informacion[1], // El nombre de la etiqueta está en el índice 1
+                    idTag: informacion[0],
+                    isSelect: false,
+                    rating: 0
+                }))
+            }
+        )
+        const endPointTagsWithRating = `miscellaneous/show_ratings_from_picture?picture_id=${image.id}`;
+        handleGetData(endPointTagsWithRating, token).then((data) => {
+            if (data.response.length !== 0) {
+                // Crea un mapa de calificaciones para una búsqueda más eficiente
+                const ratingsMap = data.response.reduce((acc, rating) => {
+                    acc[rating[4]] = rating[2]; // rating[4] es idTag y rating[2] es el score
+                    return acc;
+                }, {});
+                console.log(ratingsMap)
+                const tagsWithRating = newTags.map((newTag) => ({
+                    ...newTag,
+                    isSelect: ratingsMap[newTag.idTag] !== undefined,
+                    rating: ratingsMap[newTag.idTag] || newTag.rating, // Asigna la calificación si existe, de lo contrario, usa la calificación por defecto
+                }));
+
+                console.log(tagsWithRating);
+                setTags(tagsWithRating);
+            } else {
+                setTags(newTags);
+            }
+        })
+
+    };
+
+
     if (!isActive) return null
     return (
         <div
             onClick={handleClose}
-            className=' fixed z-40 inset-0 bg-black bg-opacity-20 backdrop-blur-sm flex justify-center items-center'>
+            className='  fixed z-40 inset-0 bg-black bg-opacity-20 backdrop-blur-sm flex justify-center items-center'>
             <div
                 onClick={(e) => e.stopPropagation()}
-                className="bg-zinc-900 border border-gray-300 p-10  rounded-3xl flex justify-center items-center">
+                className="max-w-[1000px]  bg-zinc-900 border border-gray-300 p-10  rounded-3xl flex justify-center items-center">
                 <button onClick={handleClose} className=' absolute top-2 right-2 text-white text-xl hover:opacity-70'>
                     x
                 </button>
@@ -284,30 +287,30 @@ export const Etiquetador = ({ isActive, handleClose }) => {
                                 ))}
                             </select>
                             <div className="pt-4 flex flex-col gap-y-2 ">
-                                {tags.length > 0 ? tags.map((tag,index) => (
-                                    <div className="">
-                                    <button
-                                        onClick={(e) => handleSelect(e, tag)}
-                                        className={`w-[100%] px-4 ${tag.isSelect ? "bg-green-700" : "bg-gray-700"} rounded-full border border-gray-600 hover:brightness-75`}
-                                        key={tag.idTag * 3}>
-                                        {tag.name}
-                                    </button>
-                                    {tag.isSelect?
-                                    <div className="flex justify-center items-center flex-col">
-                                        <p>Selecciona la calificacion de la etiqueta:  <span className="text-sky-300">{tags[index].rating}</span></p>
-                                        <input
-                                        onChange={(e)=>handleRatingChange(e,index)}
-                                        value={tags[index].rating}
-                                        type="range"
-                                        step="0.5"
-                                        max={3}
-                                        min={0}
-                                    />
-                                    </div>
-                                    :""}
+                                {tags.length > 0 ? tags.map((tag, index) => (
+                                    <div className="" key={index}>
+                                        <button
+                                            onClick={(e) => handleSelect(e, tag)}
+                                            className={`w-[330px] w-full px-4 ${tag.isSelect ? "bg-green-700" : "bg-gray-700"} rounded-full border border-gray-600 hover:brightness-75`}
+                                            key={tag.idTag * 3}>
+                                            {tag.name}
+                                        </button>
+                                        {tag.isSelect ?
+                                            <div className="w-[330px] flex justify-center items-center flex-col">
+                                                <p >Selecciona la calificacion de la etiqueta:  <span className="text-sky-300">{tags[index].rating}</span></p>
+                                                <input
+                                                    onChange={(e) => handleRatingChange(e, index)}
+                                                    value={tags[index].rating}
+                                                    type="range"
+                                                    step="0.5"
+                                                    max={3}
+                                                    min={0}
+                                                />
+                                            </div>
+                                            : ""}
                                     </div>
                                 )) :
-                                    <div className="flex justify-center items-center flex-col">
+                                    <div className="w-[330px] flex justify-center items-center flex-col">
                                         <p>Categoria sin etiquetas.</p>
                                         <p>Crea una</p>
                                         <FontAwesomeIcon className='pb-1 text-green-600' icon={faArrowDown} />
@@ -317,7 +320,7 @@ export const Etiquetador = ({ isActive, handleClose }) => {
                         </div>
                     </div>
                     <div className="flex flex-col items-center ">
-                       
+
                         <p>Usuario: <span className="text-sky-300">{userName}</span></p>
                     </div>
                     <div>
