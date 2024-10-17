@@ -7,6 +7,7 @@ import { faArrowDown, faGreaterThan, faLessThan } from "@fortawesome/free-solid-
 import { useNavigate } from "react-router-dom";
 import handleGetData from "../../helpers/handleGetData";
 import handleGet from "../../helpers/handleGet";
+import CambiosEtiquetas from "../etiqueta/CambiosEtiquetas";
 
 export const Etiquetador = ({ isActive, handleClose }) => {
 
@@ -20,6 +21,7 @@ export const Etiquetador = ({ isActive, handleClose }) => {
     const [isNextPage, setIsNextPage] = useState(true)
     const [categorySelected, setCategorySelected] = useState(null)
     const [maxPage, setMaxPage] = useState(1)
+    const [changes ,setChanges] = useState([])
     const userName = userData.userName
     const userID = userData.decoded.user_id
 
@@ -54,7 +56,7 @@ export const Etiquetador = ({ isActive, handleClose }) => {
 
 
 
-    }, [cardImagePage, categorySelected]);
+    }, [cardImagePage, categorySelected,image]);
 
 
     const handleClick = () => {
@@ -123,6 +125,11 @@ export const Etiquetador = ({ isActive, handleClose }) => {
                     isSelect: !tagEach.isSelect,
                     rating: tagEach.rating
                 })
+                if(tag.isSelect){
+                    updateCreateDeselect(tag)
+                }else{
+                    setChanges((changes) =>[...changes,{type:"create",name:tag.name,rating:tag.rating,id:`${tag.idTag}1`}])
+                }
             } else {
                 newTags.push(tagEach)
             }
@@ -136,6 +143,20 @@ export const Etiquetador = ({ isActive, handleClose }) => {
         })
         setTagsSelected(newTagsSelected)
     }
+
+    const updateCreateDeselect = (tag)=>{
+        setChanges((changes)=>{
+            let newChanges = []
+            changes.forEach((change)=>{
+                if(change.id !==`${tag.idTag}1` ){
+                    newChanges.push(change)
+                }
+            })
+            return newChanges 
+        })
+    }
+
+    
 
     const handleCloseModal = () => {
         setIsModalActive(false)
@@ -189,6 +210,51 @@ export const Etiquetador = ({ isActive, handleClose }) => {
 
     }
 
+    const updateCreate = (index)=>{
+        setChanges((changes)=>{
+            let newChanges = []
+            changes.forEach((change)=>{
+                if(change.id ===`${tags[index].idTag}1` ){
+                    newChanges.push({type:"create",name:tags[index].name,rating:tags[index].rating,id:`${tags[index].idTag}1`})
+                }else{
+                    newChanges.push(change)
+                }
+            })
+            return newChanges 
+        })
+    }
+
+    const updateUpdateTag = (index) => {
+        console.log(tags[index].rating ,"  ", tags[index].oldRating)
+        
+        if ('oldRating' in tags[index]) {
+            if(Number(tags[index].rating) === Number(tags[index].oldRating)){
+                let newChanges = []
+                changes.forEach((change)=>{
+                    if(change.id !== `${tags[index].idTag}2`){
+                        newChanges.push(change)
+                    }
+                })
+                setChanges(newChanges)
+                return
+            }
+
+            setChanges((changes) => {
+                const existingChange = changes.find((change) => change.id === `${tags[index].idTag}2`);    
+                if (existingChange) {
+                    return changes.map((change) =>
+                        change.id === `${tags[index].idTag}2`
+                            ? { type: "update", name: tags[index].name, rating: tags[index].rating, id: `${tags[index].idTag}2` }
+                            : change
+                    );
+                } else {
+                    return [...changes, { type: "update", name: tags[index].name, rating: tags[index].rating, id: `${tags[index].idTag}2` }];
+                }
+            });
+        }
+    };
+    
+
     const handleRatingChange = (e, tagIndex) => {
         const newTags = tags.map((tag, index) => {
             if (index === tagIndex) {
@@ -199,49 +265,54 @@ export const Etiquetador = ({ isActive, handleClose }) => {
             }
             return tag;
         });
-
         setTags(newTags);
+        updateCreate(tagIndex)
+        updateUpdateTag(tagIndex)
     };
 
 
 
 
-    const handleTags = (id) => {
-        let newTags = []
-        const endPointTags = `pictures/show_tags?category_id=${id}`
-        handleGetData(endPointTags, token).then(
-            (data) => {
-                newTags = data.response.map((informacion) => ({
-                    name: informacion[1], // El nombre de la etiqueta está en el índice 1
-                    idTag: informacion[0],
-                    isSelect: false,
-                    rating: 0
-                }))
-            }
-        )
-        const endPointTagsWithRating = `miscellaneous/show_ratings_from_picture?picture_id=${image.id}`;
-        handleGetData(endPointTagsWithRating, token).then((data) => {
-            if (data.response.length !== 0) {
-                // Crea un mapa de calificaciones para una búsqueda más eficiente
-                const ratingsMap = data.response.reduce((acc, rating) => {
+    const handleTags = async (id) => {
+        try {
+            let newTags = [];
+            
+            // Obtener etiquetas (tags) sin calificación
+            const dataTags = await handleGetData(`pictures/show_tags?category_id=${id}`, token);
+            newTags = dataTags.response.map((informacion) => ({
+                name: informacion[1], // El nombre de la etiqueta está en el índice 1
+                idTag: informacion[0],
+                isSelect: false,
+                rating: 0
+            }));
+    
+            // Obtener etiquetas con calificación
+            const dataTagsWithRating = await handleGetData(`miscellaneous/show_ratings_from_picture?picture_id=${image.id}`, token);
+    
+            if (dataTagsWithRating.response.length !== 0) {
+                // Mapa de calificaciones para búsqueda eficiente
+                const ratingsMap = dataTagsWithRating.response.reduce((acc, rating) => {
                     acc[rating[4]] = rating[2]; // rating[4] es idTag y rating[2] es el score
                     return acc;
                 }, {});
-                console.log(ratingsMap)
+    
                 const tagsWithRating = newTags.map((newTag) => ({
                     ...newTag,
                     isSelect: ratingsMap[newTag.idTag] !== undefined,
-                    rating: ratingsMap[newTag.idTag] || newTag.rating, // Asigna la calificación si existe, de lo contrario, usa la calificación por defecto
+                    rating: ratingsMap[newTag.idTag] || newTag.rating,
+                    oldRating:ratingsMap[newTag.idTag] || newTag.rating // Asigna la calificación si existe
                 }));
-
-                console.log(tagsWithRating);
+    
                 setTags(tagsWithRating);
             } else {
                 setTags(newTags);
             }
-        })
-
+    
+        } catch (error) {
+            console.error(error);
+        }
     };
+    
 
 
     if (!isActive) return null
@@ -269,7 +340,8 @@ export const Etiquetador = ({ isActive, handleClose }) => {
                     <ModalIMagen handleClose={handleCloseModal} image={image} isActive={isModalActive} />
 
                     {/* Fila para la imagen y el select */}
-                    <div className=" flex justify-center items-center gap-x-10 sm:flex-col flex-col md:flex-col lg:flex-row xl:flex-row">
+                    <div className=" flex justify-center items-start gap-x-10 sm:flex-col flex-col md:flex-col lg:flex-row xl:flex-row">
+                        <CambiosEtiquetas changes={changes}/>
                         <div onClick={handleOpenModal} className=" w-3/5 h-60  min-h-[30rem] bg-gray-200 flex items-center justify-center hover:cursor-pointer">
                             {image.link ? (
                                 <img className=" object-cover w-full h-full" src={image.link} alt="sin" />
@@ -288,7 +360,7 @@ export const Etiquetador = ({ isActive, handleClose }) => {
                             </select>
                             <div className="pt-4 flex flex-col gap-y-2 ">
                                 {tags.length > 0 ? tags.map((tag, index) => (
-                                    <div className="" key={index}>
+                                    <div className=" flex justify-center items-center flex-col" key={index}>
                                         <button
                                             onClick={(e) => handleSelect(e, tag)}
                                             className={`w-[330px] w-full px-4 ${tag.isSelect ? "bg-green-700" : "bg-gray-700"} rounded-full border border-gray-600 hover:brightness-75`}
@@ -296,13 +368,13 @@ export const Etiquetador = ({ isActive, handleClose }) => {
                                             {tag.name}
                                         </button>
                                         {tag.isSelect ?
-                                            <div className="w-[330px] flex justify-center items-center flex-col">
+                                            <div className="flex items-center justify-center flex-col">
                                                 <p >Selecciona la calificacion de la etiqueta:  <span className="text-sky-300">{tags[index].rating}</span></p>
                                                 <input
                                                     onChange={(e) => handleRatingChange(e, index)}
                                                     value={tags[index].rating}
                                                     type="range"
-                                                    step="0.5"
+                                                    step="0.50"
                                                     max={3}
                                                     min={0}
                                                 />
@@ -310,7 +382,7 @@ export const Etiquetador = ({ isActive, handleClose }) => {
                                             : ""}
                                     </div>
                                 )) :
-                                    <div className="w-[330px] flex justify-center items-center flex-col">
+                                    <div className=" flex justify-center items-center flex-col">
                                         <p>Categoria sin etiquetas.</p>
                                         <p>Crea una</p>
                                         <FontAwesomeIcon className='pb-1 text-green-600' icon={faArrowDown} />
@@ -322,11 +394,6 @@ export const Etiquetador = ({ isActive, handleClose }) => {
                     <div className="flex flex-col items-center ">
 
                         <p>Usuario: <span className="text-sky-300">{userName}</span></p>
-                    </div>
-                    <div>
-                        <button onClick={onLabel} className="bg-cyan-500 text-black py-1 px-4 rounded-full">
-                            Guardar
-                        </button>
                     </div>
                 </div>
             </div>
