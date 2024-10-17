@@ -4,7 +4,7 @@ function CambiosEtiquetas({changes}) {
   
 
     return (
-    <div className='flex flex-col h-60 min-h-[30rem] bg-blue-300'>
+    <div className='flex flex-col h-60 min-h-[30rem] w-[300px] bg-blue-300'>
     <div className='bg-blue-200 min-h-[26rem]'>
         {changes.map((change)=>(
             <div key={change.id}>
