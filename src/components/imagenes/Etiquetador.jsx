@@ -128,7 +128,7 @@ export const Etiquetador = ({ isActive, handleClose }) => {
                 if(tag.isSelect){
                     updateCreateDeselect(tag)
                 }else{
-                    setChanges((changes) =>[...changes,{type:"create",name:tag.name,rating:tag.rating,id:`${tag.idTag}1`}])
+                    setChanges((changes) =>[...changes,{type:"create",name:tag.name,rating:tag.rating,categorySelected,id:`${tag.idTag}1`}])
                 }
             } else {
                 newTags.push(tagEach)
@@ -167,11 +167,6 @@ export const Etiquetador = ({ isActive, handleClose }) => {
     }
 
     const onLabel = () => {
-        const ratingEndPoint = `miscellaneous/show_ratings_from_picture?picture_id=${image.id}`
-        handleGetData(ratingEndPoint, token)
-            .then((data) => {
-
-            })
 
         tags.forEach((tag) => {
             if (tag.isSelect) {
@@ -223,10 +218,42 @@ export const Etiquetador = ({ isActive, handleClose }) => {
             }
             return tag;
         });
-        
-        
+
+        if('oldRating' in newTags[tagIndex]){
+            handleUpdateRatingChage(tagIndex,newTags)
+        }else{
+            updateCreateRating(tagIndex,newTags)
+        }
         setTags(newTags)
     };
+
+    const handleUpdateRatingChage = (index,newTags) => {
+        if(true){
+
+        }
+        const existsRecord = changes.some((change)=> change.id === `${newTags[index].idTag}2`)
+        if(existsRecord){
+            const newChanges = changes.map((change)=>(
+                change.id === `${newTags[index].idTag}2` ? {...change,rating:newTags[index].rating} : change
+            ))
+            
+            setChanges(newChanges)
+        }else{
+            setChanges((changes)=> [...changes,{type:"update",name:newTags[index].name,rating:newTags[index].rating,categorySelected,id:`${newTags[index].idTag}2`}])
+        }
+    }
+
+    const updateCreateRating = (index,newTags)=>{
+            let newChanges = []
+            changes.forEach((change)=>{
+                if(change.id === `${newTags[index].idTag}1`){
+                    newChanges.push({type:"create",name:newTags[index].name,rating:newTags[index].rating,categorySelected,id:`${newTags[index].idTag}1`})
+                }else{
+                    newChanges.push(change)
+                }
+            })
+            setChanges(newChanges)
+    }
 
 
 
@@ -350,7 +377,6 @@ export const Etiquetador = ({ isActive, handleClose }) => {
                         </div>
                     </div>
                     <div className="flex flex-col items-center ">
-
                         <p>Usuario: <span className="text-sky-300">{userName}</span></p>
                     </div>
                 </div>
