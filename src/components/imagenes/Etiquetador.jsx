@@ -12,7 +12,7 @@ import CambiosEtiquetas from "../etiqueta/CambiosEtiquetas";
 export const Etiquetador = ({ isActive, handleClose }) => {
 
     const navigate = useNavigate()
-    const { cardImagePage, setCardImagePage, setImage, image, userData, albumInformation } = useAuth()
+    const { changes,setChanges,cardImagePage, setCardImagePage, setImage, image, userData, albumInformation } = useAuth()
     const token = userData.token
     const [categories, setCategories] = useState([])
     const [tags, setTags] = useState([])
@@ -21,7 +21,6 @@ export const Etiquetador = ({ isActive, handleClose }) => {
     const [isNextPage, setIsNextPage] = useState(true)
     const [categorySelected, setCategorySelected] = useState(null)
     const [maxPage, setMaxPage] = useState(1)
-    const [changes ,setChanges] = useState([])
     const userName = userData.userName
     const userID = userData.decoded.user_id
 
@@ -79,6 +78,8 @@ export const Etiquetador = ({ isActive, handleClose }) => {
                 setImage(newImages[0])
                 setCardImagePage((CardImagePage) => CardImagePage + 1)
                 handleIsNextPage(2)
+                setChanges([])
+
             }
         }).catch((error) => {
             console.error('Error:', error);
@@ -111,6 +112,7 @@ export const Etiquetador = ({ isActive, handleClose }) => {
         handleIsNextPage(0)
         setImage(newImages[0])
         setCardImagePage(cardImagePage => cardImagePage - 1)
+        setChanges([])
     }
 
     const handleSelect = (e, tag) => {
@@ -128,6 +130,13 @@ export const Etiquetador = ({ isActive, handleClose }) => {
                     updateCreateDeselect(tagEach)
                 }if(tagEach.oldRating == undefined && !tagEach.isSelect) {
                     setChanges((changes) =>[...changes,{type:"create",idTag:tag.idTag,name:tag.name,rating:tag.rating,categorySelected,id:`${tag.idTag}1`}])
+                }if(tagEach.oldRating != undefined){
+                    const exists = changes.some((change)=> change.idTag === tag.idTag)
+                    if(exists){
+                        updateCreateDeselect(tag)              
+                    }else{
+                        setChanges((changes) =>[...changes,{type:"delete",idTag:tag.idTag,name:tag.name,rating:tag.rating,categorySelected,id:`${tag.idTag}3`}])
+                    }
                 }
             } else {
                 newTags.push(tagEach)
@@ -147,7 +156,7 @@ export const Etiquetador = ({ isActive, handleClose }) => {
         setChanges((changes)=>{
             let newChanges = []
             changes.forEach((change)=>{
-                if(change.id !==`${tag.idTag}1` ){
+                if(change.idTag !==tag.idTag ){
                     newChanges.push(change)
                 }
             })
@@ -297,12 +306,11 @@ export const Etiquetador = ({ isActive, handleClose }) => {
                 }));
 
                 setTags(tagsWithRating);
-                
-                
+                transformChangesToTags(tagsWithRating)
             } else {
                 setTags(newTags);
+                transformChangesToTags(newTags)
             }
-            
             
     
         } catch (error) {
@@ -310,27 +318,22 @@ export const Etiquetador = ({ isActive, handleClose }) => {
         }
     };
 
-   
-
-
     const transformChangesToTags = (Tags) => {
         let newTags = [];
         const changesMap = changes.map((change)=>(change.idTag))
 
         Tags.forEach((tag)=>{
             if(changesMap.includes(tag.idTag)){
-                const change = changes.find((change)=> change.idTag === tag.idTag)
-                        newTags.push({
+                const change = changes.find((change)=> change.idTag === tag.idTag)                
+                    newTags.push({
                             ...tag,
-                            isSelect:true,
+                            isSelect:change.type !== "delete",
                             rating:change.rating
                         })                   
             }else{
                 newTags.push(tag)
             }
-        })
-
-    
+        })    
         // Actualizar los tags después de procesar ambos cambios
         setTags(newTags);
     };
@@ -364,14 +367,17 @@ export const Etiquetador = ({ isActive, handleClose }) => {
 
                     {/* Fila para la imagen y el select */}
                     <div className=" flex justify-center items-center xl:items-start gap-x-10 sm:flex-col flex-col md:flex-col lg:flex-row xl:flex-row overflow-auto xl:overflow-hidden">
-                        <div onClick={handleOpenModal} className=" w-3/5 h-60  min-h-[30rem] bg-gray-200 flex items-center justify-center hover:cursor-pointer">
-                            {image.link ? (
-                                <img className=" object-cover w-full h-full" src={image.link} alt="sin" />
-                            ) : (
-                                <p className="text-gray-500">No Image Available</p>
-                            )}
-                        </div>
-                        <CambiosEtiquetas changes={changes}/>
+                    <div onClick={handleOpenModal} className="relative w-3/5 h-60 min-h-[30rem] bg-gray-200 flex items-center justify-center hover:cursor-pointer">
+                        {image.link ? (
+                            <img className="object-cover w-full h-full" src={image.link} alt="sin" />
+                        ) : (
+                            <p className="text-gray-500">No Image Available</p>
+                        )}
+                        <button className="absolute top-1/2 right-[-20px] transform -translate-x-1/2 -translate-y-1/2 bg-blue-500 text-white p-2 rounded-full">
+                            <FontAwesomeIcon icon={faGreaterThan} />
+                        </button>
+                    </div>
+                        
                         <div className="sm:invisible visible lg:visible md:visible xl:visible inline-block xl:min-h-[30rem] w-0.5 bg-zinc-600"></div>
                         <div className="flex-col  lg:self-start xl:self-start sm:flex sm:flex sm:justify-center sm-items-center sm:flex">
                             <select onChange={(e) => handleTags(e.target.value)} about="hola" className="text-gray-700">

@@ -4,7 +4,7 @@ import { useSearchParams } from "react-router-dom"
 import { useAuth } from "../../AuthProvider"
 
 export const GridImagenes = ({ images }) => {
-    const {isTaggerActive,setIsTaggerActive} =  useAuth()
+    const {isTaggerActive,setIsTaggerActive,setChanges} =  useAuth()
     const [searchParams,setSearchParams] = useSearchParams()
             
     const handlecloseTagger = () => {
@@ -13,6 +13,7 @@ export const GridImagenes = ({ images }) => {
             prev.delete('image-page')
             return prev
         })
+        setChanges([])
         setIsTaggerActive(false)
     }
 

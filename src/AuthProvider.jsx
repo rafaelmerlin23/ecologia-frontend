@@ -43,6 +43,7 @@ export const AuthProvider = ({ children }) => {
 
     const [backRoute,setBackRoute] = useState('/proyectos')
 
+    const [changes ,setChanges] = useState([])
 
 
     const refreshProjects = () => {
@@ -120,6 +121,8 @@ export const AuthProvider = ({ children }) => {
             , setIsTaggerActive
             ,backRoute
             ,setBackRoute
+            ,changes
+            ,setChanges
 
         }}>
             {children}
