@@ -56,7 +56,7 @@ export const Etiquetador = ({ isActive, handleClose }) => {
 
 
 
-    }, [cardImagePage, categorySelected,image]);
+    }, [cardImagePage,categorySelected,image]);
 
 
     const handleClick = () => {
@@ -119,16 +119,15 @@ export const Etiquetador = ({ isActive, handleClose }) => {
         let newTags = []
         tags.forEach((tagEach) => {
             if (tagEach === tag) {
-                newTags.push({
-                    name: tagEach.name, // El nombre de la etiqueta está en el índice 1
-                    idTag: tagEach.idTag,
-                    isSelect: !tagEach.isSelect,
-                    rating: tagEach.rating
-                })
-                if(tag.isSelect){
-                    updateCreateDeselect(tag)
-                }else{
-                    setChanges((changes) =>[...changes,{type:"create",name:tag.name,rating:tag.rating,categorySelected,id:`${tag.idTag}1`}])
+                    newTags.push({
+                        ...tag,
+                        isSelect: !tag.isSelect,
+                    })
+                console.log(tag)   
+                if(tagEach.isSelect){
+                    updateCreateDeselect(tagEach)
+                }if(tagEach.oldRating == undefined && !tagEach.isSelect) {
+                    setChanges((changes) =>[...changes,{type:"create",idTag:tag.idTag,name:tag.name,rating:tag.rating,categorySelected,id:`${tag.idTag}1`}])
                 }
             } else {
                 newTags.push(tagEach)
@@ -219,7 +218,7 @@ export const Etiquetador = ({ isActive, handleClose }) => {
             return tag;
         });
 
-        if('oldRating' in newTags[tagIndex]){
+        if(newTags[tagIndex].oldRating != undefined){
             handleUpdateRatingChage(tagIndex,newTags)
         }else{
             updateCreateRating(tagIndex,newTags)
@@ -228,8 +227,15 @@ export const Etiquetador = ({ isActive, handleClose }) => {
     };
 
     const handleUpdateRatingChage = (index,newTags) => {
-        if(true){
-
+        if(Number(newTags[index].oldRating) === Number(newTags[index].rating)){
+            let newChanges = []
+            changes.forEach((change)=>{
+                if(change.id !== `${newTags[index].idTag}2`){
+                    newChanges.push(change)
+                }
+            })
+            setChanges(newChanges)
+            return 
         }
         const existsRecord = changes.some((change)=> change.id === `${newTags[index].idTag}2`)
         if(existsRecord){
@@ -239,7 +245,7 @@ export const Etiquetador = ({ isActive, handleClose }) => {
             
             setChanges(newChanges)
         }else{
-            setChanges((changes)=> [...changes,{type:"update",name:newTags[index].name,rating:newTags[index].rating,categorySelected,id:`${newTags[index].idTag}2`}])
+            setChanges((changes)=> [...changes,{type:"update",idTag:newTags[index].idTag,name:newTags[index].name,rating:newTags[index].rating,categorySelected,id:`${newTags[index].idTag}2`}])
         }
     }
 
@@ -247,7 +253,7 @@ export const Etiquetador = ({ isActive, handleClose }) => {
             let newChanges = []
             changes.forEach((change)=>{
                 if(change.id === `${newTags[index].idTag}1`){
-                    newChanges.push({type:"create",name:newTags[index].name,rating:newTags[index].rating,categorySelected,id:`${newTags[index].idTag}1`})
+                    newChanges.push({type:"create",idTag:newTags[index].idTag,name:newTags[index].name,rating:newTags[index].rating,categorySelected,id:`${newTags[index].idTag}1`})
                 }else{
                     newChanges.push(change)
                 }
@@ -259,16 +265,18 @@ export const Etiquetador = ({ isActive, handleClose }) => {
 
 
     const handleTags = async (id) => {
+        
         try {
             let newTags = [];
             
             // Obtener etiquetas (tags) sin calificación
             const dataTags = await handleGetData(`pictures/show_tags?category_id=${id}`, token);
             newTags = dataTags.response.map((informacion) => ({
-                name: informacion[1], // El nombre de la etiqueta está en el índice 1
+                name: informacion[1],
                 idTag: informacion[0],
                 isSelect: false,
-                rating: 0
+                rating: 0,
+                oldRating:undefined
             }));
     
             // Obtener etiquetas con calificación
@@ -280,23 +288,53 @@ export const Etiquetador = ({ isActive, handleClose }) => {
                     acc[rating[4]] = rating[2]; // rating[4] es idTag y rating[2] es el score
                     return acc;
                 }, {});
-    
+
                 const tagsWithRating = newTags.map((newTag) => ({
                     ...newTag,
                     isSelect: ratingsMap[newTag.idTag] !== undefined,
                     rating: ratingsMap[newTag.idTag] || newTag.rating,
-                    oldRating:ratingsMap[newTag.idTag] || newTag.rating // Asigna la calificación si existe
+                    oldRating:ratingsMap[newTag.idTag] || undefined // Asigna la calificación si existe
                 }));
-    
+
                 setTags(tagsWithRating);
+                
+                
             } else {
                 setTags(newTags);
             }
+            
+            
     
         } catch (error) {
             console.error(error);
         }
     };
+
+   
+
+
+    const transformChangesToTags = (Tags) => {
+        let newTags = [];
+        const changesMap = changes.map((change)=>(change.idTag))
+
+        Tags.forEach((tag)=>{
+            if(changesMap.includes(tag.idTag)){
+                const change = changes.find((change)=> change.idTag === tag.idTag)
+                        newTags.push({
+                            ...tag,
+                            isSelect:true,
+                            rating:change.rating
+                        })                   
+            }else{
+                newTags.push(tag)
+            }
+        })
+
+    
+        // Actualizar los tags después de procesar ambos cambios
+        setTags(newTags);
+    };
+    
     
 
 

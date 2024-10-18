@@ -1,11 +1,11 @@
 import React, { useEffect } from 'react'
 
 function CambiosEtiquetas({changes}) {
-  
+    useEffect(()=>{},[changes])
 
     return (
     <div className='flex flex-col h-60 min-h-[30rem] w-[300px] bg-blue-300'>
-    <div className='bg-blue-200 min-h-[26rem]'>
+    <div className='text-black bg-blue-200 min-h-[26rem]'>
         {changes.map((change)=>(
             <div key={change.id}>
                 <h1>{change.type}</h1>
@@ -15,7 +15,7 @@ function CambiosEtiquetas({changes}) {
             </div>
         ))}
     </div> 
-    <button className='mt-auto bg-blue-500 text-white px-4 py-2'>Guardar</button>
+    <button className=' mt-auto bg-blue-500 text-black px-4 py-2'>Guardar</button>
     </div>
 
   )
