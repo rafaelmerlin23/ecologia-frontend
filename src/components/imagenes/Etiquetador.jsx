@@ -3,11 +3,13 @@ import { useEffect, useState } from "react";
 import prefixUrl from "../../helpers/ip";
 import ModalIMagen from "./ModalIMagen";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faArrowDown, faGreaterThan, faLessThan } from "@fortawesome/free-solid-svg-icons"
+import { faArrowDown, faGreaterThan, faLessThan,faCheck } from "@fortawesome/free-solid-svg-icons"
 import { useNavigate } from "react-router-dom";
 import handleGetData from "../../helpers/handleGetData";
 import handleGet from "../../helpers/handleGet";
 import CambiosEtiquetas from "../etiqueta/CambiosEtiquetas";
+import { motion,AnimatePresence } from 'framer-motion';
+
 
 export const Etiquetador = ({ isActive, handleClose }) => {
 
@@ -174,43 +176,10 @@ export const Etiquetador = ({ isActive, handleClose }) => {
         setIsModalActive(true)
     }
 
-    const onLabel = () => {
-
-        tags.forEach((tag) => {
-            if (tag.isSelect) {
-                const formData = new FormData();
-                formData.append('picture_id', image.id);
-                formData.append('user_id', userID);
-                formData.append('tag_id', tag.idTag);
-                formData.append('rating_score', tag.rating);
-
-                // Hacer la petición POST
-                fetch(`${prefixUrl}miscellaneous/create_rating`, {
-                    method: 'POST',
-
-                    headers: {
-                        'Authorization': token // Envía el token en el encabezado Authorization
-                    },
-                    body: formData // Enviamos el FormData
-
-
-                })
-                    .then((res) => res.json())
-                    .then((data) => {
-                        console.log('Respuesta del servidor:', data);
-                        if (data && data.status == 'success') {
-
-
-                        }
-
-                    })
-                    .catch((error) => {
-                        console.error('Error:', error);
-                    });
-
-            }
-        })
-
+    const onLabel = (e) => {
+        e.stopPropagation()
+        e.preventDefault()
+        console.log("hola")
     }
 
     
@@ -337,11 +306,12 @@ export const Etiquetador = ({ isActive, handleClose }) => {
         // Actualizar los tags después de procesar ambos cambios
         setTags(newTags);
     };
+
     
     
 
 
-    if (!isActive) return null
+    if (!isActive) return null  
     return (
         <div
             onClick={handleClose}
@@ -373,10 +343,40 @@ export const Etiquetador = ({ isActive, handleClose }) => {
                         ) : (
                             <p className="text-gray-500">No Image Available</p>
                         )}
-                        <button className="absolute top-1/2 right-[-20px] transform -translate-x-1/2 -translate-y-1/2 bg-blue-500 text-white p-2 rounded-full">
-                            <FontAwesomeIcon icon={faGreaterThan} />
-                        </button>
-                    </div>
+                         <AnimatePresence>
+                        {changes.length > 0 ? (
+                        <motion.button
+                            onClick={(e) => onLabel(e)}
+                            title="guardar cambios"
+                            className="absolute top-1/2 right-[-10px] transform -translate-x-1/2 -translate-y-1/2 bg-blue-500 text-white py-2 px-3 rounded-full"
+                            initial={{ opacity: 0, scale: 0.5 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            exit={{ opacity: 0, scale: 0.5 }}
+                            transition={{ duration: 0.3 }}
+                        >
+                            <label>
+                            guardar <FontAwesomeIcon icon={faGreaterThan} />
+                            </label>
+                        </motion.button>
+                        ) : (
+                        <motion.div
+                            initial={{ opacity: 0, scale: 0.5 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            exit={{ opacity: 0, scale: 0.5 }}
+                            transition={{ duration: 0.3 }}
+                            className="absolute top-1/2 right-[-15px] transform -translate-x-1/2 -translate-y-1/2"
+                        >
+                            <label
+                            onClick={(e) => e.stopPropagation()}
+                            title="sin cambios"
+                            className="bg-green-500 px-3 py-2 rounded-full"
+                            >
+                            <FontAwesomeIcon className="text-white" icon={faCheck} />
+                            </label>
+                        </motion.div>
+                        )}
+                    </AnimatePresence>
+                        </div>
                         
                         <div className="sm:invisible visible lg:visible md:visible xl:visible inline-block xl:min-h-[30rem] w-0.5 bg-zinc-600"></div>
                         <div className="flex-col  lg:self-start xl:self-start sm:flex sm:flex sm:justify-center sm-items-center sm:flex">
