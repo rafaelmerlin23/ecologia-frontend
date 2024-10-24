@@ -5,7 +5,7 @@ import { motion,AnimatePresence } from 'framer-motion';
 
 function LabelImage({image,changes,handleOpenModal}) {
   return (
-    <div onClick={handleOpenModal} className="relative w-3/5 h-60 min-h-[30rem] bg-gray-200 flex items-center justify-center hover:cursor-pointer">
+    <div onClick={handleOpenModal} className="relative w-3/5 h-60 min-h-[30-rem] xl:min-h-[40rem] bg-gray-200 flex items-center justify-center hover:cursor-pointer">
           {image.link ? (
               <img className="object-cover w-full h-full" src={image.link} alt="sin" />
           ) : (
