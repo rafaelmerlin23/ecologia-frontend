@@ -9,8 +9,8 @@ import { useParams, useSearchParams } from "react-router-dom";
 import { Paginacion } from "../components/imagenes/Paginacion";
 import handleGetData from "../helpers/handleGetData";
 
-function Imagenes() {
-  const [isActiveUploadImages, setIsActiveUploadImages] = useState(false);
+function Imagenes() { 
+  const [isActiveUploadImages , setIsActiveUploadImages] = useState(false);
   const {
     setImage
     , cardImagePage
@@ -18,7 +18,9 @@ function Imagenes() {
     , quantityImagePerPage
     , setPageImage
     , pageImage
+    ,setMaxPage
     , images
+    ,setCardImagePage
     , setImages
     , shouldRefresh
     , userData
@@ -26,7 +28,7 @@ function Imagenes() {
   const [isLoadingImage, setIsLoadingImage] = useState(false)
   const token = userData.token
   const [searchParams, setSearchParams] = useSearchParams()
-  const [maxPage, setMaxPage] = useState(1)
+  const [maxPageGrid, setMaxPageGrid] = useState(1)
   const { albumID } = useParams()
 
 
@@ -69,10 +71,9 @@ function Imagenes() {
           }
         ))
         setImage(newImages[0])
-
+        setCardImagePage(searchParams.get('image-page'))
         setIsTaggerActive(true)
-        setMaxPageGrid(data.total_pages)
-
+        setMaxPage(data.total_pages)
       }
     }).catch((error) => {
       console.error('Error:', error);
@@ -160,7 +161,7 @@ function Imagenes() {
               </p>
             </button>
             <GridImagenes images={images} />
-            <Paginacion handleNext={handleNext} handlePrevious={handlePrevious} maxPageGrid={maxPageGrid} />
+            <Paginacion handleNext={handleNext} handlePrevious={handlePrevious} maxPage={maxPageGrid} />
           </div >
 
           : <div

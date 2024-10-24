@@ -45,6 +45,9 @@ export const AuthProvider = ({ children }) => {
 
     const [changes ,setChanges] = useState([])
 
+    const [maxPage, setMaxPage] = useState(1)
+
+
 
     const refreshProjects = () => {
         setShouldRefresh(prev => !prev);
@@ -123,6 +126,8 @@ export const AuthProvider = ({ children }) => {
             ,setBackRoute
             ,changes
             ,setChanges
+            ,maxPage
+            ,setMaxPage
 
         }}>
             {children}

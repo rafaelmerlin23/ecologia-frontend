@@ -4,7 +4,7 @@ import ModalIMagen from "./ModalIMagen";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {  faGreaterThan, faLessThan } from "@fortawesome/free-solid-svg-icons"
 
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import handleGetData from "../../helpers/handleGetData";
 import handleGet from "../../helpers/handleGet";
 import LabelWrapper from "./label components/labelWrapper";
@@ -15,15 +15,15 @@ import TagsSelector from "./label components/TagsSelector";
 export const Etiquetador = ({ isActive, handleClose }) => {
 
     const navigate = useNavigate()
-    const { changes,setChanges,cardImagePage, setCardImagePage, setImage, image, userData, albumInformation } = useAuth()
+    const { setMaxPage,maxPage,changes,setChanges,cardImagePage, setCardImagePage, setImage, image, userData, albumInformation } = useAuth()
     const token = userData.token
     const [categories, setCategories] = useState([])
     const [tags, setTags] = useState([])
     const [isModalActive, setIsModalActive] = useState(false)
     const [isNextPage, setIsNextPage] = useState(true)
     const [categorySelected, setCategorySelected] = useState(null)
-    const [maxPage, setMaxPage] = useState(1)
     const userName = userData.userName
+    const [searchParams, setSearchParams] = useSearchParams()
     const userID = userData.decoded.user_id
 
     useEffect(() => {
@@ -77,8 +77,12 @@ export const Etiquetador = ({ isActive, handleClose }) => {
                         date: response[2],
                     }
                 ))
+                setSearchParams(params => {
+                    params.set("image-page", cardImagePage+1);
+                    return params;
+                  });
                 setImage(newImages[0])
-                setCardImagePage((CardImagePage) => CardImagePage + 1)
+                setCardImagePage((CardImagePage) => Number(cardImagePage) + 1)
                 handleIsNextPage(2)
                 setChanges([])
 
@@ -113,6 +117,10 @@ export const Etiquetador = ({ isActive, handleClose }) => {
         ))
         handleIsNextPage(0)
         setImage(newImages[0])
+        setSearchParams(params => {
+            params.set("image-page", Number(cardImagePage)-1);
+            return params;
+          });
         setCardImagePage(cardImagePage => cardImagePage - 1)
         setChanges([])
     }
@@ -312,7 +320,7 @@ export const Etiquetador = ({ isActive, handleClose }) => {
     return (
         <LabelWrapper handleClose={handleClose} >
 
-                {cardImagePage !== 1 ? <button onClick={handlePrevious}
+                {cardImagePage != 1 ? <button onClick={handlePrevious}
                     className='flex justify-center items-center py-3 px-3 bg-white rounded-full absolute top-1/2 left-2 text-white text-xl hover:opacity-70'>
                     <FontAwesomeIcon className="text-sm text-black" icon={faLessThan} />
                 </button> : ""}
