@@ -14,7 +14,6 @@ function Imagenes() {
   const {
     setImage
     , cardImagePage
-    , isTaggerActive
     , setIsTaggerActive
     , quantityImagePerPage
     , setPageImage
@@ -23,7 +22,6 @@ function Imagenes() {
     , setImages
     , shouldRefresh
     , userData
-    , albumInformation
     , setAlbumInformation } = useAuth()
   const [isLoadingImage, setIsLoadingImage] = useState(false)
   const token = userData.token
@@ -71,7 +69,10 @@ function Imagenes() {
           }
         ))
         setImage(newImages[0])
+
         setIsTaggerActive(true)
+        setMaxPageGrid(data.total_pages)
+
       }
     }).catch((error) => {
       console.error('Error:', error);
@@ -105,7 +106,7 @@ function Imagenes() {
       .then((res) => res.json())
       .then((data) => {
         if (data && data.status == 'success') {
-          setMaxPage(data.total_pages)
+          setMaxPageGrid(data.total_pages)
           const newImages = data.response.map((response) => (
             {
               link: response[0],
@@ -149,6 +150,7 @@ function Imagenes() {
               id="agregar-imagen"
               className={isActiveUploadImages ? "" : 'h-3/5 w-3/5 pb-4 group hover:cursor-pointer'}
               onClick={openImageOverlay}>
+                
               <FontAwesomeIcon
                 className="text-4xl text-gray-400 group-hover:text-gray-300"
                 icon={faImage}
@@ -158,7 +160,7 @@ function Imagenes() {
               </p>
             </button>
             <GridImagenes images={images} />
-            <Paginacion handleNext={handleNext} handlePrevious={handlePrevious} maxPage={maxPage} />
+            <Paginacion handleNext={handleNext} handlePrevious={handlePrevious} maxPageGrid={maxPageGrid} />
           </div >
 
           : <div

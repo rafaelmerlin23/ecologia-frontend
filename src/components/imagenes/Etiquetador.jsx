@@ -1,14 +1,15 @@
 import { useAuth } from "../../AuthProvider"
 import { useEffect, useState } from "react";
-import prefixUrl from "../../helpers/ip";
 import ModalIMagen from "./ModalIMagen";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faArrowDown, faGreaterThan, faLessThan,faCheck } from "@fortawesome/free-solid-svg-icons"
+import {  faGreaterThan, faLessThan } from "@fortawesome/free-solid-svg-icons"
+
 import { useNavigate } from "react-router-dom";
 import handleGetData from "../../helpers/handleGetData";
 import handleGet from "../../helpers/handleGet";
-import CambiosEtiquetas from "../etiqueta/CambiosEtiquetas";
-import { motion,AnimatePresence } from 'framer-motion';
+import LabelWrapper from "./label components/labelWrapper";
+import LabelImage from "./label components/LabelImage";
+import TagsSelector from "./label components/TagsSelector";
 
 
 export const Etiquetador = ({ isActive, handleClose }) => {
@@ -19,7 +20,6 @@ export const Etiquetador = ({ isActive, handleClose }) => {
     const [categories, setCategories] = useState([])
     const [tags, setTags] = useState([])
     const [isModalActive, setIsModalActive] = useState(false)
-    const [tagsSelected, setTagsSelected] = useState([])
     const [isNextPage, setIsNextPage] = useState(true)
     const [categorySelected, setCategorySelected] = useState(null)
     const [maxPage, setMaxPage] = useState(1)
@@ -119,7 +119,6 @@ export const Etiquetador = ({ isActive, handleClose }) => {
 
     const handleSelect = (e, tag) => {
         e.preventDefault()
-        setTagsSelected(tagsSelected => [...tagsSelected, tag.idTag])
         let newTags = []
         tags.forEach((tagEach) => {
             if (tagEach === tag) {
@@ -135,7 +134,14 @@ export const Etiquetador = ({ isActive, handleClose }) => {
                 }if(tagEach.oldRating != undefined){
                     const exists = changes.some((change)=> change.idTag === tag.idTag)
                     if(exists){
-                        updateCreateDeselect(tag)              
+                        if(changes.some((change)=> change.idTag === tag.idTag && change.type == "update")){
+                            setChanges((changes) =>[...changes,{type:"delete",idTag:tag.idTag,name:tag.name,rating:tag.oldRating,categorySelected,id:`${tag.idTag}3`}])
+                        }else{
+                            updateCreateDeselect(tag)
+                            if(tagEach.rating != tagEach.oldRating){
+                                setChanges((changes) =>[...changes,{type:"update",idTag:tag.idTag,name:tag.name,rating:tag.rating,categorySelected,id:`${tag.idTag}2`}])
+                            }
+                        }
                     }else{
                         setChanges((changes) =>[...changes,{type:"delete",idTag:tag.idTag,name:tag.name,rating:tag.rating,categorySelected,id:`${tag.idTag}3`}])
                     }
@@ -145,13 +151,7 @@ export const Etiquetador = ({ isActive, handleClose }) => {
             }
         })
         setTags(newTags)
-        const newTagsSelected = []
-        newTags.forEach((newTag) => {
-            if (newTag.isSelect) {
-                newTagsSelected.push(newTag.idTag)
-            }
-        })
-        setTagsSelected(newTagsSelected)
+        
     }
 
     const updateCreateDeselect = (tag)=>{
@@ -263,13 +263,13 @@ export const Etiquetador = ({ isActive, handleClose }) => {
             if (dataTagsWithRating.response.length !== 0) {
                 // Mapa de calificaciones para búsqueda eficiente
                 const ratingsMap = dataTagsWithRating.response.reduce((acc, rating) => {
-                    acc[rating[4]] = rating[2]; // rating[4] es idTag y rating[2] es el score
+                    acc[rating[4]] = rating[2]; 
                     return acc;
                 }, {});
 
                 const tagsWithRating = newTags.map((newTag) => ({
                     ...newTag,
-                    isSelect: ratingsMap[newTag.idTag] !== undefined,
+                    isSelect: ratingsMap[newTag.idTag] !== undefined ,
                     rating: ratingsMap[newTag.idTag] || newTag.rating,
                     oldRating:ratingsMap[newTag.idTag] || undefined // Asigna la calificación si existe
                 }));
@@ -308,20 +308,9 @@ export const Etiquetador = ({ isActive, handleClose }) => {
     };
 
     
-    
-
-
     if (!isActive) return null  
     return (
-        <div
-            onClick={handleClose}
-            className='  fixed z-40 inset-0 bg-black bg-opacity-20 backdrop-blur-sm flex justify-center items-center'>
-            <div
-                onClick={(e) => e.stopPropagation()}
-                className="  bg-zinc-900 border border-gray-300 p-10  rounded-3xl flex justify-center items-center">
-                <button onClick={handleClose} className=' absolute top-2 right-2 text-white text-xl hover:opacity-70'>
-                    x
-                </button>
+        <LabelWrapper handleClose={handleClose} >
 
                 {cardImagePage !== 1 ? <button onClick={handlePrevious}
                     className='flex justify-center items-center py-3 px-3 bg-white rounded-full absolute top-1/2 left-2 text-white text-xl hover:opacity-70'>
@@ -337,95 +326,22 @@ export const Etiquetador = ({ isActive, handleClose }) => {
 
                     {/* Fila para la imagen y el select */}
                     <div className=" flex justify-center items-center xl:items-start gap-x-10 sm:flex-col flex-col md:flex-col lg:flex-row xl:flex-row overflow-auto xl:overflow-hidden">
-                    <div onClick={handleOpenModal} className="relative w-3/5 h-60 min-h-[30rem] bg-gray-200 flex items-center justify-center hover:cursor-pointer">
-                        {image.link ? (
-                            <img className="object-cover w-full h-full" src={image.link} alt="sin" />
-                        ) : (
-                            <p className="text-gray-500">No Image Available</p>
-                        )}
-                         <AnimatePresence>
-                        {changes.length > 0 ? (
-                        <motion.button
-                            onClick={(e) => onLabel(e)}
-                            title="guardar cambios"
-                            className="absolute top-1/2 right-[-10px] transform -translate-x-1/2 -translate-y-1/2 bg-blue-500 text-white py-2 px-3 rounded-full"
-                            initial={{ opacity: 0, scale: 0.5 }}
-                            animate={{ opacity: 1, scale: 1 }}
-                            exit={{ opacity: 0, scale: 0.5 }}
-                            transition={{ duration: 0.3 }}
-                        >
-                            <label>
-                            guardar <FontAwesomeIcon icon={faGreaterThan} />
-                            </label>
-                        </motion.button>
-                        ) : (
-                        <motion.div
-                            initial={{ opacity: 0, scale: 0.5 }}
-                            animate={{ opacity: 1, scale: 1 }}
-                            exit={{ opacity: 0, scale: 0.5 }}
-                            transition={{ duration: 0.3 }}
-                            className="absolute top-1/2 right-[-15px] transform -translate-x-1/2 -translate-y-1/2"
-                        >
-                            <label
-                            onClick={(e) => e.stopPropagation()}
-                            title="sin cambios"
-                            className="bg-green-500 px-3 py-2 rounded-full"
-                            >
-                            <FontAwesomeIcon className="text-white" icon={faCheck} />
-                            </label>
-                        </motion.div>
-                        )}
-                    </AnimatePresence>
-                        </div>
-                        
+                    <LabelImage changes={changes} image={image} handleOpenModal={handleOpenModal}/>
+
                         <div className="sm:invisible visible lg:visible md:visible xl:visible inline-block xl:min-h-[30rem] w-0.5 bg-zinc-600"></div>
-                        <div className="flex-col  lg:self-start xl:self-start sm:flex sm:flex sm:justify-center sm-items-center sm:flex">
-                            <select onChange={(e) => handleTags(e.target.value)} about="hola" className="text-gray-700">
-                                {categories.map((category) => (
-                                    <option value={category.id} className="text-gray-700" key={category.id * 10}>
-                                        {category.field}
-                                    </option>
-                                ))}
-                            </select>
-                            <div className="pt-4 flex flex-col gap-y-2 ">
-                                {tags.length > 0 ? tags.map((tag, index) => (
-                                    <div className=" flex justify-center items-center flex-col" key={index}>
-                                        <button
-                                            onClick={(e) => handleSelect(e, tag)}
-                                            className={`w-[330px] w-full px-4 ${tag.isSelect ? "bg-green-700" : "bg-gray-700"} rounded-full border border-gray-600 hover:brightness-75`}
-                                            key={tag.idTag * 3}>
-                                            {tag.name}
-                                        </button>
-                                        {tag.isSelect ?
-                                            <div className="flex items-center justify-center flex-col">
-                                                <p >Selecciona la calificacion de la etiqueta:  <span className="text-sky-300">{tags[index].rating}</span></p>
-                                                <input
-                                                    onChange={(e) => handleRatingChange(e, index)}
-                                                    value={tags[index].rating}
-                                                    type="range"
-                                                    step="0.50"
-                                                    max={3}
-                                                    min={0}
-                                                />
-                                            </div>
-                                            : ""}
-                                    </div>
-                                )) :
-                                    <div className=" flex justify-center items-center flex-col">
-                                        <p>Categoria sin etiquetas.</p>
-                                        <p>Crea una</p>
-                                        <FontAwesomeIcon className='pb-1 text-green-600' icon={faArrowDown} />
-                                        <button onClick={handleClick} className="rounded-full bg-blue-700 px-6">Crear</button>
-                                    </div>}
-                            </div>
-                        </div>
+                        <TagsSelector 
+                        categories={categories}
+                        handleClick={handleClick}
+                        handleSelect={handleSelect}
+                        handleTags={handleTags}
+                        tags={tags}
+                        handleRatingChange={handleRatingChange}/>
                     </div>
                     <div className="flex flex-col items-center ">
                         <p>Usuario: <span className="text-sky-300">{userName}</span></p>
                     </div>
                 </div>
-            </div>
-        </div>
+        </LabelWrapper> 
 
     )
 }
