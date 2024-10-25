@@ -18,7 +18,7 @@ function GridProyecto() {
     const fetchData = async () => {
       try {
 
-        const endPoint = `pictures/show_projects?page=${page}&quantity=${quantity}`;
+        const endPoint = `projects/show_projects?page=${page}&quantity=${quantity}`;
 
         // Hacer la petición GET principal
         const response = await handleGet(endPoint, token);

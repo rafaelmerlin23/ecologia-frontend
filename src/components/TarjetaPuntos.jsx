@@ -52,7 +52,7 @@ function TarjetaPuntos({ index, nombre, coordenadas, imagen }) {
   const handleDeleteLocation = () => {
     const formData = new FormData();
     formData.append('location_id', index);
-    const endPoint = 'pictures/delete_location'
+    const endPoint = 'projects/delete_location'
 
     handleDelete(endPoint, formData, token, () => {
       refreshProjects()

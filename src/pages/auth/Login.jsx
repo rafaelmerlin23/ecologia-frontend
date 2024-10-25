@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../AuthProvider';
 import AuthBackGround from './components/AuthBackGround';
+import prefixUrl from '../../helpers/ip';
 
 function Login() {
     const [usuario, setUsuario] = useState("");
@@ -19,7 +20,7 @@ function Login() {
         formData.append('user_password', clave);
         formData.append('remember', 'True');
 
-        fetch('http://127.0.0.1:5000/api/miscellaneous/login', {
+        fetch(`${prefixUrl}users/login`, {
             method: 'POST',
             body: formData
         })

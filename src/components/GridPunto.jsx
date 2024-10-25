@@ -21,7 +21,7 @@ function GridPunto() {
       setProjectInformation((projectInformation)=>({...projectInformation,index:proyectoId}))
       try {
         // Usa solo 'project_id' en el endpoint
-        let endPoint = `pictures/show_locations?project_id=${proyectoId}`;
+        let endPoint = `projects/show_locations?project_id=${proyectoId}`;
 
         const response = await handleGet(endPoint, token);
 

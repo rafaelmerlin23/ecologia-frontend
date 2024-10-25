@@ -17,7 +17,7 @@ export const CrearPunto = ({ closeCreateLocation, isActive }) => {
 
 
         // Hacer la petición POST
-        fetch(`${prefixUrl}pictures/create_location`, {
+        fetch(`${prefixUrl}projects/create_location`, {
             method: 'POST',
 
             headers: {

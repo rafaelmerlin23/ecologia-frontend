@@ -20,7 +20,7 @@ const EditarPunto = ({closeEdit,isActive}) =>{
         formData.append('project_id', projectInformation.index);
 
         // Hacer la petición PATCH
-        fetch(`${prefixUrl}pictures/update_location`, {
+        fetch(`${prefixUrl}projects/update_location`, {
             method: 'PATCH',
 
             headers: {

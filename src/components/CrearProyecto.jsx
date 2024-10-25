@@ -19,7 +19,7 @@ export const CrearProyecto = ({ isActive, closeCreateProject }) => {
         formData.append('project_date', date);
 
         // Hacer la petición POST
-        fetch(`${prefixUrl}pictures/create_project`, {
+        fetch(`${prefixUrl}projects/create_project`, {
             method: 'POST',
 
             headers: {

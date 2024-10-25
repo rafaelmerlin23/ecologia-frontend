@@ -15,7 +15,7 @@ import TagsSelector from "./label components/TagsSelector";
 export const Etiquetador = ({ isActive, handleClose }) => {
 
     const navigate = useNavigate()
-    const { setMaxPage,maxPage,changes,setChanges,cardImagePage, setCardImagePage, setImage, image, userData, albumInformation } = useAuth()
+    const { shouldRefresh,setMaxPage,maxPage,changes,setChanges,cardImagePage, setCardImagePage, setImage, image, userData, albumInformation } = useAuth()
     const token = userData.token
     const [categories, setCategories] = useState([])
     const [tags, setTags] = useState([])
@@ -57,7 +57,7 @@ export const Etiquetador = ({ isActive, handleClose }) => {
 
 
 
-    }, [cardImagePage,categorySelected,image]);
+    }, [cardImagePage,categorySelected,image,shouldRefresh]);
 
 
     const handleClick = () => {
@@ -174,8 +174,6 @@ export const Etiquetador = ({ isActive, handleClose }) => {
         })
     }
 
-    
-
     const handleCloseModal = () => {
         setIsModalActive(false)
     }
@@ -184,11 +182,6 @@ export const Etiquetador = ({ isActive, handleClose }) => {
         setIsModalActive(true)
     }
 
-    const onLabel = (e) => {
-        e.stopPropagation()
-        e.preventDefault()
-        console.log("hola")
-    }
 
     
 
@@ -336,7 +329,7 @@ export const Etiquetador = ({ isActive, handleClose }) => {
                     <div className=" flex justify-center items-center xl:items-start gap-x-10 sm:flex-col flex-col md:flex-col lg:flex-row xl:flex-row overflow-auto xl:overflow-hidden">
                     <LabelImage changes={changes} image={image} handleOpenModal={handleOpenModal}/>
 
-                        <div className="sm:invisible visible lg:visible md:visible xl:visible inline-block xl:min-h-[30rem] w-0.5 bg-zinc-600"></div>
+                        <div className="sm:invisible visible lg:visible md:visible xl:visible inline-block xl:min-h-[40rem] w-0.5 bg-zinc-600"></div>
                         <TagsSelector 
                         categories={categories}
                         handleClick={handleClick}

@@ -59,10 +59,11 @@ function TarjetaDeproyecto({ LinkImagen, nombre, fecha, description, indice }) {
   const handleDeleteProject = () => {
     const formData = new FormData();
     formData.append('project_id', indice);
-    const endPoint = 'pictures/delete_project'
+    const endPoint = 'projects/delete_project'
 
     handleDelete(endPoint, formData, token, () => {
       refreshProjects()
+      cerrarOverlayEditar()
     })
   }
 

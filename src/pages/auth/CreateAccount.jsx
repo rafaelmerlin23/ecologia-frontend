@@ -11,7 +11,7 @@ export const CreateAccount = () => {
     const [password, setPassword] = useState('')
     const [repeatPassword, setRepeatPassword] = useState('')
     const [isEqualPassword, setIsEqualPassword] = useState(true)
-
+    const [email,setEmail] = useState('')
 
     const handleSubmit = (e) => {
         e.preventDefault()
@@ -22,11 +22,12 @@ export const CreateAccount = () => {
 
         const formData = new FormData();
         formData.append('user_name', user);
+        formData.append('user_email', email);
         formData.append('user_password', password);
         formData.append('user_repeat_password', repeatPassword);
 
         // Hacer la petición POST
-        fetch(`${prefixUrl}miscellaneous/create_user`, {
+        fetch(`${prefixUrl}users/register`, {
             method: 'POST',
             body: formData // Enviamos el FormData
         })
@@ -55,10 +56,17 @@ export const CreateAccount = () => {
                     <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Tu usuario</label>
                     <input required value={user} onChange={(e) => setUser(e.target.value)} type="text" name="username" id="username" className="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="gerardor1234" />
                 </div>
+                
+                <div>
+                    <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Tu correo</label>
+                    <input required value={email} onChange={(e) => setEmail(e.target.value)} type="email" name="correo" id="correo" placeholder="negronAdrian@gmail.uv.mx" className="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" />
+                </div>
+
                 <div>
                     <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Tu contraseña</label>
                     <input required value={password} onChange={(e) => setPassword(e.target.value)} type="password" name="password" id="password" placeholder="••••••••" className="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" />
                 </div>
+                
 
                 <div >
                     <label className={
@@ -83,6 +91,7 @@ export const CreateAccount = () => {
                     }
 
                 </div>
+                
 
                 <div className="flex items-center justify-between">
 

@@ -21,7 +21,7 @@ const EditarProyecto = ({cerrarEditar, isActive }) => {
         formData.append('project_date', date);
 
         // Hacer la petición PATCH
-        fetch(`${prefixUrl}pictures/update_project`, {
+        fetch(`${prefixUrl}projects/update_project`, {
             method: 'PATCH',
 
             headers: {
