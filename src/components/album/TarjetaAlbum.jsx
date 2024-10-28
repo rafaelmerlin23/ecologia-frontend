@@ -24,26 +24,20 @@ export const TarjetaAlbum = ({ album }) => {
 
   const [isEditActive, setIsEditActive] = useState(false)
 
-  const [claseContenedor, setClaseContenedor] = useState("transition ease-in-out delay-10 hover:-translate-y-1 hover:scale-105  duration-10 hover:saturate-150")
-
-
 
   const cerrarOverlayEliminar = () => {
     setIsDeleteActive(false)
-    setClaseContenedor("transition ease-in-out delay-10 hover:-translate-y-1 hover:scale-105  duration-10 hover:saturate-150")
   }
 
   const abrirOverlayEliminar = (e) => {
     e.preventDefault()
     e.stopPropagation()
     setIsDeleteActive(true)
-    setClaseContenedor("")
   }
 
   const cerrarOverlayEditar = () => {
     handleAlbumInformation()
     setIsEditActive(false)
-    setClaseContenedor("transition ease-in-out delay-10 hover:-translate-y-1 hover:scale-105  duration-10 hover:saturate-150")
   }
 
   const abrirOverlayEditar = (e) => {
@@ -51,13 +45,12 @@ export const TarjetaAlbum = ({ album }) => {
     e.stopPropagation()
     handleAlbumInformation()
     setIsEditActive(true)
-    setClaseContenedor("")
   }
 
   const handleDeleteAlbum = () => {
     const formData = new FormData();
     formData.append('album_id', album.index);
-    const endPoint = 'pictures/delete_album'
+    const endPoint = 'projects/delete_album'
 
     handleDelete(endPoint, formData, token, () => {
       refreshProjects()

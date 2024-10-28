@@ -5,7 +5,7 @@ import LabelEditorButton from './LabelEditorButton';
 
 function TagsSelector({handleTags,categories,handleSelect,tags,handleClick,handleRatingChange}) {
   return (
-    <div className="flex-col  lg:self-start xl:self-start sm:flex sm:flex sm:justify-center sm-items-center sm:flex">
+    <div className="flex-col  lg:self-start xl:self-start sm:flex sm:flex sm:justify-center sm-items-center sm:flex w-[340px]">
                             <select onChange={(e) => handleTags(e.target.value)} about="hola" className="text-gray-700">
                                 {categories.map((category) => (
                                     <option value={category.id} className="text-gray-700" key={category.id * 10}>

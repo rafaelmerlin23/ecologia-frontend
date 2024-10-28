@@ -27,25 +27,21 @@ function TarjetaDeproyecto({ LinkImagen, nombre, fecha, description, indice }) {
 
   const [esActivaEditar, setEsActivaEditar] = useState(false)
 
-  const [claseContenedor, setClaseContenedor] = useState("transition ease-in-out delay-10 hover:-translate-y-1 hover:scale-105  duration-10 hover:saturate-150")
 
 
 
   const cerrarOverlayEliminar = () => {
     setEsActiva(false)
-    setClaseContenedor("transition ease-in-out delay-10 hover:-translate-y-1 hover:scale-105  duration-10 hover:saturate-150")
   }
 
   const abrirOverlayEliminar = (e) => {
     e.preventDefault()
     e.stopPropagation()
     setEsActiva(true)
-    setClaseContenedor("")
   }
 
   const cerrarOverlayEditar = () => {
     setEsActivaEditar(false)
-    setClaseContenedor("transition ease-in-out delay-10 hover:-translate-y-1 hover:scale-105  duration-10 hover:saturate-150")
   }
 
   const abrirOverlayEditar = (e) => {
@@ -53,7 +49,6 @@ function TarjetaDeproyecto({ LinkImagen, nombre, fecha, description, indice }) {
     e.stopPropagation()
     setProjectInformation({ index: indice, name: nombre, description: description, date: fecha })
     setEsActivaEditar(true)
-    setClaseContenedor("")
   }
 
   const handleDeleteProject = () => {
@@ -62,8 +57,9 @@ function TarjetaDeproyecto({ LinkImagen, nombre, fecha, description, indice }) {
     const endPoint = 'projects/delete_project'
 
     handleDelete(endPoint, formData, token, () => {
+      console.log("borrando")
+      cerrarOverlayEliminar()
       refreshProjects()
-      cerrarOverlayEditar()
     })
   }
 

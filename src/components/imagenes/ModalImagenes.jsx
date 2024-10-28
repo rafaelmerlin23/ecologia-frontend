@@ -25,7 +25,7 @@ function ModalImagenes({ closeModal, children }) {
 
       formData.append('category_id',1)
 
-      await fetch(`${prefixUrl}pictures/create_picture`, {
+      await fetch(`${prefixUrl}pictures/upload_picture`, {
         method: 'POST',
         headers: {
           Authorization: token,  // Si se necesita un token

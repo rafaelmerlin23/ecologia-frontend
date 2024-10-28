@@ -71,7 +71,7 @@ export const CategoriaEtiqueta = () => {
         formData.append('category_name', field.field);
 
         // Hacer la petición POST
-        fetch(`${prefixUrl}pictures/create_category`, {
+        fetch(`${prefixUrl}tag_system/create_category`, {
             method: 'POST',
 
             headers: {
@@ -100,7 +100,7 @@ export const CategoriaEtiqueta = () => {
         formData.append('category_id', field.id);
 
         // Hacer la petición PATCH
-        fetch(`${prefixUrl}pictures/update_category`, {
+        fetch(`${prefixUrl}tag_system/update_category`, {
             method: 'PATCH',
 
             headers: {
@@ -154,7 +154,7 @@ export const CategoriaEtiqueta = () => {
     useEffect(() => {
         document.body.className = ' bg-gradient-to-r from-gray-900 to-blue-gray-950';
         setFields([])
-        fetch(`${prefixUrl}pictures/show_categories?page=${page}&quantity=${quantity}`, {
+        fetch(`${prefixUrl}tag_system/show_categories?page=${page}&quantity=${quantity}`, {
             method: 'GET',
             headers: {
                 'Authorization': token // Envía el token en el encabezado Authorization
@@ -242,7 +242,7 @@ const ModalDelete = ({ isActive, handleClose }) => {
             }else{
                 const formData = new FormData();
                 formData.append('category_id', field.id);
-                const endPoint = 'pictures/delete_category'
+                const endPoint = 'tag_system/delete_category'
                 handleDelete(endPoint,formData,token,()=>{
                 
             })

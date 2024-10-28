@@ -18,7 +18,7 @@ export function CrearAlbum({ isActive, closeCreateAlbum }) {
         formData.append('location_id', locationInformation.index);
 
         // Hacer la petición POST
-        fetch(`${prefixUrl}pictures/create_album`, {
+        fetch(`${prefixUrl}projects/create_album`, {
             method: 'POST',
 
             headers: {

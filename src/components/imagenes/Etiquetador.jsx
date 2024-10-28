@@ -37,7 +37,7 @@ export const Etiquetador = ({ isActive, handleClose }) => {
             handleIsNextPage()
         })
 
-        const endPointCategories = `pictures/show_categories?page=${1}}&quantity=${100}`
+        const endPointCategories = `tag_system/show_categories?page=${1}&quantity=${100}`
 
         //obtener categorias
         handleGetData(endPointCategories, token).then(
@@ -249,7 +249,7 @@ export const Etiquetador = ({ isActive, handleClose }) => {
             let newTags = [];
             
             // Obtener etiquetas (tags) sin calificación
-            const dataTags = await handleGetData(`pictures/show_tags?category_id=${id}`, token);
+            const dataTags = await handleGetData(`tag_system/show_tags?category_id=${id}`, token);
             newTags = dataTags.response.map((informacion) => ({
                 name: informacion[1],
                 idTag: informacion[0],
@@ -259,7 +259,7 @@ export const Etiquetador = ({ isActive, handleClose }) => {
             }));
     
             // Obtener etiquetas con calificación
-            const dataTagsWithRating = await handleGetData(`miscellaneous/show_ratings_from_picture?picture_id=${image.id}`, token);
+            const dataTagsWithRating = await handleGetData(`ratings/show_ratings_from_picture?picture_id=${image.id}`, token);
     
             if (dataTagsWithRating.response.length !== 0) {
                 // Mapa de calificaciones para búsqueda eficiente

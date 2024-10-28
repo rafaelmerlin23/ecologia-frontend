@@ -15,7 +15,7 @@ export const EditarAlbum = ({closeEdit,isActive}) =>{
         formData.append('album_date',date );
 
         // Hacer la petición PATCH
-        fetch(`${prefixUrl}pictures/update_album`, {
+        fetch(`${prefixUrl}projects/update_album`, {
             method: 'PATCH',
 
             headers: {

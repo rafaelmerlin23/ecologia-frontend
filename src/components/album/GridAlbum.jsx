@@ -20,7 +20,7 @@ export const GridAlbum = () => {
       setLocationInformation((LocationInformation)=>({...LocationInformation,index:puntoID}))
       try {
 
-        const endPoint = `pictures/show_albums?page=${page}&quantity=${quantity}&location_id=${puntoID}`;
+        const endPoint = `projects/show_albums?page=${page}&quantity=${quantity}&location_id=${puntoID}`;
         // Hacer la petición GET principal
         const response = await handleGet(endPoint, token);
 

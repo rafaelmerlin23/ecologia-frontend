@@ -117,6 +117,7 @@ function Imagenes() {
           ))
           setImages(newImages)
           setIsLoadingImage(true)
+          console.log(data)
         }
 
       })

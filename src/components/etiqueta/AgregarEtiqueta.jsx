@@ -23,7 +23,7 @@ function AgregarEtiqueta({ isActive, handleClose, categoryId, setTags }) {
         formData.append('category_id', categoryId);
 
         // Hacer la petición POST
-        fetch(`${prefixUrl}pictures/create_tag`, {
+        fetch(`${prefixUrl}tag_system/create_tag`, {
             method: 'POST',
 
             headers: {

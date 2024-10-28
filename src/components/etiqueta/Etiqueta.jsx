@@ -43,7 +43,7 @@ function Etiqueta({ category }) {
             setTags([])
             return
         }
-        fetch(`${prefixUrl}pictures/show_tags?page=${page}&quantity=${quantity}&category_id=${category.id}`, {
+        fetch(`${prefixUrl}tag_system/show_tags?page=${page}&quantity=${quantity}&category_id=${category.id}`, {
             method: 'GET',
             headers: {
                 'Authorization': token // Envía el token en el encabezado Authorization
@@ -111,7 +111,7 @@ const DeleteTagModal = ({ isActive, handleClose, tagId }) => {
     const handleDeleteTag = () => {
         const formData = new FormData();
         formData.append('tag_id', tagId);
-        const endPoint = 'pictures/delete_tag'
+        const endPoint = 'tag_system/delete_tag'
         handleDelete(endPoint, formData, token, () => {
             refreshProjects()
         })
