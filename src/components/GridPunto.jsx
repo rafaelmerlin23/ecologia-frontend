@@ -5,14 +5,26 @@ import TarjetaPuntos from './TarjetaPuntos'
 import { useAuth } from '../AuthProvider'
 import placeHolderLocation from '../assets/place_holder_location.jpg'
 import handleGet from '../helpers/handleGet'
+import EditarPunto from './location/EditarPunto'
+import Eliminar from './Eliminar'
 
 function GridPunto() {
   const [locationsInformation, setLocationsInformation] = useState([])
   const { setBackRoute,userData, shouldRefresh,projectInformation,setProjectInformation } = useAuth()
   const token = userData.token
+  const [isEditActive, setIsEditActive] = useState(false)
+  const [isDeleteActive, setIsDeleteActive] = useState(false)
 
   // Usar useSearchParams para obtener los parámetros de la URL
   const { proyectoId } = useParams();  // Accede al proyectoId desde la URL
+
+  const closeEditOverlay = ()=>{
+    setIsEditActive(false)
+  }
+
+  const closeDeleteOverlay = ()=>{
+    setIsDeleteActive(false)
+  }
 
   useEffect(() => {
     setBackRoute('/proyectos')
@@ -57,6 +69,8 @@ function GridPunto() {
 
   return (
     <div>
+      <Eliminar cerrarOverlay={closeDeleteOverlay} esActiva={isDeleteActive}/>
+      <EditarPunto isActive={isEditActive} closeEdit={closeEditOverlay} ></EditarPunto>
       {locationsInformation.length > 0 ? (
         <Grid>
           {locationsInformation.map(location => (
@@ -66,6 +80,8 @@ function GridPunto() {
               imagen={location.imageURL}
               nombre={location.name}
               key={location.locationId}
+              setIsEditActive={setIsEditActive}
+              setIsDeleteActive={setIsDeleteActive}
             />
           ))}
         </Grid>

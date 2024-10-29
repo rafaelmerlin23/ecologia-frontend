@@ -47,9 +47,13 @@ export const AuthProvider = ({ children }) => {
 
     const [maxPage, setMaxPage] = useState(1)
 
+    const [deleteInformation,setDeleteInformation] = useState({})
+
+    const [imagesInformation,setImagesInformation] = useState([])
 
 
-    const refreshProjects = () => {
+    const refreshProjects = (acction = ()=>{}) => {
+        acction()
         setShouldRefresh(prev => !prev);
     };
 
@@ -122,12 +126,16 @@ export const AuthProvider = ({ children }) => {
             , quantityImagePerPage
             , isTaggerActive
             , setIsTaggerActive
-            ,backRoute
-            ,setBackRoute
-            ,changes
-            ,setChanges
-            ,maxPage
-            ,setMaxPage
+            , backRoute
+            , setBackRoute
+            , changes
+            , setChanges
+            , maxPage
+            , setMaxPage
+            , deleteInformation
+            , setDeleteInformation
+            , imagesInformation
+            , setImagesInformation
 
         }}>
             {children}

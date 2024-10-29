@@ -6,6 +6,7 @@ import handleCreate from '../../../helpers/handleCreate';
 import { useAuth } from '../../../AuthProvider';
 import prefixUrl from '../../../helpers/ip';
 import handleUpdate from '../../../helpers/handleUpdate';
+import { handleDelete } from '../../../helpers/handleDelete';
 function LabelImage({image,changes,handleOpenModal}) {
   
   const {userData,refreshProjects,setChanges} = useAuth()
@@ -14,7 +15,6 @@ function LabelImage({image,changes,handleOpenModal}) {
 
   const handleChanges = (event)=>{
     event.stopPropagation()
-    console.log("hola")
     for(let change of changes){
       switch (change.type) {
         case "create":
@@ -22,8 +22,13 @@ function LabelImage({image,changes,handleOpenModal}) {
             console.log("se creo")
           break;
         case "update":
-
+            handleUpdateLabel(change)
+            console.log("se edito")
           break;
+        case "delete":
+            handleDeleteLabel(change)
+          break;
+
         default:
           "nadota"
           break;
@@ -44,7 +49,7 @@ function LabelImage({image,changes,handleOpenModal}) {
 
   const handleCreateLabel = (change)=>{
     const data = new FormData()
-    const endPointUrl = `${prefixUrl}miscellaneous/create_rating`
+    const endPointUrl = `${prefixUrl}ratings/create_rating`
     
     data.append('picture_id',image.id)
     data.append('user_id',userID)
@@ -58,7 +63,14 @@ function LabelImage({image,changes,handleOpenModal}) {
   }
 
   const handleDeleteLabel = (change) =>{
-    
+    const data = new FormData()
+    const endPointUrl = `ratings/delete_rating`
+    data.append('rating_id',change.ratingID)
+
+    handleDelete(endPointUrl,data,token,()=>{
+      deleteChange(change)
+      refreshProjects()
+    })
   }
 
 
@@ -68,14 +80,20 @@ function LabelImage({image,changes,handleOpenModal}) {
   // rating_date = request.form.get('rating_date', type=int)
 
   const handleUpdateLabel = (change)=>{
+    console.log(change)
     const data = new FormData()
     data.append('picture_id',image.id)
     data.append('user_id',userID)
     data.append('tag_id',change.idTag)
     data.append('rating_score',change.rating)
+    console.log(userID)
+  
 
-    const endPointUrl = `${prefixUrl}miscellaneous/update_rating`
-    handleUpdate(endPointUrl,token,)
+    const endPointUrl = `${prefixUrl}ratings/update_rating`
+    handleUpdate(endPointUrl,token,data,()=>{
+      refreshProjects()
+      deleteChange(change)
+    })
   }
 
   return (

@@ -4,7 +4,7 @@ import prefixUrl from "../../helpers/ip"
 export const EditarAlbum = ({closeEdit,isActive}) =>{
     const {albumInformation,locationInformation,userData,refreshProjects}  = useAuth()
     const token = userData.token
-
+    
 
     const handleUpdateAlbum = (e,name,date,index)=>{
         e.preventDefault()

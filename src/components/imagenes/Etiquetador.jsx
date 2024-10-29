@@ -143,7 +143,7 @@ export const Etiquetador = ({ isActive, handleClose }) => {
                     const exists = changes.some((change)=> change.idTag === tag.idTag)
                     if(exists){
                         if(changes.some((change)=> change.idTag === tag.idTag && change.type == "update")){
-                            setChanges((changes) =>[...changes,{type:"delete",idTag:tag.idTag,name:tag.name,rating:tag.oldRating,categorySelected,id:`${tag.idTag}3`}])
+                            setChanges((changes) =>[...changes,{type:"delete",idTag:tag.idTag,name:tag.name,rating:tag.oldRating,categorySelected,id:`${tag.idTag}3`,ratingID:tag.ratingID}])
                         }else{
                             updateCreateDeselect(tag)
                             if(tagEach.rating != tagEach.oldRating){
@@ -151,7 +151,7 @@ export const Etiquetador = ({ isActive, handleClose }) => {
                             }
                         }
                     }else{
-                        setChanges((changes) =>[...changes,{type:"delete",idTag:tag.idTag,name:tag.name,rating:tag.rating,categorySelected,id:`${tag.idTag}3`}])
+                        setChanges((changes) =>[...changes,{type:"delete",idTag:tag.idTag,name:tag.name,rating:tag.rating,categorySelected,id:`${tag.idTag}3`,ratingID:tag.ratingID}])
                     }
                 }
             } else {
@@ -255,27 +255,33 @@ export const Etiquetador = ({ isActive, handleClose }) => {
                 idTag: informacion[0],
                 isSelect: false,
                 rating: 0,
-                oldRating:undefined
+                oldRating:undefined,
+                ratingID:undefined
             }));
     
             // Obtener etiquetas con calificación
             const dataTagsWithRating = await handleGetData(`ratings/show_ratings_from_picture?picture_id=${image.id}`, token);
-    
-            if (dataTagsWithRating.response.length !== 0) {
+            console.log(dataTagsWithRating)
+            if (dataTagsWithRating.response.length != 0) {
                 // Mapa de calificaciones para búsqueda eficiente
                 const ratingsMap = dataTagsWithRating.response.reduce((acc, rating) => {
-                    acc[rating[4]] = rating[2]; 
+                    acc[rating[4]] = [rating[2],rating[5]]; 
                     return acc;
                 }, {});
 
+                console.log(ratingsMap)
+
                 const tagsWithRating = newTags.map((newTag) => ({
                     ...newTag,
-                    isSelect: ratingsMap[newTag.idTag] !== undefined ,
-                    rating: ratingsMap[newTag.idTag] || newTag.rating,
-                    oldRating:ratingsMap[newTag.idTag] || undefined // Asigna la calificación si existe
+                    isSelect: ratingsMap[newTag.idTag][0] !== undefined ,
+                    rating: ratingsMap[newTag.idTag][0] || newTag.rating,
+                    oldRating:ratingsMap[newTag.idTag][0] ?? newTag.rating, // Asigna la calificación si existe
+                    ratingID:ratingsMap[newTag.idTag][1] ?? newTag.rating// Asigna la calificación si existe
+
                 }));
 
                 setTags(tagsWithRating);
+                console.log(tagsWithRating)
                 transformChangesToTags(tagsWithRating)
             } else {
                 setTags(newTags);

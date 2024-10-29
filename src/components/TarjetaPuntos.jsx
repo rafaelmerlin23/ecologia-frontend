@@ -9,16 +9,11 @@ import { handleDelete } from '../helpers/handleDelete'
 import TarjetaEnvoltorio from './TarjetaEnvoltorio'
 import BotonesTarjeta from './BotonesTarjeta'
 
-function TarjetaPuntos({ index, nombre, coordenadas, imagen }) {
+const TarjetaPuntos=({ index, nombre, coordenadas, imagen ,setIsEditActive,setIsDeleteActive}) =>{
+
 
   
-
-
-  const [esActivoOverlay, setEsActivoOverlay] = useState(false)
-
-  const [isEditActive, setIsEditActive] = useState(false)
-
-  const {setLocationInformation, locationInformation, userData, refreshProjects } = useAuth()
+  const {setDeleteInformation,setLocationInformation, locationInformation, userData, refreshProjects } = useAuth()
 
   const token = userData.token
 
@@ -35,39 +30,35 @@ function TarjetaPuntos({ index, nombre, coordenadas, imagen }) {
     setIsEditActive(true)
   }
 
-  const closeEditOverlay = () => {
-    setIsEditActive(false)
-  }
 
-  const cerrarOverlayEliminar = () => {
-    setEsActivoOverlay(false)
-  }
-
-  const abrirOverlayEliminar = (e) => {
-    e.preventDefault()
-    e.stopPropagation()
-    setEsActivoOverlay(true)
-  }
 
   const handleDeleteLocation = () => {
     const formData = new FormData();
     formData.append('location_id', index);
     const endPoint = 'projects/delete_location'
-
+    console.log(index)
     handleDelete(endPoint, formData, token, () => {
       refreshProjects()
+      setIsDeleteActive(false)
     })
   }
 
+  const abrirOverlayEliminar = (e) => {
+    e.preventDefault()
+    e.stopPropagation()
+    setDeleteInformation({
+      peticion:handleDeleteLocation,
+      iconoInformacionSecundaria:faLocationDot,
+      objetoEliminar:"Punto",
+      proyecto:{ informacionPrimaria: nombre, informacionSecundaria: coordenadas }
+    })
+    setIsDeleteActive(true)
+  }
+
+
   return (
     <>
-      <EditarPunto isActive={isEditActive} closeEdit={closeEditOverlay} ></EditarPunto>
-      <Eliminar peticion={handleDeleteLocation}
-        iconoInformacionSecundaria={faLocationDot}
-        objetoEliminar={"Punto"}
-        cerrarOverlay={cerrarOverlayEliminar}
-        esActiva={esActivoOverlay}
-        proyecto={{ informacionPrimaria: nombre, informacionSecundaria: coordenadas }}></Eliminar>
+     
       <Link onClick={handleLocationInformation} to={`${index}/albumes`}>
         <TarjetaEnvoltorio imagen={imagen}>
           <BotonesTarjeta openDelete={abrirOverlayEliminar} openEdit={openEditOverlay} />

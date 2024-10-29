@@ -8,8 +8,10 @@ import { EditarAlbum } from "./EditarAlbum"
 import { handleDelete } from "../../helpers/handleDelete"
 import TarjetaEnvoltorio from "../TarjetaEnvoltorio"
 import BotonesTarjeta from "../BotonesTarjeta"
-export const TarjetaAlbum = ({ album }) => {
-  const {setAlbumInformation, userData, refreshProjects, setImages } = useAuth()
+
+export const TarjetaAlbum = ({ album,setIsEditActive,setIsDeleteActive }) => {
+
+  const {setAlbumInformation, userData, refreshProjects, setImages,setDeleteInformation } = useAuth()
   
   const token = userData.token
 
@@ -20,25 +22,19 @@ export const TarjetaAlbum = ({ album }) => {
 
   
 
-  const [isDeleteActive, setIsDeleteActive] = useState(false)
-
-  const [isEditActive, setIsEditActive] = useState(false)
-
-
-  const cerrarOverlayEliminar = () => {
-    setIsDeleteActive(false)
-  }
 
   const abrirOverlayEliminar = (e) => {
     e.preventDefault()
     e.stopPropagation()
+    setDeleteInformation({
+      peticion:handleDeleteAlbum,
+      iconoInformacionSecundaria:faCalendar,
+      objetoEliminar:"Album",
+      proyecto:{ informacionPrimaria: album.name, informacionSecundaria: album.date }
+    })
     setIsDeleteActive(true)
   }
 
-  const cerrarOverlayEditar = () => {
-    handleAlbumInformation()
-    setIsEditActive(false)
-  }
 
   const abrirOverlayEditar = (e) => {
     e.preventDefault()
@@ -53,6 +49,7 @@ export const TarjetaAlbum = ({ album }) => {
     const endPoint = 'projects/delete_album'
 
     handleDelete(endPoint, formData, token, () => {
+      setIsDeleteActive(false)
       refreshProjects()
     })
   }
@@ -60,8 +57,6 @@ export const TarjetaAlbum = ({ album }) => {
 
   return (
     <>
-      <EditarAlbum closeEdit={cerrarOverlayEditar} isActive={isEditActive} ></EditarAlbum>
-      <Eliminar peticion={handleDeleteAlbum} iconoInformacionSecundaria={faCalendar} objetoEliminar={"Album"} cerrarOverlay={cerrarOverlayEliminar} esActiva={isDeleteActive} proyecto={{ informacionPrimaria: album.name, informacionSecundaria: album.date }} />
       <Link onClick={handleAlbumInformation} to={`${album.index}/navbar-imagenes/imagenes`}  >
         <TarjetaEnvoltorio imagen={album.image}>
           <BotonesTarjeta openDelete={abrirOverlayEliminar} openEdit={abrirOverlayEditar} />

@@ -9,7 +9,6 @@ export const CrearProyecto = ({ isActive, closeCreateProject }) => {
     const [response, setResponse] = useState(null)
     const { userData, refreshProjects } = useAuth()
     const token = userData.token
-    console.log(token)
 
     const handleCreateProject = (e, name, description, date) => {
         e.preventDefault()

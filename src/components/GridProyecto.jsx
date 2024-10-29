@@ -5,14 +5,26 @@ import { useEffect, useState } from 'react'
 import { useAuth } from '../AuthProvider'
 import handleGet from '../helpers/handleGet'
 import placeHolderImage from '../assets/place_holder_project.png'
+import EditarProyecto from './EditarProyecto'
+import Eliminar from './Eliminar'
 
 function GridProyecto() {
 
-  const { userData, shouldRefresh } = useAuth()
+  const {imagesInformation,setImagesInformation, userData, shouldRefresh } = useAuth()
   const token = userData.token
-  const [imagesInformation, setImagesInformation] = useState([])
   const page = 1
   const quantity = 50
+  const [esActivaEditar, setEsActivaEditar] = useState(false)
+  const [esActivaEliminar, setEsActivaELiminar] = useState(false)
+
+  const cerrarOverlayEditar = () => {
+    setEsActivaEditar(false)
+  }
+
+  const cerrarOverlayEliminar= () =>{
+    setEsActivaELiminar(false)
+  }
+
 
   useEffect(() => {
     const fetchData = async () => {
@@ -44,6 +56,7 @@ function GridProyecto() {
 
           // Actualiza el estado con la nueva información
           setImagesInformation(newImagesInformation);
+
         }
 
       } catch (error) {
@@ -60,16 +73,27 @@ function GridProyecto() {
 
     // Llamar a la función fetchData dentro del useEffect
     fetchData()
-  }, [shouldRefresh, page, quantity,imagesInformation ]);
+  }, [shouldRefresh, page, quantity,imagesInformation,esActivaEliminar]);
   // Dependencia de shouldRefresh
   return (
 
     <>
+      <Eliminar cerrarOverlay={cerrarOverlayEliminar} esActiva={esActivaEliminar}/>
+      <EditarProyecto isActive={esActivaEditar} cerrarEditar={cerrarOverlayEditar} />
       {
         imagesInformation.length > 0 ? <Grid >
           {imagesInformation.map((x) => (
-            <TarjetaDeproyecto key={x.indice} indice={x.indice} LinkImagen={x.imagen} fecha={x.fecha} nombre={x.nombre} description={x.description} />
+            <TarjetaDeproyecto
+            setEsActivaEditar={setEsActivaEditar} 
+            key={x.indice}
+            indice={x.indice}
+            LinkImagen={x.imagen} 
+            fecha={x.fecha} 
+            nombre={x.nombre} 
+            description={x.description}
+            setEsActivaEliminar={setEsActivaELiminar} />
           ))}
+        
         </Grid> :
           <div className='flex justify-center content-center p-5'>
             <div className=''>

@@ -5,6 +5,8 @@ import TarjetaAlbum from "./TarjetaAlbum"
 import placeHolderAlbum from '../../assets/place_holder_album.jpg'
 import handleGet from "../../helpers/handleGet"
 import { useParams } from "react-router-dom"
+import { EditarAlbum } from "./EditarAlbum"
+import Eliminar from "../Eliminar"
 
 export const GridAlbum = () => {
   const {setBackRoute, setLocationInformation, userData, shouldRefresh } = useAuth()
@@ -13,6 +15,18 @@ export const GridAlbum = () => {
   const [quantity] = useState(50)
   const [albumsInformation, setAlbumsInformation] = useState([])
   const { proyectoId,puntoID } = useParams()
+
+  const [isEditActive, setIsEditActive] = useState(false)
+  const [isDeleteActive, setIsDeleteActive] = useState(false)
+
+
+    const closeEditOverlay = ()=>{
+        setIsEditActive(false)
+    }
+
+    const closeDeleteOverlay = ()=>{
+        setIsDeleteActive(false)
+    }
   
   useEffect(() => {
     setBackRoute(`/proyectos/${proyectoId}/puntos/`)
@@ -92,11 +106,21 @@ export const GridAlbum = () => {
 
   return (
     <>
+      <EditarAlbum closeEdit={closeEditOverlay} isActive={isEditActive} ></EditarAlbum>
+      <Eliminar 
+      cerrarOverlay={closeDeleteOverlay} 
+      esActiva={isDeleteActive}
+      />
       {
         albumsInformation.length > 0 ?
           <Grid>
             {albumsInformation.map((information) => (
-              <TarjetaAlbum key={information.index} album={information} />
+              <TarjetaAlbum 
+              key={information.index} 
+              album={information}
+              setIsEditActive={setIsEditActive}
+              setIsDeleteActive={setIsDeleteActive}
+               />
             ))}
           </Grid>
           :
