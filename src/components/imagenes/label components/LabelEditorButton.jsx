@@ -1,12 +1,20 @@
 import { motion } from 'framer-motion'
-import React from 'react'
 
 function LabelEditorButton({handleRatingChange,handleSelect,tag,index}) {
+  
   return (
     <div className=" flex justify-center items-center flex-col" key={index}>
         <button
             onClick={(e) => handleSelect(e, tag)}
-            className={`z-20 w-[330px] w-full px-4 ${tag.isSelect ? "bg-green-700" : "bg-gray-700"} rounded-full border border-gray-600 hover:brightness-75`}
+            className={`z-20 w-[330px] w-full px-4 ${
+              !tag.isSelect && tag.oldRating !== undefined && tag.ratingID !== undefined?
+              "bg-red-800"
+              :tag.isSelect 
+              ? "bg-green-700" 
+              :
+               "bg-gray-700"
+               
+            } rounded-full border border-gray-600 hover:brightness-75`}
             key={tag.idTag * 3}>
             {tag.name}
         </button>

@@ -3,19 +3,29 @@ import { useEffect, useState } from "react";
 import ModalIMagen from "./ModalIMagen";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {  faGreaterThan, faLessThan } from "@fortawesome/free-solid-svg-icons"
-
 import { useNavigate, useSearchParams } from "react-router-dom";
 import handleGetData from "../../helpers/handleGetData";
 import handleGet from "../../helpers/handleGet";
 import LabelWrapper from "./label components/labelWrapper";
 import LabelImage from "./label components/LabelImage";
 import TagsSelector from "./label components/TagsSelector";
-
+import CambiosEtiquetas from '../etiqueta/CambiosEtiquetas'
 
 export const Etiquetador = ({ isActive, handleClose }) => {
 
     const navigate = useNavigate()
-    const { shouldRefresh,setMaxPage,maxPage,changes,setChanges,cardImagePage, setCardImagePage, setImage, image, userData, albumInformation } = useAuth()
+    const {
+        shouldRefresh,
+        setMaxPage,maxPage,
+        changes,setChanges,
+        cardImagePage,
+        setCardImagePage,
+        setImage,
+        image,
+        userData,
+        albumInformation,
+            
+    } = useAuth()
     const token = userData.token
     const [categories, setCategories] = useState([])
     const [tags, setTags] = useState([])
@@ -261,7 +271,7 @@ export const Etiquetador = ({ isActive, handleClose }) => {
     
             // Obtener etiquetas con calificación
             const dataTagsWithRating = await handleGetData(`ratings/show_ratings_from_picture?picture_id=${image.id}`, token);
-            console.log(dataTagsWithRating)
+            console.log("datos de mierdaaaa :",dataTagsWithRating)
             if (dataTagsWithRating.response.length != 0) {
                 // Mapa de calificaciones para búsqueda eficiente
                 const ratingsMap = dataTagsWithRating.response.reduce((acc, rating) => {
@@ -271,14 +281,16 @@ export const Etiquetador = ({ isActive, handleClose }) => {
 
                 console.log(ratingsMap)
 
-                const tagsWithRating = newTags.map((newTag) => ({
-                    ...newTag,
-                    isSelect: ratingsMap[newTag.idTag][0] !== undefined ,
-                    rating: ratingsMap[newTag.idTag][0] || newTag.rating,
-                    oldRating:ratingsMap[newTag.idTag][0] ?? newTag.rating, // Asigna la calificación si existe
-                    ratingID:ratingsMap[newTag.idTag][1] ?? newTag.rating// Asigna la calificación si existe
-
-                }));
+                const tagsWithRating = newTags.map((newTag) => {
+                    const ratingInfo = ratingsMap[newTag.idTag]; // No asignamos un arreglo vacío, sino que dejamos undefined si no se encuentra
+                    return {
+                        ...newTag,
+                        isSelect: ratingInfo ? true : false, // Verifica si ratingInfo existe
+                        rating: ratingInfo ? ratingInfo[0] : 0, // Asigna ratingInfo[0] o undefined
+                        oldRating: ratingInfo ? ratingInfo[0] : undefined, // Asigna ratingInfo[0] o undefined
+                        ratingID: ratingInfo ? ratingInfo[1] : undefined // Asigna ratingInfo[1] o undefined
+                    };
+                });
 
                 setTags(tagsWithRating);
                 console.log(tagsWithRating)
@@ -333,8 +345,14 @@ export const Etiquetador = ({ isActive, handleClose }) => {
 
                     {/* Fila para la imagen y el select */}
                     <div className=" flex justify-center items-center xl:items-start gap-x-10 sm:flex-col flex-col md:flex-col lg:flex-row xl:flex-row overflow-auto xl:overflow-hidden">
-                    <LabelImage changes={changes} image={image} handleOpenModal={handleOpenModal}/>
-
+                    <LabelImage 
+                    setTags = {setTags}
+                    tags = {tags}
+                    changes={changes}
+                    image={image}
+                    setChanges={setChanges} 
+                    handleOpenModal={handleOpenModal}/>
+                    <CambiosEtiquetas changes={changes}/>
                         <div className="sm:invisible visible lg:visible md:visible xl:visible inline-block xl:min-h-[40rem] w-0.5 bg-zinc-600"></div>
                         <TagsSelector 
                         categories={categories}

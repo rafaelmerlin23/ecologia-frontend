@@ -52,6 +52,8 @@ export const AuthProvider = ({ children }) => {
     const [imagesInformation,setImagesInformation] = useState([])
 
 
+
+
     const refreshProjects = (acction = ()=>{}) => {
         acction()
         setShouldRefresh(prev => !prev);
@@ -136,6 +138,7 @@ export const AuthProvider = ({ children }) => {
             , setDeleteInformation
             , imagesInformation
             , setImagesInformation
+    
 
         }}>
             {children}

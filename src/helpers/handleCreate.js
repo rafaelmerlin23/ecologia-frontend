@@ -8,9 +8,8 @@ const handleCreate = (url, token, data, onSuccess) => {
     })
     .then((res) => res.json())
     .then((responseData) => {
-        console.log('Respuesta del servidor:', responseData);
         if (responseData && responseData.status === 'success') {
-            onSuccess();
+            onSuccess(responseData);
         } 
     })
     .catch((error) => {

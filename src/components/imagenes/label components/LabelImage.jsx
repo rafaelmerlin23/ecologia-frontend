@@ -7,9 +7,9 @@ import { useAuth } from '../../../AuthProvider';
 import prefixUrl from '../../../helpers/ip';
 import handleUpdate from '../../../helpers/handleUpdate';
 import { handleDelete } from '../../../helpers/handleDelete';
-function LabelImage({image,changes,handleOpenModal}) {
+function LabelImage({image,changes,handleOpenModal,setTags,setChanges}) {
   
-  const {userData,refreshProjects,setChanges} = useAuth()
+  const {userData,refreshProjects} = useAuth()
   const userID = userData.decoded.user_id
   const token = userData.token
 
@@ -34,18 +34,8 @@ function LabelImage({image,changes,handleOpenModal}) {
           break;
       }
     }
+    setChanges([])
   }
-
-  const deleteChange = (change)=>{
-    let newChanges = []
-    changes.forEach(eachChange => {
-      if(eachChange.idTag !== change.idTag){
-          newChanges.push(eachChange)
-      }
-    });
-    setChanges(newChanges)
-  }
-
 
   const handleCreateLabel = (change)=>{
     const data = new FormData()
@@ -56,9 +46,24 @@ function LabelImage({image,changes,handleOpenModal}) {
     data.append('tag_id',change.idTag)
     data.append('rating_score',change.rating)
 
-    handleCreate(endPointUrl,token,data,()=>{
-        refreshProjects()
-        deleteChange(change)
+    handleCreate(endPointUrl,token,data,(responseData)=>{
+        console.log("datostos",responseData.rating_id)
+        setTags((tags)=>{
+          const newTags = tags.map((tag)=>{
+            if(tag.idTag === change.idTag){
+              return {
+                ...tag,
+                isSelect: true,
+                rating:change.rating,
+                oldRating:change.rating,
+                ratingID:responseData.rating_id,
+              }
+            }else{
+              return tag
+            }
+          }) 
+          return newTags
+        })
     })
   }
 
@@ -68,16 +73,26 @@ function LabelImage({image,changes,handleOpenModal}) {
     data.append('rating_id',change.ratingID)
 
     handleDelete(endPointUrl,data,token,()=>{
-      deleteChange(change)
-      refreshProjects()
+      
+      setTags((tags)=>{
+        const newTags = tags.map((tag)=>{
+          if(tag.idTag === change.idTag){
+            return {
+              ...tag,
+              isSelect: false,
+              rating:0,
+              oldRating:undefined,
+              ratingID:undefined,
+            }
+          }else{
+            return tag
+          }
+        }) 
+        return newTags
+      })
+
     })
   }
-
-
-  // picture_id = request.form.get('picture_id', type=str)
-  // user_id = request.form.get('user_id', type=int)
-  // rating_score = request.form.get('rating_score', type=int)
-  // rating_date = request.form.get('rating_date', type=int)
 
   const handleUpdateLabel = (change)=>{
     console.log(change)
@@ -86,13 +101,29 @@ function LabelImage({image,changes,handleOpenModal}) {
     data.append('user_id',userID)
     data.append('tag_id',change.idTag)
     data.append('rating_score',change.rating)
+    data.append('tag_id',change.idTag)
+
     console.log(userID)
   
 
     const endPointUrl = `${prefixUrl}ratings/update_rating`
     handleUpdate(endPointUrl,token,data,()=>{
-      refreshProjects()
-      deleteChange(change)
+      
+      setTags((tags)=>{
+        const newTags = tags.map((tag)=>{
+          if(tag.idTag === change.idTag){
+            return {
+              ...tag,
+              rating: change.rating,
+              oldRating: change.rating,
+            }
+          }else{
+            return tag
+          }
+        }) 
+        return newTags
+      })
+
     })
   }
 
