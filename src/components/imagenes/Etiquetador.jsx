@@ -352,7 +352,7 @@ export const Etiquetador = ({ isActive, handleClose }) => {
                     image={image}
                     setChanges={setChanges} 
                     handleOpenModal={handleOpenModal}/>
-                    <CambiosEtiquetas changes={changes}/>
+                    {/* <CambiosEtiquetas changes={changes}/> */}
                         <div className="sm:invisible visible lg:visible md:visible xl:visible inline-block xl:min-h-[40rem] w-0.5 bg-zinc-600"></div>
                         <TagsSelector 
                         categories={categories}
