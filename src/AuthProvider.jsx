@@ -1,5 +1,6 @@
 import React, { createContext, useState, useContext, useEffect, useMemo } from 'react'
 import {jwtDecode} from 'jwt-decode'
+import { useNavigate } from 'react-router-dom'
 
 const AuthContext = createContext()
 
@@ -51,6 +52,8 @@ export const AuthProvider = ({ children }) => {
 
     const [imagesInformation,setImagesInformation] = useState([])
 
+    const navigate = useNavigate()
+
 
 
 
@@ -75,6 +78,7 @@ export const AuthProvider = ({ children }) => {
         setUserData(null)
         localStorage.removeItem('isAuthenticated');
         localStorage.removeItem('userData');
+        navigate("/login")
     }
 
     useEffect(() => {

@@ -49,16 +49,23 @@ export default App
 function Navigation(){
   const location = useLocation();
   const { hash, pathname, search } = location;
-  const { backRoute } = useAuth();
+  const { backRoute,logout } = useAuth();
  
-  if(pathname === "/login"|| pathname === "/proyectos/" ||pathname === "/proyectos" ) return null 
+  if(pathname === "/login" ) return null
+
   return (
     <>
       <nav>
+      {pathname !== "/proyectos" && pathname !== "/proyectos/" ?
       <ul className='fixed top-5 left-5 px-2 py-2 rounded-full bg-blue-700 hover:bg-blue-600'>
             <Link className="w-full h-full flex justify-center items-center" to={backRoute}>
                 <FontAwesomeIcon icon={faArrowLeft} />
             </Link>
+      </ul>:""}
+        <ul className='fixed top-5 right-5 px-2 py-2 rounded-full bg-red-700 hover:bg-red-600'>
+            <button onClick={logout} className="w-full h-full flex justify-center items-center" >
+                <p>cerrar sesion</p>
+            </button>
       </ul>
       </nav>
     </>

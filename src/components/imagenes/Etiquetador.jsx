@@ -270,7 +270,7 @@ export const Etiquetador = ({ isActive, handleClose }) => {
             }));
     
             // Obtener etiquetas con calificación
-            const dataTagsWithRating = await handleGetData(`ratings/show_ratings_from_picture?picture_id=${image.id}`, token);
+            const dataTagsWithRating = await handleGetData(`ratings/show_ratings_from_user?picture_id=${image.id}&user_id=${userID}`, token);
             console.log("datos de mierdaaaa :",dataTagsWithRating)
             if (dataTagsWithRating.response.length != 0) {
                 // Mapa de calificaciones para búsqueda eficiente

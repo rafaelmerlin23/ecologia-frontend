@@ -2,10 +2,11 @@ import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft, faImage, faTag } from '@fortawesome/free-solid-svg-icons';
 import { Outlet, Link } from 'react-router-dom';
+import { useAuth } from '../../AuthProvider';
 
 export const NavBarImagenes = () => {
-    const navigate = useNavigate();
     const location = useLocation();
+    const {logout} = useAuth()
     const { hash, pathname, search } = location;
     const {puntoID,proyectoId } = useParams()   
     const baseClass = "py-2  flex justify-center items-center m-0 p-0  w-2/3 "
@@ -22,6 +23,11 @@ export const NavBarImagenes = () => {
                         <FontAwesomeIcon icon={faArrowLeft} />
                     </Link>
                 </ul>
+                <ul className='fixed top-5 right-5 px-2 py-2 rounded-full bg-red-700 hover:bg-red-600'>
+                    <button onClick={logout} className="w-full h-full flex justify-center items-center" >
+                        <p>cerrar sesion</p>
+                    </button>
+                 </ul>
                 <ul className="p-0 m-0 w-1/6 border-none rounded-full bg-blue-700 text-gray-200 flex flex-row justify-center items-center">
 
                     <li className={bottomImagesClass}>
