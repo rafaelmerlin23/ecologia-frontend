@@ -10,6 +10,7 @@ import LabelWrapper from "./label components/labelWrapper";
 import LabelImage from "./label components/LabelImage";
 import TagsSelector from "./label components/TagsSelector";
 import CambiosEtiquetas from '../etiqueta/CambiosEtiquetas'
+import RatingsVisualizer from "./label components/RatingsVisualizer";
 
 export const Etiquetador = ({ isActive, handleClose }) => {
 
@@ -24,14 +25,14 @@ export const Etiquetador = ({ isActive, handleClose }) => {
         image,
         userData,
         albumInformation,
-            
+        setCategorySelected,
+        categorySelected
     } = useAuth()
     const token = userData.token
     const [categories, setCategories] = useState([])
     const [tags, setTags] = useState([])
     const [isModalActive, setIsModalActive] = useState(false)
     const [isNextPage, setIsNextPage] = useState(true)
-    const [categorySelected, setCategorySelected] = useState(null)
     const userName = userData.userName
     const [searchParams, setSearchParams] = useSearchParams()
     const userID = userData.decoded.user_id
@@ -67,7 +68,7 @@ export const Etiquetador = ({ isActive, handleClose }) => {
 
 
 
-    }, [cardImagePage,categorySelected,image,shouldRefresh]);
+    }, [cardImagePage,image,shouldRefresh]);
 
 
     const handleClick = () => {
@@ -77,7 +78,7 @@ export const Etiquetador = ({ isActive, handleClose }) => {
 
     const handleNext = () => {
         const endPoint = `pictures/show_picture_from_album?page=${cardImagePage + 1}&quantity=${1}&album_id=${albumInformation.index}`
-
+        
         handleGetData(endPoint, token).then((data) => {
             if (data && data.status == 'success') {
                 const newImages = data.response.map((response) => (
@@ -148,20 +149,20 @@ export const Etiquetador = ({ isActive, handleClose }) => {
                 if(tagEach.isSelect){
                     updateCreateDeselect(tagEach)
                 }if(tagEach.oldRating == undefined && !tagEach.isSelect) {
-                    setChanges((changes) =>[...changes,{type:"create",idTag:tag.idTag,name:tag.name,rating:tag.rating,categorySelected,id:`${tag.idTag}1`}])
+                    setChanges((changes) =>[...changes,{type:"create",idTag:tag.idTag,name:tag.name,rating:tag.rating,id:`${tag.idTag}1`}])
                 }if(tagEach.oldRating != undefined){
                     const exists = changes.some((change)=> change.idTag === tag.idTag)
                     if(exists){
                         if(changes.some((change)=> change.idTag === tag.idTag && change.type == "update")){
-                            setChanges((changes) =>[...changes,{type:"delete",idTag:tag.idTag,name:tag.name,rating:tag.oldRating,categorySelected,id:`${tag.idTag}3`,ratingID:tag.ratingID}])
+                            setChanges((changes) =>[...changes,{type:"delete",idTag:tag.idTag,name:tag.name,rating:tag.oldRating,id:`${tag.idTag}3`,ratingID:tag.ratingID}])
                         }else{
                             updateCreateDeselect(tag)
                             if(tagEach.rating != tagEach.oldRating){
-                                setChanges((changes) =>[...changes,{type:"update",idTag:tag.idTag,name:tag.name,rating:tag.rating,categorySelected,id:`${tag.idTag}2`}])
+                                setChanges((changes) =>[...changes,{type:"update",idTag:tag.idTag,name:tag.name,rating:tag.rating,id:`${tag.idTag}2`}])
                             }
                         }
                     }else{
-                        setChanges((changes) =>[...changes,{type:"delete",idTag:tag.idTag,name:tag.name,rating:tag.rating,categorySelected,id:`${tag.idTag}3`,ratingID:tag.ratingID}])
+                        setChanges((changes) =>[...changes,{type:"delete",idTag:tag.idTag,name:tag.name,rating:tag.rating,id:`${tag.idTag}3`,ratingID:tag.ratingID}])
                     }
                 }
             } else {
@@ -234,7 +235,7 @@ export const Etiquetador = ({ isActive, handleClose }) => {
             
             setChanges(newChanges)
         }else{
-            setChanges((changes)=> [...changes,{type:"update",idTag:newTags[index].idTag,name:newTags[index].name,rating:newTags[index].rating,categorySelected,id:`${newTags[index].idTag}2`}])
+            setChanges((changes)=> [...changes,{type:"update",idTag:newTags[index].idTag,name:newTags[index].name,rating:newTags[index].rating,id:`${newTags[index].idTag}2`}])
         }
     }
 
@@ -242,7 +243,7 @@ export const Etiquetador = ({ isActive, handleClose }) => {
             let newChanges = []
             changes.forEach((change)=>{
                 if(change.id === `${newTags[index].idTag}1`){
-                    newChanges.push({type:"create",idTag:newTags[index].idTag,name:newTags[index].name,rating:newTags[index].rating,categorySelected,id:`${newTags[index].idTag}1`})
+                    newChanges.push({type:"create",idTag:newTags[index].idTag,name:newTags[index].name,rating:newTags[index].rating,id:`${newTags[index].idTag}1`})
                 }else{
                     newChanges.push(change)
                 }
@@ -256,8 +257,8 @@ export const Etiquetador = ({ isActive, handleClose }) => {
     const handleTags = async (id) => {
         
         try {
+            setCategorySelected(id)
             let newTags = [];
-            
             // Obtener etiquetas (tags) sin calificación
             const dataTags = await handleGetData(`tag_system/show_tags?category_id=${id}`, token);
             newTags = dataTags.response.map((informacion) => ({
@@ -366,6 +367,7 @@ export const Etiquetador = ({ isActive, handleClose }) => {
                         <p>Usuario: <span className="text-sky-300">{userName}</span></p>
                     </div>
                 </div>
+                <RatingsVisualizer  categorySelected = {categorySelected}/>
         </LabelWrapper> 
 
     )

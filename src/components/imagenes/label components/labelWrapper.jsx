@@ -1,6 +1,5 @@
 import { motion } from 'framer-motion'
 import React from 'react'
-
 function LabelWrapper({children,handleClose}) {
   return (
     <motion.div
@@ -18,6 +17,7 @@ function LabelWrapper({children,handleClose}) {
                     x
                 </button>
                 {children}
+                
                 </div>
         </motion.div>
   )

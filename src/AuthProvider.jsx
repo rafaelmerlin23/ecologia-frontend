@@ -52,6 +52,9 @@ export const AuthProvider = ({ children }) => {
 
     const [imagesInformation,setImagesInformation] = useState([])
 
+    const [categorySelected, setCategorySelected] = useState(null)
+
+
     const navigate = useNavigate()
 
 
@@ -142,7 +145,8 @@ export const AuthProvider = ({ children }) => {
             , setDeleteInformation
             , imagesInformation
             , setImagesInformation
-    
+            , categorySelected
+            , setCategorySelected
 
         }}>
             {children}
