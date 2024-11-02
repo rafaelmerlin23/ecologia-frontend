@@ -16,7 +16,6 @@ export const Etiquetador = ({ isActive, handleClose }) => {
 
     const navigate = useNavigate()
     const {
-        shouldRefresh,
         setMaxPage,maxPage,
         changes,setChanges,
         cardImagePage,
@@ -25,17 +24,16 @@ export const Etiquetador = ({ isActive, handleClose }) => {
         image,
         userData,
         albumInformation,
-        setCategorySelected,
-        categorySelected
     } = useAuth()
     const token = userData.token
     const [categories, setCategories] = useState([])
     const [tags, setTags] = useState([])
     const [isModalActive, setIsModalActive] = useState(false)
     const [isNextPage, setIsNextPage] = useState(true)
-    const userName = userData.userName
+    
     const [searchParams, setSearchParams] = useSearchParams()
     const userID = userData.decoded.user_id
+    const [componentToRender, setComponentToRender] = useState(null);
 
     useEffect(() => {
         document.body.className = ' bg-gradient-to-r from-gray-900 to-blue-gray-950';
@@ -55,7 +53,7 @@ export const Etiquetador = ({ isActive, handleClose }) => {
             (data) => {
                 if (data && data.status == 'success') {
                     let newFields = []
-                    data.response.forEach(category => {
+                        data.response.forEach(category => {
                         if (category[0] != 1) {
                             newFields.push({ field: category[1], id: category[0] })
                         }
@@ -68,7 +66,7 @@ export const Etiquetador = ({ isActive, handleClose }) => {
 
 
 
-    }, [cardImagePage,image,shouldRefresh]);
+    }, [cardImagePage,image]);
 
 
     const handleClick = () => {
@@ -255,10 +253,15 @@ export const Etiquetador = ({ isActive, handleClose }) => {
 
 
     const handleTags = async (id) => {
-        
+        setComponentToRender(<RatingsVisualizer 
+            componentToRender = {componentToRender}
+            categoryId={id}
+            />); // Actualiza el componente a renderizar
+            
+
         try {
-            setCategorySelected(id)
             let newTags = [];
+
             // Obtener etiquetas (tags) sin calificación
             const dataTags = await handleGetData(`tag_system/show_tags?category_id=${id}`, token);
             newTags = dataTags.response.map((informacion) => ({
@@ -269,9 +272,9 @@ export const Etiquetador = ({ isActive, handleClose }) => {
                 oldRating:undefined,
                 ratingID:undefined
             }));
-    
+            console.log("id id id id id",id)
             // Obtener etiquetas con calificación
-            const dataTagsWithRating = await handleGetData(`ratings/show_ratings_from_user?picture_id=${image.id}&user_id=${userID}`, token);
+            const dataTagsWithRating = await handleGetData(`ratings/show_ratings_from_user?picture_id=${image.id}&user_id=${userID}&category_id=${id}`, token);
             console.log("datos de mierdaaaa :",dataTagsWithRating)
             if (dataTagsWithRating.response.length != 0) {
                 // Mapa de calificaciones para búsqueda eficiente
@@ -346,6 +349,11 @@ export const Etiquetador = ({ isActive, handleClose }) => {
 
                     {/* Fila para la imagen y el select */}
                     <div className=" flex justify-center items-center xl:items-start gap-x-10 sm:flex-col flex-col md:flex-col lg:flex-row xl:flex-row overflow-auto xl:overflow-hidden">
+                    <div className="min-h-[40rem] bg-zinc-800  hidden xl:block max-h-[40rem] w-[350px] overflow-y-auto">
+                      {componentToRender}
+                    </div>
+
+
                     <LabelImage 
                     setTags = {setTags}
                     tags = {tags}
@@ -354,7 +362,7 @@ export const Etiquetador = ({ isActive, handleClose }) => {
                     setChanges={setChanges} 
                     handleOpenModal={handleOpenModal}/>
                     {/* <CambiosEtiquetas changes={changes}/> */}
-                        <div className="sm:invisible visible lg:visible md:visible xl:visible inline-block xl:min-h-[40rem] w-0.5 bg-zinc-600"></div>
+                        {/* <div className="sm:invisible visible lg:visible md:visible xl:visible inline-block xl:min-h-[40rem] w-0.5 bg-zinc-600"></div> */}
                         <TagsSelector 
                         categories={categories}
                         handleClick={handleClick}
@@ -364,10 +372,8 @@ export const Etiquetador = ({ isActive, handleClose }) => {
                         handleRatingChange={handleRatingChange}/>
                     </div>
                     <div className="flex flex-col items-center ">
-                        <p>Usuario: <span className="text-sky-300">{userName}</span></p>
                     </div>
                 </div>
-                <RatingsVisualizer  categorySelected = {categorySelected}/>
         </LabelWrapper> 
 
     )

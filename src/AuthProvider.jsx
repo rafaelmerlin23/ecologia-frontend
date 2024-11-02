@@ -11,6 +11,8 @@ export const AuthProvider = ({ children }) => {
 
     const [shouldRefresh, setShouldRefresh] = useState(false)
 
+    const [shouldRefreshRatings, setShouldRefreshRatings] = useState(false)
+
     const [projectInformation, setProjectInformation] = useState(null)
 
     const [locationInformation, setLocationInformation] = useState(null)
@@ -63,6 +65,12 @@ export const AuthProvider = ({ children }) => {
     const refreshProjects = (acction = ()=>{}) => {
         acction()
         setShouldRefresh(prev => !prev);
+    };
+
+    
+    const refreshRatings = (acction = ()=>{}) => {
+        acction()
+        setShouldRefreshRatings(prev => !prev);
     };
 
     const login = (data,user) => {
@@ -147,6 +155,8 @@ export const AuthProvider = ({ children }) => {
             , setImagesInformation
             , categorySelected
             , setCategorySelected
+            , shouldRefreshRatings
+            , refreshRatings
 
         }}>
             {children}

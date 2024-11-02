@@ -6,7 +6,7 @@ function LabelEditorButton({handleRatingChange,handleSelect,tag,index}) {
     <div className=" flex justify-center items-center flex-col" key={index}>
         <button
             onClick={(e) => handleSelect(e, tag)}
-            className={`z-30 w-[330px] w-full px-4 ${
+            className={`z-30 w-full px-4 ${
               !tag.isSelect && tag.oldRating !== undefined && tag.ratingID !== undefined?
               "bg-red-800"
               :tag.isSelect 

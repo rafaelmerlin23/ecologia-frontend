@@ -9,7 +9,7 @@ import handleUpdate from '../../../helpers/handleUpdate';
 import { handleDelete } from '../../../helpers/handleDelete';
 function LabelImage({image,changes,handleOpenModal,setTags,setChanges}) {
   
-  const {userData,refreshProjects} = useAuth()
+  const {userData,refreshRatings} = useAuth()
   const userID = userData.decoded.user_id
   const token = userData.token
 
@@ -35,6 +35,9 @@ function LabelImage({image,changes,handleOpenModal,setTags,setChanges}) {
       }
     }
     setChanges([])
+    setTimeout(() => {
+      refreshRatings()
+    }, 200);
   }
 
   const handleCreateLabel = (change)=>{
@@ -128,7 +131,7 @@ function LabelImage({image,changes,handleOpenModal,setTags,setChanges}) {
   }
 
   return (
-    <div onClick={handleOpenModal} className="relative w-3/5 h-60 min-h-[30-rem] xl:min-h-[40rem] bg-gray-200 flex items-center justify-center hover:cursor-pointer">
+    <div onClick={handleOpenModal} className="relative w-[90%] xl:w-[600px] h-60 min-h-[30-rem] xl:min-h-[40rem] bg-gray-200 flex items-center justify-center hover:cursor-pointer">
           {image.link ? (
               <img className="object-cover w-full h-full" src={image.link} alt="sin" />
           ) : (
