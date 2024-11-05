@@ -6,14 +6,17 @@ import LabelEditorButton from './LabelEditorButton';
 function TagsSelector({handleTags,categories,handleSelect,tags,handleClick,handleRatingChange}) {
   return (
     <div className="flex-col  lg:self-start xl:self-start sm:flex sm:flex sm:justify-center sm-items-center sm:flex w-[380px]">
-                            <select onChange={(e) => handleTags(e.target.value)} about="hola" className="text-gray-700">
+                            <select 
+                            onChange={(e) => handleTags(e.target.value)}
+                            about="hola" 
+                            className=" text-gray-700">
                                 {categories.map((category) => (
                                     <option value={category.id} className="text-gray-700" key={category.id * 10}>
                                         {category.field}
                                     </option>
                                 ))}
                             </select>
-                            <div className="max-h-[40rem] overflow-auto pt-4 flex flex-col gap-y-2 ">
+                            <div className="max-h-[40rem]  pt-4 flex flex-col gap-y-2 ">
                                 {tags.length > 0 ? tags.map((tag, index) => (
                                     <LabelEditorButton key={index} handleRatingChange={handleRatingChange} handleSelect={handleSelect} tag={tag} index = {index}/>)) :
                                     <div className=" flex justify-center items-center flex-col">

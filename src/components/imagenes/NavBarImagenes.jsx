@@ -12,7 +12,21 @@ export const NavBarImagenes = () => {
     const baseClass = "py-2  flex justify-center items-center m-0 p-0  w-2/3 "
     const bottomImagesClass = pathname.includes("navbar-imagenes/imagenes") ?`rounded-s-full bg-blue-900 ${baseClass} `: `rounded-s-full ${baseClass} hover:bg-blue-600`
     const bottomTagsClass = pathname.includes("navbar-imagenes/categoria-etiqueta") ?`rounded-e-full bg-blue-900 ${baseClass} `: `rounded-e-full ${baseClass} hover:bg-blue-600`
+    const rutasPermitidas = [
+        "/proyectos/:proyectoId/puntos/:puntoID/albumes/:albumID/navbar-imagenes/imagenes",
+        "/proyectos/:proyectoId/puntos/:puntoID/albumes/:albumID/navbar-imagenes/imagenes/",
+        "/proyectos/:proyectoId/puntos/:puntoID/albumes/:albumID/navbar-imagenes/categoria-etiqueta",
+        "/proyectos/:proyectoId/puntos/:puntoID/albumes/:albumID/navbar-imagenes/categoria-etiqueta/",
+      ];
     
+      // Verifica si la ruta actual es una de las permitidas
+      const mostrarNavigation = rutasPermitidas.some((ruta) =>
+        new RegExp(`^${ruta.replace(/:[^\s/]+/g, '[^/]+')}$`).test(pathname)
+      );
+    
+      // Si no es una ruta permitida, no mostrar el componente
+      if (!mostrarNavigation) return null;
+
     return (
         <div className="">
             <nav
@@ -23,11 +37,7 @@ export const NavBarImagenes = () => {
                         <FontAwesomeIcon icon={faArrowLeft} />
                     </Link>
                 </ul>
-                <ul className='fixed top-5 right-5 px-2 py-2 rounded-full bg-red-700 hover:bg-red-600'>
-                    <button onClick={logout} className="w-full h-full flex justify-center items-center" >
-                        <p>cerrar sesion</p>
-                    </button>
-                 </ul>
+               
                 <ul className="p-0 m-0 w-1/6 border-none rounded-full bg-blue-700 text-gray-200 flex flex-row justify-center items-center">
 
                     <li className={bottomImagesClass}>

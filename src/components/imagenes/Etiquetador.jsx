@@ -9,7 +9,6 @@ import handleGet from "../../helpers/handleGet";
 import LabelWrapper from "./label components/labelWrapper";
 import LabelImage from "./label components/LabelImage";
 import TagsSelector from "./label components/TagsSelector";
-import CambiosEtiquetas from '../etiqueta/CambiosEtiquetas'
 import RatingsVisualizer from "./label components/RatingsVisualizer";
 
 export const Etiquetador = ({ isActive, handleClose }) => {
@@ -24,6 +23,7 @@ export const Etiquetador = ({ isActive, handleClose }) => {
         image,
         userData,
         albumInformation,
+        isCategoryMenuActivate,      
     } = useAuth()
     const token = userData.token
     const [categories, setCategories] = useState([])
@@ -37,7 +37,7 @@ export const Etiquetador = ({ isActive, handleClose }) => {
 
     useEffect(() => {
         document.body.className = ' bg-gradient-to-r from-gray-900 to-blue-gray-950';
-
+        console.log("esta activado el menu de categorias:",isCategoryMenuActivate)
 
         // conseguir el numero de la ultima pagina 
         const endPointPage = `pictures/show_picture_from_album?page=${cardImagePage}&quantity=${1}&album_id=${albumInformation.index}`
@@ -66,7 +66,7 @@ export const Etiquetador = ({ isActive, handleClose }) => {
 
 
 
-    }, [cardImagePage,image]);
+    }, [cardImagePage,image,isCategoryMenuActivate]);
 
 
     const handleClick = () => {
@@ -334,13 +334,12 @@ export const Etiquetador = ({ isActive, handleClose }) => {
     if (!isActive) return null  
     return (
         <LabelWrapper handleClose={handleClose} >
-
                 {cardImagePage != 1 ? <button onClick={handlePrevious}
-                    className='flex justify-center items-center py-3 px-3 bg-white rounded-full absolute top-1/2 left-2 text-white text-xl hover:opacity-70'>
+                    className='z-50 flex justify-center items-center py-3 px-3 bg-white rounded-full absolute top-1/2 left-2 text-white text-xl hover:opacity-70'>
                     <FontAwesomeIcon className="text-sm text-black" icon={faLessThan} />
                 </button> : ""}
                 {isNextPage ? <button onClick={handleNext}
-                    className='flex justify-center items-center py-3 px-3 bg-white  rounded-full absolute top-1/2 right-2 text-white text-xl hover:opacity-70'>
+                    className='z-50 flex justify-center items-center py-3 px-3 bg-white  rounded-full absolute top-1/2 right-2 text-white text-xl hover:opacity-70'>
                     <FontAwesomeIcon className="text-sm text-black" icon={faGreaterThan} />
                 </button> : ""}
                 <div className="h-full w-full flex flex-col justify-center items-center gap-y-4 ">
@@ -348,7 +347,8 @@ export const Etiquetador = ({ isActive, handleClose }) => {
                     <ModalIMagen handleClose={handleCloseModal} image={image} isActive={isModalActive} />
 
                     {/* Fila para la imagen y el select */}
-                    <div className=" flex justify-center items-center xl:items-start gap-x-10 sm:flex-col flex-col md:flex-col lg:flex-row xl:flex-row overflow-auto xl:overflow-hidden">
+                    <div className=" flex justify-center items-center xl:items-start gap-x-10 sm:flex-col flex-col md:flex-col lg:flex-row xl:flex-row  xl:overflow-hidden">
+                    {isCategoryMenuActivate? componentToRender:""}
                     <div className="min-h-[40rem] bg-zinc-800  hidden xl:block max-h-[40rem] w-[350px] overflow-y-auto">
                       {componentToRender}
                     </div>

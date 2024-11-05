@@ -11,6 +11,7 @@ import CategoriaEtiqueta from './pages/CategoriaEtiqueta';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import { useEffect } from 'react';
+import Error404 from './components/Error404';
 
 function PrivateRoute({ element, ...rest }) {
   const { isAuthenticated } = useAuth();
@@ -25,6 +26,7 @@ function App() {
       <AuthProvider>
         <Navigation/>
         <Routes>
+          <Route path='*' element={<Error404/>}/>
           <Route path="/login" element={<Login />} />
           <Route path="/crear_cuenta" element={<CreateAccount />} />
           <Route path="/proyectos" element={<PrivateRoute element={<Proyectos />} />} />
@@ -32,11 +34,9 @@ function App() {
           {/*<Route path="/albumes" element={<PrivateRoute element={<Albumes />} />} />*/}
           <Route path="/proyectos/:proyectoId/puntos/:puntoID/albumes" element={<PrivateRoute element={<Albumes />}></PrivateRoute>} />
           <Route path="/proyectos/:proyectoId/puntos/:puntoID/albumes/:albumID/navbar-imagenes" element={<PrivateRoute element={<NavBarImagenes />}></PrivateRoute>} >
-            <Route path='imagenes' element={<Imagenes />} />
-            <Route path='categoria-etiqueta' element={<CategoriaEtiqueta />} />
-
+          <Route path='imagenes' element={<Imagenes />} />
+          <Route path='categoria-etiqueta' element={<CategoriaEtiqueta />} />
           </Route>
-
           <Route path="/" element={<Navigate to="/login" />} />
         </Routes>
       </AuthProvider>
@@ -46,28 +46,55 @@ function App() {
 
 export default App
 
-function Navigation(){
+function Navigation() {
   const location = useLocation();
-  const { hash, pathname, search } = location;
-  const { backRoute,logout } = useAuth();
- 
-  if(pathname === "/login" ) return null
+  const { pathname } = location;
+  const { backRoute, logout } = useAuth();
+
+  // Rutas en las que se debe mostrar el componente Navigation
+  const rutasPermitidas = [
+    "/proyectos",
+    "/proyectos/",
+    "/proyectos/:proyectoId/puntos",
+    "/proyectos/:proyectoId/puntos/",
+    "/proyectos/:proyectoId/puntos/:puntoID/albumes",
+    "/proyectos/:proyectoId/puntos/:puntoID/albumes/",
+    "/proyectos/:proyectoId/puntos/:puntoID/albumes/:albumID/navbar-imagenes/imagenes",
+    "/proyectos/:proyectoId/puntos/:puntoID/albumes/:albumID/navbar-imagenes/imagenes/",
+    "/proyectos/:proyectoId/puntos/:puntoID/albumes/:albumID/navbar-imagenes/categoria-etiqueta",
+    "/proyectos/:proyectoId/puntos/:puntoID/albumes/:albumID/navbar-imagenes/categoria-etiqueta/",
+  ];
+
+  // Verifica si la ruta actual es una de las permitidas
+  const mostrarNavigation = rutasPermitidas.some((ruta) =>
+    new RegExp(`^${ruta.replace(/:[^\s/]+/g, '[^/]+')}$`).test(pathname)
+  );
+
+  // Si no es una ruta permitida, no mostrar el componente
+  if (!mostrarNavigation) return null;
 
   return (
     <>
       <nav>
-      {pathname !== "/proyectos" && pathname !== "/proyectos/" ?
-      <ul className='fixed top-5 left-5 px-2 py-2 rounded-full bg-blue-700 hover:bg-blue-600'>
+        {pathname !== "/proyectos" && pathname !== "/proyectos/" ? (
+          <ul className="fixed top-5 left-5 px-2 py-2 rounded-full bg-blue-700 hover:bg-blue-600">
             <Link className="w-full h-full flex justify-center items-center" to={backRoute}>
-                <FontAwesomeIcon icon={faArrowLeft} />
+              <FontAwesomeIcon icon={faArrowLeft} />
             </Link>
-      </ul>:""}
-        <ul className='fixed top-5 right-5 px-2 py-2 rounded-full bg-red-700 hover:bg-red-600'>
-            <button onClick={logout} className="w-full h-full flex justify-center items-center" >
-                <p>cerrar sesion</p>
-            </button>
-      </ul>
+          </ul>
+        ) : (
+          ""  
+        )}
+        <ul className="fixed top-5 right-5 px-2 py-2 rounded-full bg-red-700 hover:bg-red-600">
+          <button
+            onClick={logout}
+            className="xl:gap-1 md:gap-1 lg:gap-1 md:flex-row flex-col lg:flex-row xl:flex-row w-full h-full flex justify-center items-center"
+          >
+            <p>Cerrar</p>
+            <p>sesión</p>
+          </button>
+        </ul>
       </nav>
     </>
-  )
+  );
 }

@@ -73,7 +73,7 @@ function GridProyecto() {
 
     // Llamar a la función fetchData dentro del useEffect
     fetchData()
-  }, [shouldRefresh, page, quantity,imagesInformation,esActivaEliminar]);
+  }, [shouldRefresh]);
   // Dependencia de shouldRefresh
   return (
 

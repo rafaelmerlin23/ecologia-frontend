@@ -55,6 +55,12 @@ export const AuthProvider = ({ children }) => {
     const [imagesInformation,setImagesInformation] = useState([])
 
     const [categorySelected, setCategorySelected] = useState(null)
+    
+    const [isCategoryMenuActivate,setIsCategoryMenuActivate] = useState(false)
+  
+    const handleCategoryMenu = ()=>{
+        setIsCategoryMenuActivate(prev=> !prev)
+    }
 
 
     const navigate = useNavigate()
@@ -157,6 +163,8 @@ export const AuthProvider = ({ children }) => {
             , setCategorySelected
             , shouldRefreshRatings
             , refreshRatings
+            , handleCategoryMenu
+            , isCategoryMenuActivate
 
         }}>
             {children}
