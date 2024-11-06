@@ -9,8 +9,8 @@ import { useParams, useSearchParams } from "react-router-dom";
 import { Paginacion } from "../components/imagenes/Paginacion";
 import handleGetData from "../helpers/handleGetData";
 
-function Imagenes() { 
-  const [isActiveUploadImages , setIsActiveUploadImages] = useState(false);
+function Imagenes() {
+  const [isActiveUploadImages, setIsActiveUploadImages] = useState(false);
   const {
     setImage
     , cardImagePage
@@ -18,9 +18,9 @@ function Imagenes() {
     , quantityImagePerPage
     , setPageImage
     , pageImage
-    ,setMaxPage
+    , setMaxPage
     , images
-    ,setCardImagePage
+    , setCardImagePage
     , setImages
     , shouldRefresh
     , userData
@@ -28,8 +28,23 @@ function Imagenes() {
   const [isLoadingImage, setIsLoadingImage] = useState(false)
   const token = userData.token
   const [searchParams, setSearchParams] = useSearchParams()
-  const [maxPageGrid, setMaxPageGrid] = useState(1)
   const { albumID } = useParams()
+  const { currentPageDate, setCurrentPageDate } = useState()
+
+  const MONTHS = {
+    1: "Enero",
+    2: "Febrero",
+    3: "Marzo",
+    4: "Abril",
+    5: "Mayo",
+    6: "Junio",
+    7: "Julio",
+    8: "Agosto",
+    9: "Septiembre",
+    10: "Octubre",
+    11: "Noviembre",
+    12: "Diciembre",
+  }
 
 
   const handleNext = () => {
@@ -80,58 +95,25 @@ function Imagenes() {
     });
   }
 
+  const getInformation = async () => {
+    // conseguir el rango maximo de fechas 
+    //conseguir imagenes
+    const endpointImages = `pictures/show_picture_from_album_pages`
+
+    const hola = await handleGetData(endpointImages, token)
+    console.log(hola)
+  }
+
+  // link: response[0],
+  // id: response[1],
+  // date: response[2],
+
   useEffect(() => {
-    if (searchParams.get('is-active-tagger')) {
-      handleTagger()
-    }
-    // Actualizar los parámetros de búsqueda si es necesario
-    const currentPage = Number(searchParams.get("page")) || 1; // Usa un valor por defecto
-    setPageImage(currentPage)
-
-    // Actualiza los parámetros de búsqueda si es necesario
-    setSearchParams(params => {
-      params.set("page", currentPage);
-      return params;
-    });
-
     setAlbumInformation((albumInformation) => ({ ...albumInformation, index: albumID }))
-    setIsLoadingImage(false)
+    getInformation()
+    setIsLoadingImage(true)
 
-
-    fetch(`${prefixUrl}pictures/show_picture_from_album?page=${searchParams.get('page')}&quantity=${quantityImagePerPage}&album_id=${albumID}`, {
-      method: 'GET',
-      headers: {
-        'Authorization': token // Envía el token en el encabezado Authorization
-      }
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        if (data && data.status == 'success') {
-          setMaxPageGrid(data.total_pages)
-          const newImages = data.response.map((response) => (
-            {
-              link: response[0],
-              id: response[1],
-              date: response[2],
-            }
-          ))
-          setImages(newImages)
-          setIsLoadingImage(true)
-          console.log(data)
-        }
-
-      })
-      .catch((error) => {
-        console.error('Error:', error);
-      });
-
-
-    document.body.className = ' bg-gradient-to-r from-gray-900 to-blue-gray-950 ';
-    return () => {
-      document.body.className = 'bg-black';
-    };
-
-  }, [shouldRefresh, pageImage]);
+  }, [shouldRefresh]);
 
 
 
@@ -152,7 +134,7 @@ function Imagenes() {
               id="agregar-imagen"
               className={isActiveUploadImages ? "" : 'h-3/5 w-3/5 pb-4 group hover:cursor-pointer'}
               onClick={openImageOverlay}>
-                
+
               <FontAwesomeIcon
                 className="text-4xl text-gray-400 group-hover:text-gray-300"
                 icon={faImage}
@@ -161,8 +143,6 @@ function Imagenes() {
                 Subir imágenes aquí
               </p>
             </button>
-            <GridImagenes images={images} />
-            <Paginacion handleNext={handleNext} handlePrevious={handlePrevious} maxPage={maxPageGrid} />
           </div >
 
           : <div

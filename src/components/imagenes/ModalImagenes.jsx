@@ -2,13 +2,20 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faUpload } from "@fortawesome/free-solid-svg-icons"
 import { useAuth } from '../../AuthProvider';
 import prefixUrl from '../../helpers/ip';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 function ModalImagenes({ closeModal, children }) {
-  const { files, userData, albumInformation,refreshProjects,setFiles} = useAuth()
+  const { files, userData, albumInformation, refreshProjects, setFiles } = useAuth()
   const token = userData.token
   const [status, setStatus] = useState('0 imagenes subidas')
   const [isUploading, setIsUploading] = useState(false)
+  const [dateImages, setDateImages] = useState('')
+
+  useEffect(() => {
+    const today = new Date();
+    const formattedDate = today.toLocaleDateString('en-CA'); // 'en-CA' es el formato YYYY-MM-DD
+    setDateImages(formattedDate);
+  }, [])
 
   const handleUploadPicture = async () => {
     if (!files || files.length === 0) {
@@ -23,7 +30,9 @@ function ModalImagenes({ closeModal, children }) {
 
       formData.append('album_id', albumInformation.index);  // Cambiar por el valor adecuado
 
-      formData.append('category_id',1)
+      formData.append('category_id', 1)
+
+      formData.append('date', dateImages)
 
       await fetch(`${prefixUrl}pictures/upload_picture`, {
         method: 'POST',
@@ -39,7 +48,7 @@ function ModalImagenes({ closeModal, children }) {
             setStatus(`${index + 1} imagenes subidas`)
             refreshProjects()
           }
-          
+
         })
         .catch((error) => {
           console.error('Error:', error);
@@ -67,6 +76,11 @@ function ModalImagenes({ closeModal, children }) {
 
           {/* Contenido con scroll */}
           <div className="h-[80vh] overflow-y-auto p-6">
+            <div className="label"> fecha de las imagenes: </div>
+            <input type="date"
+              value={dateImages}
+              onChange={(e) => setDateImages(e.target.value)}
+              className='text-black' />
             {children}
           </div>
 

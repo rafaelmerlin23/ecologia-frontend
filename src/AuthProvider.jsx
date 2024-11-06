@@ -1,5 +1,5 @@
 import React, { createContext, useState, useContext, useEffect, useMemo } from 'react'
-import {jwtDecode} from 'jwt-decode'
+import { jwtDecode } from 'jwt-decode'
 import { useNavigate } from 'react-router-dom'
 
 const AuthContext = createContext()
@@ -40,26 +40,29 @@ export const AuthProvider = ({ children }) => {
 
     const [cardImagePage, setCardImagePage] = useState(1)
 
-    const quantityImagePerPage = 20 
+    const quantityImagePerPage = 20
 
     const [isTaggerActive, setIsTaggerActive] = useState(false)
 
-    const [backRoute,setBackRoute] = useState('/proyectos')
+    const [backRoute, setBackRoute] = useState('/proyectos')
 
-    const [changes ,setChanges] = useState([])
+    const [changes, setChanges] = useState([])
 
     const [maxPage, setMaxPage] = useState(1)
 
-    const [deleteInformation,setDeleteInformation] = useState({})
+    const [deleteInformation, setDeleteInformation] = useState({})
 
-    const [imagesInformation,setImagesInformation] = useState([])
+    const [imagesInformation, setImagesInformation] = useState([])
 
     const [categorySelected, setCategorySelected] = useState(null)
-    
-    const [isCategoryMenuActivate,setIsCategoryMenuActivate] = useState(false)
-  
-    const handleCategoryMenu = ()=>{
-        setIsCategoryMenuActivate(prev=> !prev)
+
+    const [isCategoryMenuActivate, setIsCategoryMenuActivate] = useState(false)
+
+    const [groupImages, setGroupImages] = useState([])
+
+
+    const handleCategoryMenu = () => {
+        setIsCategoryMenuActivate(prev => !prev)
     }
 
 
@@ -68,18 +71,18 @@ export const AuthProvider = ({ children }) => {
 
 
 
-    const refreshProjects = (acction = ()=>{}) => {
+    const refreshProjects = (acction = () => { }) => {
         acction()
         setShouldRefresh(prev => !prev);
     };
 
-    
-    const refreshRatings = (acction = ()=>{}) => {
+
+    const refreshRatings = (acction = () => { }) => {
         acction()
         setShouldRefreshRatings(prev => !prev);
     };
 
-    const login = (data,user) => {
+    const login = (data, user) => {
         const token = data.token
         const decoded = jwtDecode(token)
         setIsAuthenticated(true)
@@ -165,6 +168,8 @@ export const AuthProvider = ({ children }) => {
             , refreshRatings
             , handleCategoryMenu
             , isCategoryMenuActivate
+            , groupImages
+            , setGroupImages
 
         }}>
             {children}
