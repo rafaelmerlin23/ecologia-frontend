@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import ModalIMagen from "./ModalIMagen";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {  faGreaterThan, faLessThan } from "@fortawesome/free-solid-svg-icons"
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import handleGetData from "../../helpers/handleGetData";
 import handleGet from "../../helpers/handleGet";
 import LabelWrapper from "./label components/labelWrapper";
@@ -30,7 +30,7 @@ export const Etiquetador = ({ isActive, handleClose }) => {
     const [tags, setTags] = useState([])
     const [isModalActive, setIsModalActive] = useState(false)
     const [isNextPage, setIsNextPage] = useState(true)
-    
+    const { albumID } = useParams()
     const [searchParams, setSearchParams] = useSearchParams()
     const userID = userData.decoded.user_id
     const [componentToRender, setComponentToRender] = useState(null);
@@ -40,7 +40,7 @@ export const Etiquetador = ({ isActive, handleClose }) => {
         console.log("esta activado el menu de categorias:",isCategoryMenuActivate)
 
         // conseguir el numero de la ultima pagina 
-        const endPointPage = `pictures/show_picture_from_album?page=${cardImagePage}&quantity=${1}&album_id=${albumInformation.index}`
+        const endPointPage = `pictures/show_picture_from_album?page=${cardImagePage}&quantity=${1}&album_id=${albumID}`
         handleGetData(endPointPage, token).then((data) => {
             setMaxPage(data.total_pages)
             handleIsNextPage()
@@ -75,7 +75,7 @@ export const Etiquetador = ({ isActive, handleClose }) => {
     };
 
     const handleNext = () => {
-        const endPoint = `pictures/show_picture_from_album?page=${cardImagePage + 1}&quantity=${1}&album_id=${albumInformation.index}`
+        const endPoint = `pictures/show_picture_from_album?page=${cardImagePage + 1}&quantity=${1}&album_id=${albumID}`
         
         handleGetData(endPoint, token).then((data) => {
             if (data && data.status == 'success') {

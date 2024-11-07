@@ -16,8 +16,8 @@ function Login() {
         e.preventDefault();
 
         const formData = new FormData();
-        formData.append('user_name', usuario);
         formData.append('user_password', clave);
+        formData.append('user_name', usuario);
         formData.append('remember', 'True');
 
         fetch(`${prefixUrl}users/login`, {

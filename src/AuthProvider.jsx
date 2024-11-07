@@ -61,6 +61,7 @@ export const AuthProvider = ({ children }) => {
     const [groupImages, setGroupImages] = useState([])
 
 
+
     const handleCategoryMenu = () => {
         setIsCategoryMenuActivate(prev => !prev)
     }

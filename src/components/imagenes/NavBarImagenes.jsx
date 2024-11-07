@@ -6,7 +6,7 @@ import { useAuth } from '../../AuthProvider';
 
 export const NavBarImagenes = () => {
     const location = useLocation();
-    const {logout} = useAuth()
+    const {logout,backRoute} = useAuth()
     const { hash, pathname, search } = location;
     const {puntoID,proyectoId } = useParams()   
     const baseClass = "py-2  flex justify-center items-center m-0 p-0  w-2/3 "
@@ -17,6 +17,8 @@ export const NavBarImagenes = () => {
         "/proyectos/:proyectoId/puntos/:puntoID/albumes/:albumID/navbar-imagenes/imagenes/",
         "/proyectos/:proyectoId/puntos/:puntoID/albumes/:albumID/navbar-imagenes/categoria-etiqueta",
         "/proyectos/:proyectoId/puntos/:puntoID/albumes/:albumID/navbar-imagenes/categoria-etiqueta/",
+        "/proyectos/:proyectoId/puntos/:puntoID/albumes/:albumID/navbar-imagenes/imagenes/:fechaImagen",
+
       ];
     
       // Verifica si la ruta actual es una de las permitidas
@@ -33,7 +35,7 @@ export const NavBarImagenes = () => {
                 id="navbar-image"
                 className="fixed top-5 left-0 w-full z-30 flex justify-center items-center flex-col p-0 m-0">
                 <ul className='fixed top-5 left-5 px-2 py-2 rounded-full bg-blue-700 hover:bg-blue-600'>
-                    <Link className="w-full h-full flex justify-center items-center" to={`/proyectos/${proyectoId}/puntos/${puntoID}/albumes/`}>
+                    <Link className="w-full h-full flex justify-center items-center" to={backRoute}>
                         <FontAwesomeIcon icon={faArrowLeft} />
                     </Link>
                 </ul>
