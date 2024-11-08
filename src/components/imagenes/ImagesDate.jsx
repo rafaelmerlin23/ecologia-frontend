@@ -8,7 +8,7 @@ function ImagesDate() {
     
     
     useEffect(()=>{
-        setBackRoute(`/proyectos/:${proyectoId}/puntos/:${puntoID}/albumes/:${albumID}/navbar-imagenes/imagenes/`)    
+        setBackRoute(`/proyectos/${proyectoId}/puntos/${puntoID}/albumes/${albumID}/navbar-imagenes/imagenes/`)    
     },[])
 
     return (

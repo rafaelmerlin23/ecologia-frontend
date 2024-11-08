@@ -30,12 +30,14 @@ function MonthImagesGroup({group}) {
 
   return (
     <div  className='mb-4'>
-        <div className='flex justify-center items-center gap-3 '>
+        <div className='flex justify-center items-center gap-3 mb-4 '>
           <FontAwesomeIcon className='text-2xl text-gray-200' icon={faCalendar}/>
+
         <p
-        className='text-center text-2xl text-gray-400 ' 
+        className='text-center text-2xl text-gray-400  ' 
         >{`${MONTHS[Number(group.date.slice(5,7))]}, ${group.date.slice(0,4)}`}</p>
         </div>
+        <hr />
         <GridGroupImages
         month= {`${Number(group.date.slice(5,7))}-${group.date.slice(0,4)}`}
         totalIMages={group.total_pictures}
@@ -47,7 +49,6 @@ function MonthImagesGroup({group}) {
                     date:picture.date
                 }
             ))}/>
-        <hr />
     </div>
   )
 }
