@@ -39,7 +39,7 @@ function MonthImagesGroup({group}) {
         </div>
         <hr />
         <GridGroupImages
-        month= {`${Number(group.date.slice(5,7))}-${group.date.slice(0,4)}`}
+        month= {`${group.date.slice(5,7)}-${group.date.slice(0,4)}`}
         totalIMages={group.total_pictures}
         images={
             group.pictures.map((picture)=>(

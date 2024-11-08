@@ -18,6 +18,7 @@ export const GridImagenes = ({ images }) => {
     }
 
     return (
+        
         <div className="  mt-4 p-4 grid grid-cols-2 lg:grid-cols-3 md:grid-cols-3 sm:grid-cols-2 xl:grid-cols-4 gap-2 p-2">
             <Etiquetador handleClose={handlecloseTagger} isActive={isTaggerActive}/>
             {images.map((image, index) => (

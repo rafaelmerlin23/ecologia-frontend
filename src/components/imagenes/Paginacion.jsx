@@ -171,3 +171,5 @@ const InputButton = ({ handleSubmit }) => {
         </div>
     )
 }
+
+export default Paginacion
