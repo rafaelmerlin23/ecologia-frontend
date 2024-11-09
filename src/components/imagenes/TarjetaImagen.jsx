@@ -3,13 +3,20 @@ import { useAuth } from "../../AuthProvider";
 import { handleDateTime } from "../../helpers/formatDate";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCalendar } from '@fortawesome/free-solid-svg-icons';
-import { useSearchParams } from "react-router-dom";
+import { useLocation, useParams, useSearchParams } from "react-router-dom";
 
 export const TarjetaImagen = ({ image, index }) => {
     const [isHover, setIsHover] = useState(false);
     const containerRef = useRef(null); // Usamos useRef para acceder al contenedor
     const { setIsTaggerActive, setImage, pageImage, setCardImagePage, quantityImagePerPage } = useAuth();
     const [SearchParams, setSearchParams] = useSearchParams();
+    const location = useLocation();
+    const { hash, pathname, search } = location;
+    const {proyectoId,puntoID,albumID,fechaImagen} =useParams()
+
+    // <Route path="/proyectos/:proyectoId/puntos/:puntoID/albumes/:albumID/navbar-imagenes" element={<NavBarImagenes />} >
+    //         <Route path='imagenes' element={<Imagenes />} />
+    //         <Route path='imagenes/:fechaImagen/' element={<ImagesDate/>} />
 
     const handleMouseOver = () => {
         setIsHover(true);
@@ -20,8 +27,14 @@ export const TarjetaImagen = ({ image, index }) => {
     };
 
     const handleOpenTagger = () => setIsTaggerActive(true);
-
     const handleInitImage = () => {
+        if(pathname === `/proyectos/${proyectoId}/puntos/${puntoID}/albumes/${albumID}/navbar-imagenes/imagenes/` || 
+            pathname ===`/proyectos/${proyectoId}/puntos/${puntoID}/albumes/${albumID}/navbar-imagenes/imagenes`
+        ){
+            console.log("estas en imagenes")
+        }else{
+            console.log("estas dentro de fecha imagen")
+        }
         const pageImageNumber = (index + 1) + (pageImage - 1) * quantityImagePerPage;
         setSearchParams((prev) => {
             prev.set("page", SearchParams.get("page"));

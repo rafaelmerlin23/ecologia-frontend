@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Route, Routes, Navigate, useLocation, Link } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes, Navigate, useLocation, Link, Outlet } from 'react-router-dom';
 import Login from './pages/auth/Login';
 import Proyectos from './pages/Proyectos';
 import Puntos from './pages/Puntos';
@@ -13,10 +13,12 @@ import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
 import Error404 from './components/Error404';
 import ImagesDate from './components/imagenes/ImagesDate';
 
-function PrivateRoute({ element, ...rest }) {
-  const { isAuthenticated } = useAuth();
-  const location = useLocation()
-  return isAuthenticated ? element : <Navigate to={location} />;
+function PrivateRoute() {
+  const { isAuthenticated } = useAuth()
+  if(!isAuthenticated){
+    return <Navigate to={'/login'} replace/>
+  }
+  return <Outlet/>
 }
 
 function App() {
@@ -29,15 +31,21 @@ function App() {
           <Route path='*' element={<Error404/>}/>
           <Route path="/login" element={<Login />} />
           <Route path="/crear_cuenta" element={<CreateAccount />} />
-          <Route path="/proyectos" element={<PrivateRoute element={<Proyectos />} />} />
-          <Route path="/proyectos/:proyectoId/puntos" element={<PrivateRoute element={<Puntos />} />} />
-          {/*<Route path="/albumes" element={<PrivateRoute element={<Albumes />} />} />*/}
-          <Route path="/proyectos/:proyectoId/puntos/:puntoID/albumes" element={<PrivateRoute element={<Albumes />}></PrivateRoute>} />
-          <Route path="/proyectos/:proyectoId/puntos/:puntoID/albumes/:albumID/navbar-imagenes" element={<PrivateRoute element={<NavBarImagenes />}></PrivateRoute>} >
-          <Route path='imagenes' element={<Imagenes />} />
-          <Route path='imagenes/:fechaImagen/' element={<ImagesDate/>} />
-          <Route path='categoria-etiqueta' element={<CategoriaEtiqueta />} />
+          
+          <Route element ={<PrivateRoute/>}>
+            <Route path="/proyectos" element={<Proyectos />} />
+            <Route path="/proyectos/:proyectoId/puntos" element={<Puntos />} />
+            <Route path="/proyectos/:proyectoId/puntos/:puntoID/albumes" element={ <Albumes />} />
+            <Route path="/proyectos/:proyectoId/puntos/:puntoID/albumes/:albumID/navbar-imagenes" element={<NavBarImagenes />} >
+            <Route path='imagenes' element={<Imagenes />} />
+            <Route path='imagenes/:fechaImagen/' element={<ImagesDate/>} />
+            <Route path='categoria-etiqueta' element={<CategoriaEtiqueta />} />
+            </Route>
+
           </Route>
+          
+
+          {/* <Route path="/albumes" element={<PrivateRoute element={<Albumes />} />} /> */}
           <Route path="/" element={<Navigate to="/login" />} />
         </Routes>
       </AuthProvider>
