@@ -2,6 +2,9 @@ import { faGreaterThan } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { useEffect, useState } from "react"
 import { Link, Outlet, useLocation, useParams } from "react-router-dom"
+import handleGetData from '../../helpers/handleGetData'
+
+import {useAuth} from '../../AuthProvider'
 
 const MONTHS = {
     1: "Enero",
@@ -20,6 +23,8 @@ const MONTHS = {
 
 export const ProjectsNavBar = () => {
     const location = useLocation()
+    const {userData} = useAuth()
+    const token = userData.token    
     const [isScrolled, setIsScrolled] = useState(false)
     const {albumID,proyectoId,puntoID,fechaImagen}= useParams()
     const [pathParts,setPartPath] = useState({albumName:null,projecName:null,locationName:null})    
@@ -43,7 +48,25 @@ export const ProjectsNavBar = () => {
 
     useEffect(()=>{
         if(proyectoId != undefined){
-            console.log("esto se ejecutó")
+            const endpoint = `projects/get_project_by_id?project_id=${proyectoId}`
+            handleGetData(endpoint,token).then((data)=>{
+                setPartPath((prev)=>({...prev,projecName:data.response[0][1]}))
+            })
+        }
+
+        if(puntoID != undefined){
+            const endpoint = `projects/get_location_by_id?location_id=${puntoID}`
+            handleGetData(endpoint,token).then((data)=>{
+                setPartPath((prev)=>({...prev,locationName:data.response[0][1]}))
+            })
+        }
+
+        if(albumID != undefined){
+            const endpoint = `projects/get_album_by_id?album_id=${albumID}`
+            handleGetData(endpoint,token).then((data)=>{
+                console.log("algo ",data)
+                setPartPath((prev)=>({...prev,albumName:data.response[0][2]}))
+            })
         }
     },[location.pathname])
 
@@ -58,19 +81,19 @@ export const ProjectsNavBar = () => {
                         isActive={true} />
                     <NavElement
                         isNext={puntoID != undefined}
-                        name={'proyectos'}
+                        name={pathParts.projecName}
                         path={`/gestor/proyectos/${proyectoId}/puntos`}
-                        isActive={proyectoId != undefined} />
+                        isActive={proyectoId != undefined && pathParts.projecName} />
                     <NavElement
                         isNext={albumID != undefined}
-                        name={'proyectos'}
+                        name={pathParts.locationName}
                         path={`/gestor/proyectos/${proyectoId}/puntos/${puntoID}/albumes`}
-                        isActive={puntoID != undefined} />
+                        isActive={puntoID != undefined && pathParts.locationName} />
                     <NavElement
                         isNext={fechaImagen != undefined}
-                        name={'proyectos'}
+                        name={pathParts.albumName}
                         path={`/gestor/proyectos/${proyectoId}/puntos/${puntoID}/albumes/${albumID}/imagenes`}
-                        isActive={albumID != undefined} />
+                        isActive={albumID != undefined && pathParts.locationName} />
                     <NavElement
                         isNext={false}
                         name={fechaImagen != undefined ? `${MONTHS[Number(fechaImagen.slice(0,2))]}-${fechaImagen.slice(3,7)}` :""}
@@ -92,7 +115,7 @@ const NavElement = ({ name, path, isNext, isActive }) => {
                 to={path}
                 className="flex items-center text-center text-gray-800 font-medium">
                 <p className="pb-2 rounded-full hover:bg-gray-500 px-6  text-center pt-0">
-                    {name}
+                    {name!=undefined ? name.length >18 ? `${name.slice(0,18)} ...`:name:name}
                 </p>
                 {isNext ?
                     <FontAwesomeIcon className="px-6 text-sm text-center" icon={faGreaterThan} />

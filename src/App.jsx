@@ -127,22 +127,22 @@ function Navigation() {
 
           <ListMember isActive={pathname.includes('/usuario')}>
             <Link to={'/usuario'}>
-              usuario
+              Usuario
             </Link>
           </ListMember>
           <ListMember isActive={pathname.includes('/cuentas')}>
             <Link to={'/cuentas'}>
-              cuentas
+              Cuentas
             </Link>
           </ListMember>
           <ListMember isActive={pathname.includes('/categoria-etiqueta')}>
             <Link to={'/categoria-etiqueta'}>
-              categorias/etiquetas
+              Categorias/Etiquetas
             </Link>
           </ListMember>
           <ListMember isActive={pathname.includes('/proyectos')}>
             <Link to={'/gestor/proyectos'}>
-              proyectos
+              Proyectos
             </Link>
           </ListMember>
           <ListMember>
