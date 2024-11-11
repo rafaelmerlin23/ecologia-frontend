@@ -1,4 +1,4 @@
-import { useEffect, useState,useRef } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useAuth } from "../../AuthProvider";
 import { handleDateTime } from "../../helpers/formatDate";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -12,7 +12,7 @@ export const TarjetaImagen = ({ image, index }) => {
     const [SearchParams, setSearchParams] = useSearchParams();
     const location = useLocation();
     const { hash, pathname, search } = location;
-    const {proyectoId,puntoID,albumID,fechaImagen} =useParams()
+    const { proyectoId, puntoID, albumID, fechaImagen } = useParams()
 
     // <Route path="/proyectos/:proyectoId/puntos/:puntoID/albumes/:albumID/navbar-imagenes" element={<NavBarImagenes />} >
     //         <Route path='imagenes' element={<Imagenes />} />
@@ -28,11 +28,11 @@ export const TarjetaImagen = ({ image, index }) => {
 
     const handleOpenTagger = () => setIsTaggerActive(true);
     const handleInitImage = () => {
-        if(pathname === `/proyectos/${proyectoId}/puntos/${puntoID}/albumes/${albumID}/navbar-imagenes/imagenes/` || 
-            pathname ===`/proyectos/${proyectoId}/puntos/${puntoID}/albumes/${albumID}/navbar-imagenes/imagenes`
-        ){
+        if (pathname === `/proyectos/${proyectoId}/puntos/${puntoID}/albumes/${albumID}/navbar-imagenes/imagenes/` ||
+            pathname === `/proyectos/${proyectoId}/puntos/${puntoID}/albumes/${albumID}/navbar-imagenes/imagenes`
+        ) {
             console.log("estas en imagenes")
-        }else{
+        } else {
             console.log("estas dentro de fecha imagen")
         }
         const pageImageNumber = (index + 1) + (pageImage - 1) * quantityImagePerPage;
@@ -64,11 +64,11 @@ export const TarjetaImagen = ({ image, index }) => {
     }, []);
 
     return (
-        <div 
+        <div
             ref={containerRef} // Añadimos el ref al contenedor
-            onMouseOver={handleMouseOver} 
-            onMouseOut={handleMouseOut} 
-            className="relative w-full h-full">
+            onMouseOver={handleMouseOver}
+            onMouseOut={handleMouseOut}
+            className="z-10 relative w-full h-full">
             {!isHover ? (
                 <img
                     src={image.link}

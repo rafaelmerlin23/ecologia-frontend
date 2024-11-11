@@ -23,11 +23,11 @@ function Imagenes() {
     , shouldRefresh
     , userData
     , setAlbumInformation } = useAuth()
-  
+
   const token = userData.token
   // const [searchParams, setSearchParams] = useSearchParams()
   const { albumID } = useParams()
-  
+
 
 
 
@@ -79,7 +79,7 @@ function Imagenes() {
   //   });
   // }
 
- 
+
 
   // link: response[0],
   // id: response[1],
@@ -87,8 +87,8 @@ function Imagenes() {
 
   useEffect(() => {
     setAlbumInformation((albumInformation) => ({ ...albumInformation, index: albumID }))
-    
-    
+
+
   }, [shouldRefresh]);
 
 
@@ -99,24 +99,24 @@ function Imagenes() {
         closeOverlay={closeImageOverlay}
         isActive={isActiveUploadImages}
       />
-          <div className=" flex flex-col items-center justify-center mt-20">
-            <button
-              id="agregar-imagen"
-              className={isActiveUploadImages ? "" : ' h-3/5 w-3/5 pb-4 pt-4 group hover:cursor-pointer'}
-              onClick={openImageOverlay}>
+      <div className=" flex flex-col items-center justify-center mt-32">
+        <button
+          id="agregar-imagen"
+          className={isActiveUploadImages ? "" : ' h-3/5 w-3/5 pb-4 pt-4 group hover:cursor-pointer'}
+          onClick={openImageOverlay}>
 
-              <FontAwesomeIcon
-                className="text-6xl text-gray-400 group-hover:text-gray-300"
-                icon={faImage}
-              />
-              <p className="mb-2 text-2xl mt-2 font-bold text-gray-400 group-hover:text-gray-300">
-                Subir imágenes
-              </p>
-            </button>
-            <InfiniteScrolling/>
-          </div >
+          <FontAwesomeIcon
+            className="text-6xl text-gray-400 group-hover:text-gray-300"
+            icon={faImage}
+          />
+          <p className="mb-2 text-2xl mt-2 font-bold text-gray-400 group-hover:text-gray-300">
+            Subir imágenes
+          </p>
+        </button>
+        <InfiniteScrolling />
+      </div >
 
-          
+
 
     </>
   );

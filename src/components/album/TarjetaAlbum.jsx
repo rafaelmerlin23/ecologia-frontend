@@ -1,18 +1,18 @@
-import {  useState } from "react"
+import { useState } from "react"
 import { faCalendar } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useAuth } from "../../AuthProvider"
 import Eliminar from "../Eliminar"
-import { Link} from "react-router-dom"
+import { Link } from "react-router-dom"
 import { EditarAlbum } from "./EditarAlbum"
 import { handleDelete } from "../../helpers/handleDelete"
 import TarjetaEnvoltorio from "../TarjetaEnvoltorio"
 import BotonesTarjeta from "../BotonesTarjeta"
 
-export const TarjetaAlbum = ({ album,setIsEditActive,setIsDeleteActive }) => {
+export const TarjetaAlbum = ({ album, setIsEditActive, setIsDeleteActive }) => {
 
-  const {setAlbumInformation, userData, refreshProjects, setImages,setDeleteInformation } = useAuth()
-  
+  const { setAlbumInformation, userData, refreshProjects, setImages, setDeleteInformation } = useAuth()
+
   const token = userData.token
 
   const handleAlbumInformation = () => {
@@ -20,17 +20,17 @@ export const TarjetaAlbum = ({ album,setIsEditActive,setIsDeleteActive }) => {
     setAlbumInformation(album)
   }
 
-  
+
 
 
   const abrirOverlayEliminar = (e) => {
     e.preventDefault()
     e.stopPropagation()
     setDeleteInformation({
-      peticion:handleDeleteAlbum,
-      iconoInformacionSecundaria:faCalendar,
-      objetoEliminar:"Album",
-      proyecto:{ informacionPrimaria: album.name, informacionSecundaria: album.date }
+      peticion: handleDeleteAlbum,
+      iconoInformacionSecundaria: faCalendar,
+      objetoEliminar: "Album",
+      proyecto: { informacionPrimaria: album.name, informacionSecundaria: album.date }
     })
     setIsDeleteActive(true)
   }
@@ -57,7 +57,7 @@ export const TarjetaAlbum = ({ album,setIsEditActive,setIsDeleteActive }) => {
 
   return (
     <>
-      <Link onClick={handleAlbumInformation} to={`${album.index}/navbar-imagenes/imagenes`}  >
+      <Link onClick={handleAlbumInformation} to={`${album.index}/imagenes`}  >
         <TarjetaEnvoltorio imagen={album.image}>
           <BotonesTarjeta openDelete={abrirOverlayEliminar} openEdit={abrirOverlayEditar} />
           <div className="text-center flex flex-col justify-between p-4 leading-normal md:text-lg">

@@ -163,14 +163,14 @@ export const CategoriaEtiqueta = () => {
             .then((res) => res.json())
             .then((data) => {
                 if (data && data.status == 'success') {
-                    
-                    let newFields = [] 
+
+                    let newFields = []
                     data.response.forEach(category => {
-                        if(category[0] !==1){
-                            newFields.push({ field: category[1], id: category[0] }); 
-                        } 
+                        if (category[0] !== 1) {
+                            newFields.push({ field: category[1], id: category[0] });
+                        }
                     });
-                    
+
                     setOldFiles(newFields);
                     setFields(newFields);
                 }
@@ -188,7 +188,7 @@ export const CategoriaEtiqueta = () => {
 
 
     return (
-        <div className=" mx-auto min-h-screen  w-full flex justify-center">
+        <div className="mt-4  mx-auto min-h-screen  w-full flex justify-center">
 
             {
                 isModalCategoryDeleteActive && <ModalDelete isActive={goingToDelete} handleClose={handlecloseOverlay} />
@@ -231,21 +231,21 @@ export const CategoriaEtiqueta = () => {
 
 const ModalDelete = ({ isActive, handleClose }) => {
     if (!isActive) return null
-    const { setCategoriesToDelete, setFields, fields, categoryToDelete,userData } = useAuth()
+    const { setCategoriesToDelete, setFields, fields, categoryToDelete, userData } = useAuth()
     const token = userData.token
     const handleDeleteCategory = () => {
         setCategoriesToDelete((categoriesToDelete) => [...categoriesToDelete, categoriesToDelete])
         let newfields = []
-        for (let field of fields) { 
+        for (let field of fields) {
             if (field != categoryToDelete) {
                 newfields.push(field)
-            }else{
+            } else {
                 const formData = new FormData();
                 formData.append('category_id', field.id);
                 const endPoint = 'tag_system/delete_category'
-                handleDelete(endPoint,formData,token,()=>{
-                
-            })
+                handleDelete(endPoint, formData, token, () => {
+
+                })
             }
         }
         setFields(newfields)

@@ -29,7 +29,7 @@ function Puntos() {
     <>
       <CrearPunto closeCreateLocation={closeCreateLocation} isActive={isActiveCreate}></CrearPunto>
       <div className=' bg-transparent p-6 flex items-center justify-center h.screen'>
-        <button onClick={openCreateLocation} id='agregar_punto' className='flex items-center justify-center bg-gradient-to-r from-sky-900 to-sky-950 rounded-2xl w-1/2 py-5 text-3xl font-bold hover:opacity-70 transition duration-200 ease-in-out '>Agregar punto</button>
+        <button onClick={openCreateLocation} id='agregar_punto' className='mt-32 flex items-center justify-center bg-gradient-to-r from-sky-900 to-sky-950 rounded-2xl w-1/2 py-5 text-3xl font-bold hover:opacity-70 transition duration-200 ease-in-out '>Agregar punto</button>
       </div>
       <GridPunto />
     </>

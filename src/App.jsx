@@ -9,44 +9,54 @@ import CreateAccount from './pages/auth/CreateAccount';
 import NavBarImagenes from './components/imagenes/NavBarImagenes';
 import CategoriaEtiqueta from './pages/CategoriaEtiqueta';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faArrowLeft } from '@fortawesome/free-solid-svg-icons';
+import { faArrowLeft, faRightFromBracket } from '@fortawesome/free-solid-svg-icons';
 import Error404 from './components/Error404';
 import ImagesDate from './components/imagenes/ImagesDate';
+import { useEffect, useState } from 'react';
+import ProjectsNavBar from './components/projects/ProjectsNavBar';
 
 function PrivateRoute() {
-  const { isAuthenticated } = useAuth()
-  if(!isAuthenticated){
-    return <Navigate to={'/login'} replace/>
-  }
-  return <Outlet/>
+  const { isAuthenticated } = useAuth();
+  const location = useLocation();
+
+  return isAuthenticated ? (
+    <Outlet />
+  ) : (
+    <Navigate to="/" replace state={{ from: location }} />
+  )
 }
 
 function App() {
-
   return (
     <Router>
       <AuthProvider>
-        <Navigation/>
+        <Navigation />
         <Routes>
-          <Route path='*' element={<Error404/>}/>
+          {/* Redirigir raíz a login */}
+          <Route path="/" element={<Navigate to="/login" />} />
+
+          {/* Rutas independientes */}
           <Route path="/login" element={<Login />} />
           <Route path="/crear_cuenta" element={<CreateAccount />} />
-          
-          <Route element ={<PrivateRoute/>}>
-            <Route path="/proyectos" element={<Proyectos />} />
-            <Route path="/proyectos/:proyectoId/puntos" element={<Puntos />} />
-            <Route path="/proyectos/:proyectoId/puntos/:puntoID/albumes" element={ <Albumes />} />
-            <Route path="/proyectos/:proyectoId/puntos/:puntoID/albumes/:albumID/navbar-imagenes" element={<NavBarImagenes />} >
-            <Route path='imagenes' element={<Imagenes />} />
-            <Route path='imagenes/:fechaImagen/' element={<ImagesDate/>} />
-            <Route path='categoria-etiqueta' element={<CategoriaEtiqueta />} />
+          <Route path="/usuario" element={<p>usuario</p>} />
+          <Route path="/cuentas" element={<p>cuentas</p>} />
+
+          {/* Rutas privadas */}
+          <Route element={<PrivateRoute />}>
+            <Route path="/categoria-etiqueta" element={<CategoriaEtiqueta />} />
+
+            {/* Rutas bajo /gestor */}
+            <Route path="/gestor" element={<ProjectsNavBar />}>
+              <Route path="proyectos" element={<Proyectos />} />
+              <Route path="proyectos/:proyectoId/puntos" element={<Puntos />} />
+              <Route path="proyectos/:proyectoId/puntos/:puntoID/albumes" element={<Albumes />} />
+              <Route path="proyectos/:proyectoId/puntos/:puntoID/albumes/:albumID/imagenes" element={<Imagenes />} />
+              <Route path="proyectos/:proyectoId/puntos/:puntoID/albumes/:albumID/imagenes/:fechaImagen" element={<ImagesDate />} />
             </Route>
-
           </Route>
-          
 
-          {/* <Route path="/albumes" element={<PrivateRoute element={<Albumes />} />} /> */}
-          <Route path="/" element={<Navigate to="/login" />} />
+          {/* Ruta para página 404 */}
+          <Route path="*" element={<Error404 />} />
         </Routes>
       </AuthProvider>
     </Router>
@@ -59,20 +69,24 @@ function Navigation() {
   const location = useLocation();
   const { pathname } = location;
   const { backRoute, logout } = useAuth();
+  const [isScrolled, setIsScrolled] = useState(false);
 
   // Rutas en las que se debe mostrar el componente Navigation
   const rutasPermitidas = [
-    "/proyectos",
-    "/proyectos/",
-    "/proyectos/:proyectoId/puntos",
-    "/proyectos/:proyectoId/puntos/",
-    "/proyectos/:proyectoId/puntos/:puntoID/albumes",
-    "/proyectos/:proyectoId/puntos/:puntoID/albumes/",
-    "/proyectos/:proyectoId/puntos/:puntoID/albumes/:albumID/navbar-imagenes/imagenes",
-    "/proyectos/:proyectoId/puntos/:puntoID/albumes/:albumID/navbar-imagenes/imagenes/",
-    "/proyectos/:proyectoId/puntos/:puntoID/albumes/:albumID/navbar-imagenes/imagenes/:fechaImagen",
-    "/proyectos/:proyectoId/puntos/:puntoID/albumes/:albumID/navbar-imagenes/categoria-etiqueta",
-    "/proyectos/:proyectoId/puntos/:puntoID/albumes/:albumID/navbar-imagenes/categoria-etiqueta/",
+    "/gestor/proyectos",
+    "/gestor/proyectos/",
+    "/usuario",
+    "/cuentas",
+    "/categoria-etiqueta",
+    "/categoria-etiqueta/",
+    "/gestor/proyectos/:proyectoId/puntos",
+    "/gestor/proyectos/:proyectoId/puntos/",
+    "/gestor/proyectos/:proyectoId/puntos/:puntoID/albumes",
+    "/gestor/proyectos/:proyectoId/puntos/:puntoID/albumes/",
+    "/gestor/proyectos/:proyectoId/puntos/:puntoID/albumes/:albumID/imagenes",
+    "/gestor/proyectos/:proyectoId/puntos/:puntoID/albumes/:albumID/navbar-imagenes/imagenes/",
+    "/gestor/proyectos/:proyectoId/puntos/:puntoID/albumes/:albumID/imagenes/:fechaImagen",
+    "/gestor/proyectos/:proyectoId/puntos/:puntoID/albumes/:albumID/imagenes/:fechaImagen/",
   ];
 
   // Verifica si la ruta actual es una de las permitidas
@@ -80,31 +94,77 @@ function Navigation() {
     new RegExp(`^${ruta.replace(/:[^\s/]+/g, '[^/]+')}$`).test(pathname)
   );
 
+  useEffect(() => {
+    const handleScroll = () => {
+      // Detectar si la posición de desplazamiento es mayor que 0
+      if (window.scrollY > 0) {
+        setIsScrolled(true);
+      } else {
+        setIsScrolled(false);
+      }
+    };
+
+    // Escuchar el evento de scroll
+    window.addEventListener('scroll', handleScroll);
+
+    // Limpiar el evento al desmontar el componente
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
+
+
   // Si no es una ruta permitida, no mostrar el componente
   if (!mostrarNavigation) return null;
 
   return (
-    <>
-      <nav>
-        {pathname !== "/proyectos" && pathname !== "/proyectos/" ? (
-          <ul className="fixed top-5 left-5 px-2 py-2 rounded-full bg-blue-700 hover:bg-blue-600">
-            <Link className="w-full h-full flex justify-center items-center" to={backRoute}>
-              <FontAwesomeIcon icon={faArrowLeft} />
+    <div className='p-0  relative'>
+      <div
+        className={`z-50 p-0 w-screen h-16 bg-gray-700 shadow-md flex items-center justify-end fixed top-0 left-0 right-0 transition-opacity duration-300 ${isScrolled ? 'opacity-90' : 'opacity-70'
+          }`}
+      >
+        <ul className='p-0 text-2xl mr-10 flex items-center flex-row gap-7 '>
+
+          <ListMember isActive={pathname.includes('/usuario')}>
+            <Link to={'/usuario'}>
+              usuario
             </Link>
-          </ul>
-        ) : (
-          ""  
-        )}
-        <ul className="z-30 fixed top-5 right-5 px-2 py-2 rounded-full bg-red-700 hover:bg-red-600">
-          <button
-            onClick={logout}
-            className="xl:gap-1 md:gap-1 lg:gap-1 md:flex-row flex-col lg:flex-row xl:flex-row w-full h-full flex justify-center items-center"
-          >
-            <p>Cerrar</p>
-            <p>sesión</p>
-          </button>
+          </ListMember>
+          <ListMember isActive={pathname.includes('/cuentas')}>
+            <Link to={'/cuentas'}>
+              cuentas
+            </Link>
+          </ListMember>
+          <ListMember isActive={pathname.includes('/categoria-etiqueta')}>
+            <Link to={'/categoria-etiqueta'}>
+              categorias/etiquetas
+            </Link>
+          </ListMember>
+          <ListMember isActive={pathname.includes('/proyectos')}>
+            <Link to={'/gestor/proyectos'}>
+              proyectos
+            </Link>
+          </ListMember>
+          <ListMember>
+            <Link onClick={logout}>
+              <FontAwesomeIcon
+                className='text-red-500'
+                icon={faRightFromBracket} />
+            </Link>
+          </ListMember>
         </ul>
-      </nav>
-    </>
+      </div>
+    </div >
   );
+}
+
+const ListMember = ({ children, isActive }) => {
+
+  return (
+    <>
+      <li className={`${isActive ? 'text-sky-500 border-sky-500 border-b-4' : ''} hover:text-slate-200 hover:border-slate-200 py-3 hover:border-b-4`}>
+        {children}
+      </li>
+    </>
+  )
 }

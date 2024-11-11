@@ -13,11 +13,11 @@ function TarjetaDeproyecto({
   , fecha
   , description
   , indice
-  ,setEsActivaEditar
-  ,setEsActivaEliminar 
-  }) {
+  , setEsActivaEditar
+  , setEsActivaEliminar
+}) {
 
-  const { setImagesInformation,imagesInformation,setDeleteInformation,setBackRoute,userData, setProjectInformation, projectInformation, refreshProjects } = useAuth()
+  const { setImagesInformation, imagesInformation, setDeleteInformation, setBackRoute, userData, setProjectInformation, projectInformation, refreshProjects } = useAuth()
   const token = userData.token
 
   const handleProjectInformation = () => {
@@ -25,9 +25,9 @@ function TarjetaDeproyecto({
     console.log(projectInformation)
   }
 
-  useEffect(()=>{
+  useEffect(() => {
     setBackRoute('/')
-  },[])
+  }, [])
 
 
   const abrirOverlayEliminar = (e) => {
@@ -35,10 +35,10 @@ function TarjetaDeproyecto({
     e.stopPropagation()
     console.log(imagesInformation)
     setDeleteInformation({
-      peticion:handleDeleteProject,
-      iconoInformacionSecundaria:faCalendar,
-      objetoEliminar:"Proyecto",
-      proyecto:{ informacionPrimaria: nombre, informacionSecundaria: fecha }
+      peticion: handleDeleteProject,
+      iconoInformacionSecundaria: faCalendar,
+      objetoEliminar: "Proyecto",
+      proyecto: { informacionPrimaria: nombre, informacionSecundaria: fecha }
     })
     setEsActivaEliminar(true)
   }
@@ -57,40 +57,40 @@ function TarjetaDeproyecto({
     const endPoint = 'projects/delete_project';
 
     handleDelete(endPoint, formData, token, () => {
-        console.log("borrando");
-        setEsActivaEliminar(false);
+      console.log("borrando");
+      setEsActivaEliminar(false);
 
-        // Refresca proyectos para obtener la lista actualizada
-        refreshProjects(()=>{
-          if (imagesInformation.length <= 1) {
-            console.log("No quedan proyectos");
-            setImagesInformation([]);
-          }
-        }) 
-            // Si solo quedaba un proyecto antes de la eliminación, limpia imagesInformation
-            
-        });
-    
-};
+      // Refresca proyectos para obtener la lista actualizada
+      refreshProjects(() => {
+        if (imagesInformation.length <= 1) {
+          console.log("No quedan proyectos");
+          setImagesInformation([]);
+        }
+      })
+      // Si solo quedaba un proyecto antes de la eliminación, limpia imagesInformation
+
+    });
+
+  };
 
   return (
     <>
-      <Link onClick={handleProjectInformation} to={`/proyectos/${indice}/puntos`}>
-      <TarjetaEnvoltorio imagen={LinkImagen}>
-        <BotonesTarjeta openDelete={abrirOverlayEliminar} openEdit={abrirOverlayEditar} />
-        <div className="flex flex-col justify-between p-4 leading-normal md:text-lg overflow-hidden">
-          <h5 className="text-center mb-2 text-xl md:text-2xl font-bold tracking-tight text-gray-900 dark:text-white truncate">
-            {nombre}
-          </h5>
-          <div className='justify-center flex items-center space-x-2 mt-2 mb-4'>
-            <FontAwesomeIcon className='h-5 w-5 mr-2' icon={faCalendar} />
-            <p className="font-normal text-gray-700 dark:text-gray-400 text-center truncate">
-              {fecha}
-            </p>
+      <Link onClick={handleProjectInformation} to={`/gestor/proyectos/${indice}/puntos`}>
+        <TarjetaEnvoltorio imagen={LinkImagen}>
+          <BotonesTarjeta openDelete={abrirOverlayEliminar} openEdit={abrirOverlayEditar} />
+          <div className="flex flex-col justify-between p-4 leading-normal md:text-lg overflow-hidden">
+            <h5 className="text-center mb-2 text-xl md:text-2xl font-bold tracking-tight text-gray-900 dark:text-white truncate">
+              {nombre}
+            </h5>
+            <div className='justify-center flex items-center space-x-2 mt-2 mb-4'>
+              <FontAwesomeIcon className='h-5 w-5 mr-2' icon={faCalendar} />
+              <p className="font-normal text-gray-700 dark:text-gray-400 text-center truncate">
+                {fecha}
+              </p>
+            </div>
           </div>
-        </div>
-      </TarjetaEnvoltorio>
-    </Link>
+        </TarjetaEnvoltorio>
+      </Link>
 
     </>
   )

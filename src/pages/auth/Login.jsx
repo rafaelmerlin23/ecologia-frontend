@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { Link, replace, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../AuthProvider';
 import AuthBackGround from './components/AuthBackGround';
 import prefixUrl from '../../helpers/ip';
@@ -11,6 +11,7 @@ function Login() {
     const navigate = useNavigate();
     const { login, setUserName } = useAuth();
     const location = useLocation();
+    const { hash, pathname, search } = location;
 
     const handleLogin = (e) => {
         e.preventDefault();
@@ -22,19 +23,18 @@ function Login() {
 
         fetch(`${prefixUrl}users/login`, {
             method: 'POST',
-            body: formData
+            body: formData,
         })
             .then((res) => res.json())
             .then((data) => {
                 console.log('Respuesta del servidor:', data);
                 if (data && data.status === 'success') {
                     setResponse(data);
-                    login(data,usuario);
-                    setUserName(usuario);
-
+                    login(data, usuario); // Llama a login para actualizar el contexto de autenticación
+                    navigate('/gestor/proyectos')
                     // Redirige a la ruta original o a /proyectos si no hay ruta guardada
-                    const from = location.state?.from?.pathname || '/proyectos';
-                    navigate(from);
+
+
                 } else {
                     // Maneja el error de autenticación (puedes mostrar un mensaje al usuario)
                     console.error('Error de inicio de sesión:', data.message);

@@ -1,6 +1,6 @@
 import React, { createContext, useState, useContext, useEffect, useMemo } from 'react'
 import { jwtDecode } from 'jwt-decode'
-import { useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 
 const AuthContext = createContext()
 
@@ -102,8 +102,10 @@ export const AuthProvider = ({ children }) => {
         navigate("/login")
     }
 
+
     useEffect(() => {
         const storedIsAuthenticated = localStorage.getItem('isAuthenticated')
+
         const storedUserData = localStorage.getItem('userData')
         if (storedIsAuthenticated === 'true' && storedUserData) {
             setIsAuthenticated(true)
