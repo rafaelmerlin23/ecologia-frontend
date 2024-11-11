@@ -335,11 +335,11 @@ export const Etiquetador = ({ isActive, handleClose }) => {
     return (
         <LabelWrapper handleClose={handleClose} >
             {cardImagePage != 1 ? <button onClick={handlePrevious}
-                className='z-50 flex justify-center items-center py-3 px-3 bg-white rounded-full absolute top-1/2 left-2 text-white text-xl hover:opacity-70'>
+                className='z-40 flex justify-center items-center py-3 px-3 bg-white rounded-full absolute top-1/2 left-2 text-white text-xl hover:opacity-70'>
                 <FontAwesomeIcon className="text-sm text-black" icon={faLessThan} />
             </button> : ""}
             {isNextPage ? <button onClick={handleNext}
-                className='z-50 flex justify-center items-center py-3 px-3 bg-white  rounded-full absolute top-1/2 right-2 text-white text-xl hover:opacity-70'>
+                className='z-40 flex justify-center items-center py-3 px-3 bg-white  rounded-full absolute top-1/2 right-2 text-white text-xl hover:opacity-70'>
                 <FontAwesomeIcon className="text-sm text-black" icon={faGreaterThan} />
             </button> : ""}
             <div className="h-full w-full flex flex-col justify-center items-center gap-y-4 ">

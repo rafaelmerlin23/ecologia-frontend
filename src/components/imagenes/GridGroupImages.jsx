@@ -8,7 +8,7 @@ import { useEffect } from "react"
 export const GridGroupImages = ({ images, totalIMages, month }) => {
 
     return (
-        <div className="z-20 mb-4 mt-4 p-4 grid grid-cols-2 lg:grid-cols-3 md:grid-cols-3 sm:grid-cols-2 xl:grid-cols-4 gap-2 p-2">
+        <div className="z-10 mb-4 mt-4 p-4 grid grid-cols-2 lg:grid-cols-3 md:grid-cols-3 sm:grid-cols-2 xl:grid-cols-4 gap-2 p-2">
             {images.map((image, index) => {
                 if (index === 6) {
                     return (

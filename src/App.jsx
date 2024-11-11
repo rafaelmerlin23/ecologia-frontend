@@ -120,7 +120,7 @@ function Navigation() {
   return (
     <div className='p-0  relative'>
       <div
-        className={`z-50 p-0 w-screen h-16 bg-gray-700 shadow-md flex items-center justify-end fixed top-0 left-0 right-0 transition-opacity duration-300 ${isScrolled ? 'opacity-90' : 'opacity-70'
+        className={`z-20 p-0 w-screen h-16 bg-gray-700 shadow-md flex items-center justify-end fixed top-0 left-0 right-0 transition-opacity duration-300 ${isScrolled ? 'opacity-90' : 'opacity-70'
           }`}
       >
         <ul className='p-0 text-2xl mr-10 flex items-center flex-row gap-7 '>
