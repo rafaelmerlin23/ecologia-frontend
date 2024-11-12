@@ -60,6 +60,8 @@ export const AuthProvider = ({ children }) => {
 
     const [groupImages, setGroupImages] = useState([])
 
+    const [projectsPath,setProjectsPath] = useState('/gestor/proyectos')
+
 
 
     const handleCategoryMenu = () => {
@@ -173,6 +175,8 @@ export const AuthProvider = ({ children }) => {
             , isCategoryMenuActivate
             , groupImages
             , setGroupImages
+            , projectsPath
+            , setProjectsPath
 
         }}>
             {children}

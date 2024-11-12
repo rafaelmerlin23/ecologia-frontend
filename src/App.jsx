@@ -68,7 +68,7 @@ export default App
 function Navigation() {
   const location = useLocation();
   const { pathname } = location;
-  const { backRoute, logout } = useAuth();
+  const { backRoute, logout,projectsPath } = useAuth();
   const [isScrolled, setIsScrolled] = useState(false);
 
   // Rutas en las que se debe mostrar el componente Navigation
@@ -141,7 +141,7 @@ function Navigation() {
             </Link>
           </ListMember>
           <ListMember isActive={pathname.includes('/proyectos')}>
-            <Link to={'/gestor/proyectos'}>
+            <Link to={projectsPath}>
               Proyectos
             </Link>
           </ListMember>

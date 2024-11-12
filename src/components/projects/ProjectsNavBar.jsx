@@ -23,11 +23,12 @@ const MONTHS = {
 
 export const ProjectsNavBar = () => {
     const location = useLocation()
-    const {userData} = useAuth()
+    const {setProjectsPath,userData} = useAuth()
     const token = userData.token    
     const [isScrolled, setIsScrolled] = useState(false)
     const {albumID,proyectoId,puntoID,fechaImagen}= useParams()
-    const [pathParts,setPartPath] = useState({albumName:null,projecName:null,locationName:null})    
+    const [pathParts,setPartPath] = useState({albumName:null,projecName:null,locationName:null})
+     
     useEffect(() => {
         
         const handleScroll = () => {
@@ -68,6 +69,8 @@ export const ProjectsNavBar = () => {
                 setPartPath((prev)=>({...prev,albumName:data.response[0][2]}))
             })
         }
+        //guardar path para cuando se cambie de pestaña y se necesite volver al sitio
+        setProjectsPath(location.pathname)
     },[location.pathname])
 
     return (
