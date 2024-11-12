@@ -18,7 +18,7 @@ import GridGroupImages from './GridGroupImages'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCalendar } from '@fortawesome/free-solid-svg-icons'
 
-function MonthImagesGroup({group}) {
+function MonthImagesGroup({group,indexImageDate}) {
     // link: response[0],
   //           id: response[1],
   //           date: response[2],
@@ -40,6 +40,7 @@ function MonthImagesGroup({group}) {
         <div className='flex justify-center items-center flex-col'>
         <hr className='w-[90%]'/>
         <GridGroupImages
+        indexImageDate={indexImageDate}
         month= {`${group.date.slice(5,7)}-${group.date.slice(0,4)}`}
         totalIMages={group.total_pictures}
         images={

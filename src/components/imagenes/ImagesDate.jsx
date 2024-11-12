@@ -25,13 +25,35 @@ const MONTHS = {
 
 function ImagesDate() {
   const { albumID, proyectoId, puntoID, fechaImagen } = useParams()
-  const { setPageImage, pageImage, setBackRoute, backRoute, userData, quantityImagePerPage } = useAuth()
+  const { setIsTaggerActive,setCardImagePage,setImage,setMaxPage,setPageImage, pageImage, setBackRoute, backRoute, userData, quantityImagePerPage } = useAuth()
   const token = userData.token
   const [images, setImages] = useState([])
   const month = Number(fechaImagen.slice(0, 2))
   const year = Number(fechaImagen.slice(3, 7))
   const [searchParams, setSearchParams] = useSearchParams()
   const [maxPageGrid, setMaxPageGrid] = useState(1)
+
+  const handleTagger = () => {
+    const endPoint = `pictures/show_picture_from_album?page=${searchParams.get('image-page')}&quantity=${1}&album_id=${albumID}`
+
+    handleGetData(endPoint, token).then((data) => {
+    if (data && data.status == 'success') {
+        const newImages = data.response.map((response) => (
+        {
+            link: response[0],
+            id: response[1],
+            date: response[2],
+        }
+        ))
+        setImage(newImages[0])
+        setCardImagePage(searchParams.get('image-page'))
+        setIsTaggerActive(true)
+        setMaxPage(data.total_pages)
+    }
+    }).catch((error) => {
+    console.error('Error:', error);
+    });
+}
 
   const getDaysInMonth = (month, year) => {
     // `month` es de 1 a 12, por lo que restamos 1 para ajustarlo al índice (0 a 11)
@@ -56,6 +78,8 @@ function ImagesDate() {
     setPageImage(newPage); // Usa el nuevo número de página aquí
   }
 
+
+
   useEffect(() => {
 
     setBackRoute(`/proyectos/${proyectoId}/puntos/${puntoID}/albumes/${albumID}/navbar-imagenes/imagenes/`)
@@ -72,6 +96,8 @@ function ImagesDate() {
       params.set("page", currentPage);
       return params;
     });
+
+    setPageImage(currentPage !== 1 ? currentPage : 1)
 
 
     const pictureEndpoint = `pictures/show_picture_from_album?startDate=${minDate}&endDate=${maxDate}&album_id=${albumID}&quantity=${quantityImagePerPage}&page=${pageImage}`
@@ -93,6 +119,9 @@ function ImagesDate() {
       console.error(error)
     })
 
+    if(searchParams.get('is-active-tagger')){
+      handleTagger()
+    }
   }, [fechaImagen, pageImage, maxPageGrid])
 
   return (

@@ -62,6 +62,10 @@ export const AuthProvider = ({ children }) => {
 
     const [projectsPath,setProjectsPath] = useState('/gestor/proyectos')
 
+    const [dateUbication,setDateUbication] = useState([])
+    
+    const [indexDateUbicationImagesDate,setIndexDateUbicationImagesDate] = useState(1)
+
 
 
     const handleCategoryMenu = () => {
@@ -177,6 +181,11 @@ export const AuthProvider = ({ children }) => {
             , setGroupImages
             , projectsPath
             , setProjectsPath
+            , dateUbication
+            , setDateUbication
+            , indexDateUbicationImagesDate
+            , setIndexDateUbicationImagesDate
+
 
         }}>
             {children}

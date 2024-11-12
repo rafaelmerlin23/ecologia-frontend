@@ -12,7 +12,7 @@ function LabelWrapper({children,handleClose}) {
             initial={{ opacity: 0, scale: 1.2 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 1.2 }}
-            transition={{ duration: 0.05 }}
+            transition={{ duration: 0.02 }}
             onClick={handleClose}
             className=' fixed z-30 inset-0 bg-black bg-opacity-20 backdrop-blur-sm flex justify-center items-center'
             >

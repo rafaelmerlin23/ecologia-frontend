@@ -1,10 +1,12 @@
 import { useNavigate, useParams } from "react-router-dom";
+import { useAuth } from "../../AuthProvider";
 
 
-export const TarjetaImagen = ({ image, totalImages, index, month }) => {
+export const TarjetaImagen = ({indexImageDate, image, totalImages, month }) => {
     const navigate = useNavigate()
-
+    const {setIndexDateUbicationImagesDate} = useAuth()
     const handleNavigate = () => {
+        setIndexDateUbicationImagesDate(indexImageDate)
         navigate(`${month}`)
     }
     return (

@@ -15,16 +15,11 @@ import ImagesDate from './components/imagenes/ImagesDate';
 import { useEffect, useState } from 'react';
 import ProjectsNavBar from './components/projects/ProjectsNavBar';
 
-function PrivateRoute() {
-  const { isAuthenticated } = useAuth();
-  const location = useLocation();
-
-  return isAuthenticated ? (
-    <Outlet />
-  ) : (
-    <Navigate to="/" replace state={{ from: location }} />
-  )
-}
+  function PrivateRoute({ element, ...rest }) {
+    const { isAuthenticated } = useAuth();
+    const location = useLocation()
+    return isAuthenticated ? element : <Navigate to={location} />;
+  }
 
 function App() {
   return (
@@ -42,18 +37,16 @@ function App() {
           <Route path="/cuentas" element={<p>cuentas</p>} />
 
           {/* Rutas privadas */}
-          <Route element={<PrivateRoute />}>
-            <Route path="/categoria-etiqueta" element={<CategoriaEtiqueta />} />
+            <Route path="/categoria-etiqueta" element={<PrivateRoute element={<CategoriaEtiqueta />}/>} />
 
             {/* Rutas bajo /gestor */}
-            <Route path="/gestor" element={<ProjectsNavBar />}>
-              <Route path="proyectos" element={<Proyectos />} />
-              <Route path="proyectos/:proyectoId/puntos" element={<Puntos />} />
-              <Route path="proyectos/:proyectoId/puntos/:puntoID/albumes" element={<Albumes />} />
-              <Route path="proyectos/:proyectoId/puntos/:puntoID/albumes/:albumID/imagenes" element={<Imagenes />} />
-              <Route path="proyectos/:proyectoId/puntos/:puntoID/albumes/:albumID/imagenes/:fechaImagen" element={<ImagesDate />} />
+            <Route path="/gestor" element={<PrivateRoute element={<ProjectsNavBar />}/>}>
+              <Route path="proyectos" element={<PrivateRoute element={<Proyectos />}/>} />
+              <Route path="proyectos/:proyectoId/puntos" element={<PrivateRoute element={<Puntos />}/>} />
+              <Route path="proyectos/:proyectoId/puntos/:puntoID/albumes" element={<PrivateRoute element={<Albumes />}/>} />
+              <Route path="proyectos/:proyectoId/puntos/:puntoID/albumes/:albumID/imagenes" element={<PrivateRoute element={<Imagenes />}/>} />
+              <Route path="proyectos/:proyectoId/puntos/:puntoID/albumes/:albumID/imagenes/:fechaImagen" element={<PrivateRoute element={<ImagesDate />}/>} />
             </Route>
-          </Route>
 
           {/* Ruta para página 404 */}
           <Route path="*" element={<Error404 />} />

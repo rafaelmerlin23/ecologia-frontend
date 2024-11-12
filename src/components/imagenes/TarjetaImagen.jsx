@@ -5,19 +5,23 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCalendar } from '@fortawesome/free-solid-svg-icons';
 import { useLocation, useParams, useSearchParams } from "react-router-dom";
 
-export const TarjetaImagen = ({ image, index }) => {
+export const TarjetaImagen = ({ indexImageDate,image, index }) => {
     const [isHover, setIsHover] = useState(false);
     const containerRef = useRef(null); // Usamos useRef para acceder al contenedor
-    const { setIsTaggerActive, setImage, pageImage, setCardImagePage, quantityImagePerPage } = useAuth();
+    const { 
+        indexDateUbicationImagesDate
+        ,dateUbication
+        ,setIsTaggerActive
+        , setImage
+        , pageImage
+        , setCardImagePage
+        , quantityImagePerPage } = useAuth();
     const [SearchParams, setSearchParams] = useSearchParams();
     const location = useLocation();
     const { hash, pathname, search } = location;
     const { proyectoId, puntoID, albumID, fechaImagen } = useParams()
 
-    // <Route path="/proyectos/:proyectoId/puntos/:puntoID/albumes/:albumID/navbar-imagenes" element={<NavBarImagenes />} >
-    //         <Route path='imagenes' element={<Imagenes />} />
-    //         <Route path='imagenes/:fechaImagen/' element={<ImagesDate/>} />
-
+  
     const handleMouseOver = () => {
         setIsHover(true);
     };
@@ -28,16 +32,26 @@ export const TarjetaImagen = ({ image, index }) => {
 
     const handleOpenTagger = () => setIsTaggerActive(true);
     const handleInitImage = () => {
-        if (pathname === `/proyectos/${proyectoId}/puntos/${puntoID}/albumes/${albumID}/navbar-imagenes/imagenes/` ||
-            pathname === `/proyectos/${proyectoId}/puntos/${puntoID}/albumes/${albumID}/navbar-imagenes/imagenes`
+        let pageImageNumber = 1;
+        if (pathname === `/gestor/proyectos/${proyectoId}/puntos/${puntoID}/albumes/${albumID}/imagenes/` ||
+            pathname === `/gestor/proyectos/${proyectoId}/puntos/${puntoID}/albumes/${albumID}/imagenes`
         ) {
-            console.log("estas en imagenes")
+            
+            // calcula la pocision de la imagen sumando en que numero de grid esta
+            let ImagePosition = 0
+            for(let i = 0;i < indexImageDate;i++){
+                ImagePosition+= dateUbication[i]
+            }
+            pageImageNumber = (index + 1) + ImagePosition   
         } else {
-            console.log("estas dentro de fecha imagen")
+            // calcula la pocision de la imagen sumando en que numero de grid esta
+            let ImagePosition = 0
+            for(let i = 0;i < indexDateUbicationImagesDate;i++){
+                ImagePosition+= dateUbication[i]
+            }
+            pageImageNumber = ((index + 1) + (pageImage - 1) * quantityImagePerPage) + ImagePosition
         }
-        const pageImageNumber = (index + 1) + (pageImage - 1) * quantityImagePerPage;
         setSearchParams((prev) => {
-            prev.set("page", SearchParams.get("page"));
             prev.set("is-active-tagger", true);
             prev.set("image-page", pageImageNumber);
             return prev;
