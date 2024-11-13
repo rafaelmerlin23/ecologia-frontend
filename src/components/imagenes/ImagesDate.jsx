@@ -25,7 +25,7 @@ const MONTHS = {
 
 function ImagesDate() {
   const { albumID, proyectoId, puntoID, fechaImagen } = useParams()
-  const { setIsTaggerActive,setCardImagePage,setImage,setMaxPage,setPageImage, pageImage, setBackRoute, backRoute, userData, quantityImagePerPage } = useAuth()
+  const {indexDateUbicationImagesDate,dateUbication, setIsTaggerActive,setCardImagePage,setImage,setMaxPage,setPageImage, pageImage, setBackRoute, backRoute, userData, quantityImagePerPage } = useAuth()
   const token = userData.token
   const [images, setImages] = useState([])
   const month = Number(fechaImagen.slice(0, 2))
@@ -81,6 +81,7 @@ function ImagesDate() {
 
 
   useEffect(() => {
+    
 
     setBackRoute(`/proyectos/${proyectoId}/puntos/${puntoID}/albumes/${albumID}/navbar-imagenes/imagenes/`)
 
@@ -96,6 +97,8 @@ function ImagesDate() {
       params.set("page", currentPage);
       return params;
     });
+
+    setPageImage(currentPage ? Number(currentPage):1)
 
 
     const pictureEndpoint = `pictures/show_picture_from_album?startDate=${minDate}&endDate=${maxDate}&album_id=${albumID}&quantity=${quantityImagePerPage}&page=${pageImage}`
@@ -116,6 +119,16 @@ function ImagesDate() {
     }).catch((error) => {
       console.error(error)
     })
+    let ImagePosition = 0
+      if(!searchParams.get('image-position')){
+          for(let i = 0;i < indexDateUbicationImagesDate;i++){
+              ImagePosition+= dateUbication[i]
+          }
+          setSearchParams((prev) => {
+              prev.set('image-position',ImagePosition)
+              return prev;
+          });
+      } 
 
     if(searchParams.get('is-active-tagger')){
       handleTagger()

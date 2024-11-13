@@ -74,33 +74,7 @@ export const Etiquetador = ({ isActive, handleClose }) => {
         navigate('/categoria-etiqueta');
     };
 
-    const handleNext = () => {
-        const endPoint = `pictures/show_picture_from_album?page=${cardImagePage + 1}&quantity=${1}&album_id=${albumID}`
-
-        handleGetData(endPoint, token).then((data) => {
-            if (data && data.status == 'success') {
-                const newImages = data.response.map((response) => (
-                    {
-                        link: response[0],
-                        id: response[1],
-                        date: response[2],
-                    }
-                ))
-                setSearchParams(params => {
-                    params.set("image-page", cardImagePage + 1);
-                    return params;
-                });
-                setImage(newImages[0])
-                setCardImagePage((CardImagePage) => Number(cardImagePage) + 1)
-                handleIsNextPage(2)
-                setChanges([])
-
-            }
-        }).catch((error) => {
-            console.error('Error:', error);
-        });
-    }
-
+    
     const handleIsNextPage = () => {
         if (cardImagePage < maxPage) {
             setIsNextPage(true)
@@ -108,32 +82,59 @@ export const Etiquetador = ({ isActive, handleClose }) => {
             setIsNextPage(false)
         }
     }
-
-    const handlePrevious = async () => {
-        const endPoint = `pictures/show_picture_from_album?page=${cardImagePage - 1}&quantity=${1}&album_id=${albumInformation.index}`
-        let data = [image]
+    const handleNext = async () => {
+        const endPoint = `pictures/show_picture_from_album?page=${cardImagePage + 1}&quantity=${1}&album_id=${albumID}`;
         try {
-            data = await handleGet(endPoint, token)
-        } catch (error) {
-            console.error(error)
-        }
-        const newImages = data.map((response) => (
-            {
-                link: response[0],
-                id: response[1],
-                date: response[2],
+            const data = await handleGet(endPoint, token);
+            
+            if (data && data.length > 0) {
+                const newImages = data.map((response) => ({
+                    link: response[0],
+                    id: response[1],
+                    date: response[2],
+                }));
+                setImage(newImages[0]);
+                setSearchParams((params) => {
+                    params.set("image-page", cardImagePage + 1);
+                    return params;
+                });
+    
+                setCardImagePage(prevPage => prevPage + 1);  // Asegúrate de actualizar correctamente el estado de la página
+                handleIsNextPage();  // Verifica si hay más páginas después de actualizar el estado
+                setChanges([]); // Resetea los cambios si es necesario
             }
-        ))
-        handleIsNextPage(0)
-        setImage(newImages[0])
-        setSearchParams(params => {
+        } catch (error) {
+            console.error(error);
+        }
+    };
+        
+    const handlePrevious = async () => {
+        const endPoint = `pictures/show_picture_from_album?page=${cardImagePage - 1}&quantity=${1}&album_id=${albumID}`;
+        let data = [image];
+        try {
+            data = await handleGet(endPoint, token);
+        } catch (error) {
+            console.error(error);
+        }
+    
+        const newImages = data.map((response) => ({
+            link: response[0],
+            id: response[1],
+            date: response[2],
+        }));
+    
+        setImage(newImages[0]);
+        setSearchParams((params) => {
             params.set("image-page", Number(cardImagePage) - 1);
             return params;
         });
-        setCardImagePage(cardImagePage => cardImagePage - 1)
-        setChanges([])
-    }
-
+    
+        // Actualiza correctamente el estado de la página y recalcula si hay una página siguiente
+        setCardImagePage((prevPage) => prevPage - 1);
+        handleIsNextPage();  // Este método se llama después de actualizar el estado de la página
+        setChanges([]);
+    };
+    
     const handleSelect = (e, tag) => {
         e.preventDefault()
         let newTags = []

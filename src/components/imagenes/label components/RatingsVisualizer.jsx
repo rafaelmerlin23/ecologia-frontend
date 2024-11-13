@@ -15,27 +15,29 @@ function RatingsVisualizer({categoryId,componentToRender}) {
   const userName = userData.userName
 
 
-  useEffect(()=>{
-    const getRatins = async() => {
-        console.log(image.id)
-        const ratings = await handleGetData(`ratings/show_ratings_from_picture?picture_id=${image.id}`, token)
-        const newRatigs = ratings.response.filter((rating)=>rating[8] == categoryId)
-        console.log("ratings antiguos: ",ratings)
-        console.log("ratings filtrados: ",newRatigs)
+  useEffect(() => {
+    const getRatins = async () => {
+      if (image && image.id) { // Verifica que image e image.id existan
+        console.log(image.id);
+        const ratings = await handleGetData(`ratings/show_ratings_from_picture?picture_id=${image.id}`, token);
+        const newRatigs = ratings.response.filter((rating) => rating[8] == categoryId);
+        console.log("ratings antiguos: ", ratings);
+        console.log("ratings filtrados: ", newRatigs);
         const groupedData = newRatigs.reduce((acc, item) => {
-          const key = item[7]; // El primer elemento de cada sub-arreglo
+          const key = item[7];
           if (!acc[key]) {
-            acc[key] = []; // Si no existe el grupo, lo inicializamos como un arreglo vacío
+            acc[key] = [];
           }
-          acc[key].push(item); // Agregamos el sub-arreglo al grupo correspondiente
+          acc[key].push(item);
           return acc;
         }, {});
-        console.log("group data: ",groupedData)
-        setUsersRatings(groupedData)
-      } 
-
-    getRatins()
-  },[image.id,componentToRender,shouldRefreshRatings])
+        console.log("group data: ", groupedData);
+        setUsersRatings(groupedData);
+      }
+    };
+  
+    getRatins();
+  }, [image?.id, componentToRender, shouldRefreshRatings])
 
   return (
     <div>

@@ -8,7 +8,8 @@ import { useLocation, useParams, useSearchParams } from "react-router-dom";
 export const TarjetaImagen = ({ indexImageDate,image, index }) => {
     const [isHover, setIsHover] = useState(false);
     const containerRef = useRef(null); // Usamos useRef para acceder al contenedor
-    const { 
+    const {
+        setIndexDateUbicationImagesDate, 
         indexDateUbicationImagesDate
         ,dateUbication
         ,setIsTaggerActive
@@ -44,11 +45,7 @@ export const TarjetaImagen = ({ indexImageDate,image, index }) => {
             }
             pageImageNumber = (index + 1) + ImagePosition   
         } else {
-            // calcula la pocision de la imagen sumando en que numero de grid esta
-            let ImagePosition = 0
-            for(let i = 0;i < indexDateUbicationImagesDate;i++){
-                ImagePosition+= dateUbication[i]
-            }
+            const ImagePosition = SearchParams.get('image-position') ? Number(SearchParams.get('image-position')) :0 
             pageImageNumber = ((index + 1) + (pageImage - 1) * quantityImagePerPage) + ImagePosition
         }
         setSearchParams((prev) => {
