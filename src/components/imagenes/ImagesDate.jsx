@@ -89,15 +89,13 @@ function ImagesDate() {
     const maxDate = `${year}-${month}-${maxDaysInMonth}`
     const minDate = `${year}-${month}-01`
 
-    const currentPage = Number(searchParams.get("page")) || 1; // Usa un valor por defecto
+    const currentPage = searchParams.get("page") || 1; // Usa un valor por defecto
 
     // Actualiza los parámetros de búsqueda si es necesario
     setSearchParams(params => {
       params.set("page", currentPage);
       return params;
     });
-
-    setPageImage(currentPage !== 1 ? currentPage : 1)
 
 
     const pictureEndpoint = `pictures/show_picture_from_album?startDate=${minDate}&endDate=${maxDate}&album_id=${albumID}&quantity=${quantityImagePerPage}&page=${pageImage}`
