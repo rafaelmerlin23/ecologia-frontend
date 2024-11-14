@@ -73,15 +73,17 @@ function ModalImagenes({ closeModal, children }) {
               ×
             </button>
           </div>
-
+          
           {/* Contenido con scroll */}
           <div className="h-[80vh] overflow-y-auto p-6">
-            <div className="label"> fecha de las imagenes: </div>
-            <input type="date"
-              value={dateImages}
-              onChange={(e) => setDateImages(e.target.value)}
-              className='text-black' />
-            {children}
+            <div className='flex items-center justify-center flex-col gap-2'>
+              <label className='text-2xl'> fecha de las imagenes </label>
+              <input type="date"
+                value={dateImages}
+                onChange={(e) => setDateImages(e.target.value)}
+                className='px-2 rounded-md bg-zinc-700 text-white text-2xl' />
+              {children}
+            </div>
           </div>
 
           <div className="p-4 border-t flex justify-end gap-x-6">

@@ -26,7 +26,7 @@ export function SubirImagenes({ closeOverlay, isActive }) {
 
   return (
     <ModalImagenes closeModal={closeOverlay}>
-      <p>Sube tus imágenes aquí</p>
+      <p className='text-3xl'>Sube tus imágenes aquí</p>
       <DropZone />
       {files.length > 0 ? (
         <div className="pt-10 grid grid-cols-2 xl:grid-cols-8 lg:grid-cols-4 sm:grid-cols-3  gap-x-0 gap-y-6 p-4 w-full place-items-center ">

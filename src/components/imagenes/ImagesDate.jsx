@@ -46,7 +46,7 @@ function ImagesDate() {
         }
         ))
         setImage(newImages[0])
-        setCardImagePage(searchParams.get('image-page'))
+        setCardImagePage(Number(searchParams.get('image-page')))
         setIsTaggerActive(true)
         setMaxPage(data.total_pages)
     }
