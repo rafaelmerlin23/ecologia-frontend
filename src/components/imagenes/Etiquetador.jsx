@@ -22,7 +22,6 @@ export const Etiquetador = ({ isActive, handleClose }) => {
         setImage,
         image,
         userData,
-        albumInformation,
         isCategoryMenuActivate,
     } = useAuth()
     const token = userData.token

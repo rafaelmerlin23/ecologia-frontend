@@ -1,13 +1,18 @@
-import { useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { useAuth } from "../../AuthProvider";
 
 
 export const TarjetaImagen = ({indexImageDate, image, totalImages, month }) => {
     const navigate = useNavigate()
     const {setIndexDateUbicationImagesDate} = useAuth()
+    const location = useLocation();
+
     const handleNavigate = () => {
         setIndexDateUbicationImagesDate(indexImageDate)
-        navigate(`${month}`)
+        
+        const searchParams = location.search;
+        console.log(searchParams)
+        navigate(`${month}${searchParams}`);
     }
     return (
         <div

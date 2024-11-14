@@ -1,7 +1,7 @@
 import { faGreaterThan } from "@fortawesome/free-solid-svg-icons"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { useEffect, useState } from "react"
-import { Link, Outlet, useLocation, useParams } from "react-router-dom"
+import { Link, Outlet, useLocation, useParams, useSearchParams } from "react-router-dom"
 import handleGetData from '../../helpers/handleGetData'
 
 import {useAuth} from '../../AuthProvider'
@@ -28,6 +28,7 @@ export const ProjectsNavBar = () => {
     const [isScrolled, setIsScrolled] = useState(false)
     const {albumID,proyectoId,puntoID,fechaImagen}= useParams()
     const [pathParts,setPartPath] = useState({albumName:null,projecName:null,locationName:null})
+    const [searchParams, setSearchParams] = useSearchParams()
      
     useEffect(() => {
         
@@ -69,9 +70,11 @@ export const ProjectsNavBar = () => {
                 setPartPath((prev)=>({...prev,albumName:data.response[0][2]}))
             })
         }
+
+        const searchParams = location.search
         //guardar path para cuando se cambie de pestaña y se necesite volver al sitio
-        setProjectsPath(location.pathname)
-    },[location.pathname])
+        setProjectsPath(`${location.pathname}${searchParams}`)
+    },[location.pathname,location.search])
 
     return (
         <div className="relative ">
@@ -95,7 +98,7 @@ export const ProjectsNavBar = () => {
                     <NavElement
                         isNext={fechaImagen != undefined}
                         name={pathParts.albumName}
-                        path={`/gestor/proyectos/${proyectoId}/puntos/${puntoID}/albumes/${albumID}/imagenes`}
+                        path={`/gestor/proyectos/${proyectoId}/puntos/${puntoID}/albumes/${albumID}/imagenes${searchParams.get('initial-date') && searchParams.get('final-date') ? `?initial-date=${searchParams.get('initial-date')}&final-date=${searchParams.get('final-date')}` : ''}`}
                         isActive={albumID != undefined && pathParts.locationName} />
                     <NavElement
                         isNext={false}

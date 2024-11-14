@@ -140,7 +140,7 @@ function InfiniteScrolling() {
         <div>
             <Etiquetador handleClose={(e)=>handlecloseTagger(e)} isActive={isTaggerActive} />
             
-            {/* <form onSubmit={handleFilter} className='mb-10 w-screen flex justify-center items-center  gap-5 flex-col'>
+            <form onSubmit={handleFilter} className='mb-10 w-screen flex justify-center items-center  gap-5 flex-col'>
                 <div className='flex flex-col sm:flex-col gap-5'>
                     <div className='flex flex-col xl:flex-row lg:flex-row gap-y-2 gap-5'>
                         <div className='flex flex-col gap-y-2 items-center'>
@@ -184,7 +184,7 @@ function InfiniteScrolling() {
                     </div>
                 </div>
                 {!isGoodForm?<p className='text-1xl text-red-500'>El inicio no puede ser mayor al final</p>:""}
-            </form> */}
+            </form>
 
             <div className='flex flex-col justify-center items-center'>
                 {images.length > 0 && images.map((image, index) => (
