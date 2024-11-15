@@ -9,9 +9,7 @@ export const TarjetaImagen = ({ indexImageDate,image, index }) => {
     const [isHover, setIsHover] = useState(false);
     const containerRef = useRef(null); // Usamos useRef para acceder al contenedor
     const {
-        setIndexDateUbicationImagesDate, 
-        indexDateUbicationImagesDate
-        ,dateUbication
+        dateUbication
         ,setIsTaggerActive
         , setImage
         , pageImage
@@ -73,6 +71,8 @@ export const TarjetaImagen = ({ indexImageDate,image, index }) => {
             window.removeEventListener("mousemove", handleMouseMove);
         };
     }, []);
+
+   
 
     return (
         <div

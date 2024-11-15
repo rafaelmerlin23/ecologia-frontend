@@ -85,15 +85,18 @@ function InfiniteScrolling() {
             prev.delete('final-date');
             return prev;
         });
-        refreshProjects()
+        
     }
 
     
 
     const handleTagger = () => {
-
-        const endPoint = `pictures/show_picture_from_album?page=${searchParams.get('image-page')}&quantity=${1}&album_id=${albumID}`;
-
+        const initialDate =searchParams.get('initial-date')
+        const finalDate =searchParams.get('final-date')
+        
+        const paramsFilters =initialDate &&finalDate?`&startDate=${initialDate}&endDate=${finalDate}`:""
+        const endPoint = `pictures/show_picture_from_album?page=${searchParams.get('image-page')}&quantity=${1}&album_id=${albumID}${paramsFilters}`;
+        console.log(endPoint)
         handleGetData(endPoint, token).then((data) => {
             if (data && data.status === 'success') {
                 const newImages = data.response.map((response) => ({
@@ -140,7 +143,8 @@ function InfiniteScrolling() {
         <div>
             <Etiquetador handleClose={(e)=>handlecloseTagger(e)} isActive={isTaggerActive} />
             
-            <form onSubmit={handleFilter} className='mb-10 w-screen flex justify-center items-center  gap-5 flex-col'>
+            {images.length > 0?
+                <form onSubmit={handleFilter} className='mb-10 w-screen flex justify-center items-center  gap-5 flex-col'>
                 <div className='flex flex-col sm:flex-col gap-5'>
                     <div className='flex flex-col xl:flex-row lg:flex-row gap-y-2 gap-5'>
                         <div className='flex flex-col gap-y-2 items-center'>
@@ -185,6 +189,7 @@ function InfiniteScrolling() {
                 </div>
                 {!isGoodForm?<p className='text-1xl text-red-500'>El inicio no puede ser mayor al final</p>:""}
             </form>
+            :""}
 
             <div className='flex flex-col justify-center items-center'>
                 {images.length > 0 && images.map((image, index) => (

@@ -33,13 +33,20 @@ export const Etiquetador = ({ isActive, handleClose }) => {
     const [searchParams, setSearchParams] = useSearchParams()
     const userID = userData.decoded.user_id
     const [componentToRender, setComponentToRender] = useState(null);
+    const [dateParam,setDateParam]=useState({initialDate:null,finalDate:null})
 
     useEffect(() => {
         document.body.className = ' bg-gradient-to-r from-gray-900 to-blue-gray-950';
         console.log("esta activado el menu de categorias:", isCategoryMenuActivate)
-
+        const initialDate =searchParams.get('initial-date')
+        const finalDate =searchParams.get('final-date')
+        if(initialDate && finalDate){
+            // esto lo voy a cambiar creo
+            setDateParam({finalDate:finalDate,initialDate:initialDate})
+        }
+        const paramsFilters =initialDate &&finalDate?`&startDate=${initialDate}&endDate=${finalDate}`:""
         // conseguir el numero de la ultima pagina 
-        const endPointPage = `pictures/show_picture_from_album?page=${cardImagePage}&quantity=${1}&album_id=${albumID}`
+        const endPointPage = `pictures/show_picture_from_album?page=${cardImagePage}&quantity=${1}&album_id=${albumID}${paramsFilters}`
         handleGetData(endPointPage, token).then((data) => {
             setMaxPage(data.total_pages)
             handleIsNextPage()
@@ -82,7 +89,8 @@ export const Etiquetador = ({ isActive, handleClose }) => {
         }
     }
     const handleNext = async () => {
-        const endPoint = `pictures/show_picture_from_album?page=${cardImagePage + 1}&quantity=${1}&album_id=${albumID}`;
+        const paramsFilters =dateParam.initialDate &&dateParam.finalDate?`&startDate=${dateParam.initialDate}&endDate=${dateParam.finalDate}`:""
+        const endPoint = `pictures/show_picture_from_album?page=${cardImagePage + 1}&quantity=${1}&album_id=${albumID}${paramsFilters}`;
         try {
             const data = await handleGet(endPoint, token);
             
@@ -108,7 +116,9 @@ export const Etiquetador = ({ isActive, handleClose }) => {
     };
         
     const handlePrevious = async () => {
-        const endPoint = `pictures/show_picture_from_album?page=${cardImagePage - 1}&quantity=${1}&album_id=${albumID}`;
+        const paramsFilters =dateParam.initialDate &&dateParam.finalDate?`&startDate=${dateParam.initialDate}&endDate=${dateParam.finalDate}`:""
+       
+        const endPoint = `pictures/show_picture_from_album?page=${cardImagePage - 1}&quantity=${1}&album_id=${albumID}${paramsFilters}`;
         let data = [image];
         try {
             data = await handleGet(endPoint, token);

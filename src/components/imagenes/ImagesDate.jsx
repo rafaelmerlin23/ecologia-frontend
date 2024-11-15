@@ -34,7 +34,11 @@ function ImagesDate() {
   const [maxPageGrid, setMaxPageGrid] = useState(1)
 
   const handleTagger = () => {
-    const endPoint = `pictures/show_picture_from_album?page=${searchParams.get('image-page')}&quantity=${1}&album_id=${albumID}`
+    const initialDate =searchParams.get('initial-date')
+    const finalDate =searchParams.get('final-date')
+        
+    const paramsFilters =initialDate &&finalDate?`&startDate=${initialDate}&endDate=${finalDate}`:""
+    const endPoint = `pictures/show_picture_from_album?page=${searchParams.get('image-page')}&quantity=${1}&album_id=${albumID}${paramsFilters}`
 
     handleGetData(endPoint, token).then((data) => {
     if (data && data.status == 'success') {
@@ -86,7 +90,6 @@ function ImagesDate() {
     setBackRoute(`/proyectos/${proyectoId}/puntos/${puntoID}/albumes/${albumID}/navbar-imagenes/imagenes/`)
 
     const maxDaysInMonth = getDaysInMonth(month, year)
-    console.log(`max days in ${month} is ${maxDaysInMonth}`)
     const maxDate = `${year}-${month}-${maxDaysInMonth}`
     const minDate = `${year}-${month}-01`
 
