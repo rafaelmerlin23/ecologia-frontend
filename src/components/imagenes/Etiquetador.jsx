@@ -92,6 +92,7 @@ export const Etiquetador = ({ isActive, handleClose }) => {
         const paramsFilters =dateParam.initialDate &&dateParam.finalDate?`&startDate=${dateParam.initialDate}&endDate=${dateParam.finalDate}`:""
         const endPoint = `pictures/show_picture_from_album?page=${cardImagePage + 1}&quantity=${1}&album_id=${albumID}${paramsFilters}`;
         try {
+            console.log(endPoint)
             const data = await handleGet(endPoint, token);
             
             if (data && data.length > 0) {
@@ -119,6 +120,8 @@ export const Etiquetador = ({ isActive, handleClose }) => {
         const paramsFilters =dateParam.initialDate &&dateParam.finalDate?`&startDate=${dateParam.initialDate}&endDate=${dateParam.finalDate}`:""
        
         const endPoint = `pictures/show_picture_from_album?page=${cardImagePage - 1}&quantity=${1}&album_id=${albumID}${paramsFilters}`;
+        console.log(endPoint)
+        
         let data = [image];
         try {
             data = await handleGet(endPoint, token);

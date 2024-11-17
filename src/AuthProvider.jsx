@@ -66,7 +66,9 @@ export const AuthProvider = ({ children }) => {
     
     const [indexDateUbicationImagesDate,setIndexDateUbicationImagesDate] = useState(1)
 
+    const [initialDate,setInitialDate] = useState('');
 
+    const [endDate,SetEndDate] = useState('');
 
     const handleCategoryMenu = () => {
         setIsCategoryMenuActivate(prev => !prev)
@@ -105,7 +107,7 @@ export const AuthProvider = ({ children }) => {
         setUserData(null)
         localStorage.removeItem('isAuthenticated');
         localStorage.removeItem('userData');
-        navigate("/login")
+        navigate("/")
     }
 
 
@@ -185,6 +187,10 @@ export const AuthProvider = ({ children }) => {
             , setDateUbication
             , indexDateUbicationImagesDate
             , setIndexDateUbicationImagesDate
+            , initialDate
+            , setInitialDate
+            , endDate
+            , SetEndDate
 
 
         }}>

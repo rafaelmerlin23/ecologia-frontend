@@ -12,6 +12,7 @@ function Login() {
     const { login, setUserName } = useAuth();
     const location = useLocation();
     const { hash, pathname, search } = location;
+    const [isGoodForm,setIsGoodForm] = useState(true)
 
     const handleLogin = (e) => {
         e.preventDefault();
@@ -27,17 +28,15 @@ function Login() {
         })
             .then((res) => res.json())
             .then((data) => {
-                console.log('Respuesta del servidor:', data);
                 if (data && data.status === 'success') {
                     setResponse(data);
                     login(data, usuario); // Llama a login para actualizar el contexto de autenticación
                     navigate('/gestor/proyectos')
                     // Redirige a la ruta original o a /proyectos si no hay ruta guardada
-
-
                 } else {
-                    // Maneja el error de autenticación (puedes mostrar un mensaje al usuario)
-                    console.error('Error de inicio de sesión:', data.message);
+                    if(data.message === "Incorrect username or password" ){
+                        setIsGoodForm(false)
+                    }
                 }
             })
             .catch((error) => {
@@ -59,7 +58,7 @@ function Login() {
                         type="text"
                         name="username"
                         id="username"
-                        className="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                        className={`bg-gray-50 border  text-gray-900 rounded-lg block w-full p-2.5  ${isGoodForm?"border-gray-300":"border-red-500 "}`}
                         placeholder="gerardor1234"
                         value={usuario}
                     />
@@ -72,11 +71,12 @@ function Login() {
                         type="password"
                         name="password"
                         id="password"
-                        className="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                        className={`bg-gray-50 border  text-gray-900 rounded-lg block w-full p-2.5  ${isGoodForm?"border-gray-300":"border-red-500"}`}
                         placeholder="••••••••"
                         value={clave}
                     />
                 </div>
+                {isGoodForm?"":<label className='flex justify-center items-center text-red-500'> Usuario o contraseña incorrectos</label>}
                 <div className="flex items-center justify-between">
                     <a href="#" className="text-sm font-medium text-blue-600 hover:underline dark:text-primary-500">Olvidaste tu contraseña?</a>
                 </div>

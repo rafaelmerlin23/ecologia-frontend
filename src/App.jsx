@@ -9,10 +9,10 @@ import CreateAccount from './pages/auth/CreateAccount';
 import NavBarImagenes from './components/imagenes/NavBarImagenes';
 import CategoriaEtiqueta from './pages/CategoriaEtiqueta';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faArrowLeft, faRightFromBracket } from '@fortawesome/free-solid-svg-icons';
+import { faArrowLeft, faBars, faRightFromBracket } from '@fortawesome/free-solid-svg-icons';
 import Error404 from './components/Error404';
 import ImagesDate from './components/imagenes/ImagesDate';
-import { useEffect, useState } from 'react';
+import { Children, useEffect, useRef, useState } from 'react';
 import ProjectsNavBar from './components/projects/ProjectsNavBar';
 
   function PrivateRoute({ element, ...rest }) {
@@ -63,8 +63,16 @@ function Navigation() {
   const { pathname } = location;
   const { backRoute, logout,projectsPath } = useAuth();
   const [isScrolled, setIsScrolled] = useState(false);
+  const [isMenuOpen,setIsMenuOpen] = useState(false)
 
-  // Rutas en las que se debe mostrar el componente Navigation
+  const onCloseMenu = ()=>{
+    setIsMenuOpen(false)
+  }
+
+  const onOpenMenuOpen = ()=>{
+    setIsMenuOpen(true)
+  }
+
   const rutasPermitidas = [
     "/gestor/proyectos",
     "/gestor/proyectos/",
@@ -112,52 +120,108 @@ function Navigation() {
 
   return (
     <div className='p-0  relative'>
+      
+      <div className={`justify-end items-center h-16 w-screen bg-gradient-to-l from-indigo-950 to-stone-950 z-30 flex xl:hidden lg:hidden md:hidden sm:flex fixed top-0 left-0  right-0 `}>
+      <Menu 
+        handleClose={onCloseMenu} 
+        isActive={isMenuOpen} 
+        logout={logout} 
+        pathname={pathname} 
+        projectsPath={projectsPath}/>
+        <button   
+        onClick={onOpenMenuOpen}
+        className=' flex sm:flex xl:hidden lg:hidden md:hidden'>
+          <FontAwesomeIcon className='hover:text-blue-100 text-2xl mr-6 text-blue-200' icon={faBars}/>
+        </button>
+      </div>
+
       <div
-        className={`z-20 p-0 w-screen h-16 bg-gray-700 shadow-md flex items-center justify-end fixed top-0 left-0 right-0 transition-opacity duration-300 ${isScrolled ? 'opacity-90' : 'opacity-70'
+        className={`hidden xl:flex lg:flex md:flex bg-gradient-to-l from-indigo-950 to-stone-950 z-20 p-0 w-screen h-16 shadow-md  items-center justify-end fixed top-0 left-0 right-0 transition-opacity duration-300 ${isScrolled ? 'opacity-90' : 'opacity-70'
           }`}
       >
-        <ul className='p-0 text-2xl mr-10 flex items-center flex-row gap-7 '>
-
-          <ListMember isActive={pathname.includes('/usuario')}>
-            <Link to={'/usuario'}>
-              Usuario
-            </Link>
-          </ListMember>
-          <ListMember isActive={pathname.includes('/cuentas')}>
-            <Link to={'/cuentas'}>
-              Cuentas
-            </Link>
-          </ListMember>
-          <ListMember isActive={pathname.includes('/categoria-etiqueta')}>
-            <Link to={'/categoria-etiqueta'}>
-              Categorias/Etiquetas
-            </Link>
-          </ListMember>
-          <ListMember isActive={pathname.includes('/proyectos')}>
-            <Link to={projectsPath}>
-              Proyectos
-            </Link>
-          </ListMember>
-          <ListMember>
-            <Link onClick={logout}>
-              <FontAwesomeIcon
-                className='text-red-500'
-                icon={faRightFromBracket} />
-            </Link>
-          </ListMember>
+        
+        
+        <ul className='hidden lg:flex md:flex xl:flex p-0 text-2xl mr-10 items-center flex-row gap-7 '>
+        <NavElements 
+          logout={logout} 
+          pathname={pathname}
+           projectsPath={projectsPath} /> 
         </ul>
+        
       </div>
     </div >
   );
 }
 
-const ListMember = ({ children, isActive }) => {
+const Menu =({pathname,logout,projectsPath,isActive,handleClose})=>{
+  const menuRef = useRef(null)
+  
+  const handleClickOutside = (event) => {
+    if (
 
-  return (
+        menuRef.current &&
+        !menuRef.current.contains(event.target)
+    ) {
+        handleClose()
+    }
+};
+
+
+  useEffect(() => {
+      if (isActive) {
+          document.addEventListener('mousedown', handleClickOutside);
+      } else {
+          document.removeEventListener('mousedown', handleClickOutside);
+      }
+      // Cleanup en caso de que el modal cambie rápido
+      return () => {
+          document.removeEventListener('mousedown', handleClickOutside);
+      };
+  }, [isActive]);
+
+  if(!isActive) return
+  return(
+    <div
+    ref={menuRef}
+    onClick={handleClose}
+    className='pt-6 gap-6 z-30 bg-gradient-to-r from-indigo-950 to-stone-950 text-1xl xl:hidden lg:hidden md:hidden h-screen w-64 fixed top-0 right-0 flex flex-col'>
+      <NavElements logout={logout} pathname={pathname} projectsPath={projectsPath}/>
+    </div>
+  )
+}
+
+const NavElements = ({pathname,logout,projectsPath})=>{
+  return(
     <>
-      <li className={`${isActive ? 'text-sky-500 border-sky-500 border-b-4' : ''} hover:text-slate-200 hover:border-slate-200 py-3 hover:border-b-4`}>
-        {children}
-      </li>
+      <ListMember isActive={pathname.includes('/usuario')} name={"Usuario"} to={'/usuario'}/>
+            
+      <ListMember isActive={pathname.includes('/cuentas')} name={"Cuentas"} to={"/cuentas"}/>
+          
+      <ListMember isActive={pathname.includes('/categoria-etiqueta')} name={"Categorias/Etiquetas"} to={'/categoria-etiqueta'}/>
+            
+      <ListMember isActive={pathname.includes('/proyectos')} to={projectsPath} name='Proyectos'/>
+           
+      <ListMember to={"/login"} onClick={logout} >
+          <FontAwesomeIcon
+            className='text-red-500'
+            icon={faRightFromBracket} />
+      </ListMember>
     </>
   )
 }
+
+const ListMember = ({ name="", isActive,to,children ,onClick= ()=>{}}) => {
+  return (
+    <li className='list-none'>
+      <Link 
+      onClick={onClick}
+      to={to}>
+        <div
+        className={`py-2 pl-3 justify-start p-0 flex items-center  hover:text-slate-200 hover:border-slate-200  hover:border-b-4 ${isActive ? 'text-sky-500 border-sky-500 border-b-4' : ''}`}>
+            {name}
+            {children}
+        </div>
+      </Link>
+    </li>
+  );
+};

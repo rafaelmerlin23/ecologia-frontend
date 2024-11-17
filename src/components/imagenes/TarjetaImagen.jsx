@@ -35,7 +35,7 @@ export const TarjetaImagen = ({ indexImageDate,image, index }) => {
         if (pathname === `/gestor/proyectos/${proyectoId}/puntos/${puntoID}/albumes/${albumID}/imagenes/` ||
             pathname === `/gestor/proyectos/${proyectoId}/puntos/${puntoID}/albumes/${albumID}/imagenes`
         ) {
-            
+            console.log("estas en imagenes")
             // calcula la pocision de la imagen sumando en que numero de grid esta
             let ImagePosition = 0
             for(let i = 0;i < indexImageDate;i++){

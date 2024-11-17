@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faImage, faImages, faGreaterThan, faLessThan } from '@fortawesome/free-solid-svg-icons';
+import { faImage, faImages, faGreaterThan, faLessThan, faCamera } from '@fortawesome/free-solid-svg-icons';
 import SubirImagenes from "../components/imagenes/SubirImagenes";
 import { useAuth } from "../AuthProvider";
 import prefixUrl from "../helpers/ip";
@@ -9,22 +9,16 @@ import { useParams, useSearchParams } from "react-router-dom";
 import { Paginacion } from "../components/imagenes/Paginacion";
 import handleGetData from "../helpers/handleGetData";
 import InfiniteScrolling from "../components/imagenes/InfiniteScrolling";
+import { button } from "framer-motion/client";
 
 function Imagenes() {
   const [isActiveUploadImages, setIsActiveUploadImages] = useState(false);
   const {
-    setImage
-    , cardImagePage
-    , setIsTaggerActive
-    , setPageImage
-    , pageImage
-    , setMaxPage
-    , setCardImagePage
-    , shouldRefresh
-    , userData
-    , setAlbumInformation } = useAuth()
+    shouldRefresh
+    , setAlbumInformation
+    ,images
+   } = useAuth()
 
-  const token = userData.token
   // const [searchParams, setSearchParams] = useSearchParams()
   const { albumID } = useParams()
 
@@ -99,8 +93,8 @@ function Imagenes() {
         closeOverlay={closeImageOverlay}
         isActive={isActiveUploadImages}
       />
-      <div className=" flex flex-col items-center justify-center mt-32">
-        <button
+      <div className={`flex flex-col items-center justify-center ${images.length>0?"mt-32":"h-screen"}`}>
+        {images.length >0?<button
           id="agregar-imagen"
           className={isActiveUploadImages ? "" : ' h-3/5 w-3/5 pb-4 pt-4 group hover:cursor-pointer'}
           onClick={openImageOverlay}>
@@ -113,6 +107,20 @@ function Imagenes() {
             Subir imágenes
           </p>
         </button>
+        :
+        <div className=" w-screen flex justify-center items-center">
+          <div className="flex flex-col items-center justify-center gap-4">
+        <div className="flex justify-center items-center h-42 w-42">
+          <div className="p-4 border rounded-full h-full w-full flex justify-center items-center">
+            <FontAwesomeIcon className="text-5xl" icon={faCamera} />
+          </div>
+        </div>
+        <p className="text-4xl">Album vacío</p>
+        <p className="text-1xl text-gray-200">Cuando subas fotos aparecerán aquí</p>
+        <a onClick={openImageOverlay} className="text-blue-500 hover:cursor-pointer hover:text-blue-200">Sube tus fotos aquí</a>
+      </div>
+        </div> 
+        }
         <InfiniteScrolling />
       </div >
 
