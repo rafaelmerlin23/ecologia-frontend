@@ -121,7 +121,7 @@ function Navigation() {
   return (
     <div className='p-0  relative'>
       
-      <div className={`justify-end items-center h-16 w-screen bg-gradient-to-l from-indigo-950 to-stone-950 z-30 flex xl:hidden lg:hidden md:hidden sm:flex fixed top-0 left-0  right-0 `}>
+      <div className={`justify-end items-center h-16 w-screen bg-gray-800 z-30 flex xl:hidden lg:hidden md:hidden sm:flex fixed top-0 left-0  right-0 `}>
       <Menu 
         handleClose={onCloseMenu} 
         isActive={isMenuOpen} 
@@ -136,7 +136,7 @@ function Navigation() {
       </div>
 
       <div
-        className={`hidden xl:flex lg:flex md:flex bg-gradient-to-l from-indigo-950 to-stone-950 z-20 p-0 w-screen h-16 shadow-md  items-center justify-end fixed top-0 left-0 right-0 transition-opacity duration-300 ${isScrolled ? 'opacity-90' : 'opacity-70'
+        className={`hidden xl:flex lg:flex md:flex bg-gray-800 z-20 p-0 w-screen h-16 shadow-md  items-center justify-end fixed top-0 left-0 right-0 transition-opacity duration-300 ${isScrolled ? 'opacity-90' : 'opacity-70'
           }`}
       >
         
@@ -184,7 +184,7 @@ const Menu =({pathname,logout,projectsPath,isActive,handleClose})=>{
     <div
     ref={menuRef}
     onClick={handleClose}
-    className='pt-6 gap-6 z-30 bg-gradient-to-r from-indigo-950 to-stone-950 text-1xl xl:hidden lg:hidden md:hidden h-screen w-64 fixed top-0 right-0 flex flex-col'>
+    className='pt-6 gap-6 z-30 bg-gray-800 text-1xl xl:hidden lg:hidden md:hidden h-screen w-64 fixed top-0 right-0 flex flex-col'>
       <NavElements logout={logout} pathname={pathname} projectsPath={projectsPath}/>
     </div>
   )

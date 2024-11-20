@@ -12,6 +12,8 @@ export const CreateAccount = () => {
     const [repeatPassword, setRepeatPassword] = useState('')
     const [isEqualPassword, setIsEqualPassword] = useState(true)
     const [email,setEmail] = useState('')
+    const [isGoodForm,setIsGoodForm] = useState(true)
+    const [messageError,setMessageError] = useState('')
 
     const handleSubmit = (e) => {
         e.preventDefault()
@@ -64,7 +66,15 @@ export const CreateAccount = () => {
 
                 <div>
                     <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Tu contraseña</label>
-                    <input required value={password} onChange={(e) => setPassword(e.target.value)} type="password" name="password" id="password" placeholder="••••••••" className="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" />
+                    <input required value={password}
+                    onChange={(e) => {
+                        if(e.target.value.length >= 8 && repeatPassword.length >= 8){
+                            repeatPassword === e.target.value ? setIsEqualPassword(true) : setIsEqualPassword(false)
+                        }
+                        setPassword(e.target.value)
+                        }} 
+                    minLength={8}
+                     type="password" name="password" id="password" placeholder="••••••••" className="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" />
                 </div>
                 
 
@@ -74,8 +84,15 @@ export const CreateAccount = () => {
                             "block mb-2 text-sm font-medium text-red-500 dark:red-600"
                     }>
                         Confirma tu contraseña</label>
-                    <input required value={repeatPassword} onChange={(e) => setRepeatPassword(e.target.value)}
+                    <input required value={repeatPassword} 
+                    onChange={(e) => {
+                        if(e.target.value.length >= 8 && password.length >= 8){
+                            password === e.target.value ? setIsEqualPassword(true) : setIsEqualPassword(false)
+                        }
+                        setRepeatPassword(e.target.value)
+                        }}
                         type="password"
+                        minLength={8}
                         name="repeat_password"
                         id="repeat_password"
                         placeholder="••••••••"

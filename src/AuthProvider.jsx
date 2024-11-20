@@ -70,6 +70,10 @@ export const AuthProvider = ({ children }) => {
 
     const [endDate,SetEndDate] = useState('');
 
+    const [scores, setScores] = useState([])
+
+    const [tagsFilters,setTagsFilters] = useState([])
+
     const handleCategoryMenu = () => {
         setIsCategoryMenuActivate(prev => !prev)
     }
@@ -191,6 +195,8 @@ export const AuthProvider = ({ children }) => {
             , setInitialDate
             , endDate
             , SetEndDate
+            , setTagsFilters
+            , tagsFilters
 
 
         }}>

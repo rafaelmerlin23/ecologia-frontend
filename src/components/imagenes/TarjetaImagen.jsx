@@ -5,7 +5,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCalendar } from '@fortawesome/free-solid-svg-icons';
 import { useLocation, useParams, useSearchParams } from "react-router-dom";
 
-export const TarjetaImagen = ({ indexImageDate,image, index }) => {
+export const TarjetaImagen = ({image, index }) => {
     const [isHover, setIsHover] = useState(false);
     const containerRef = useRef(null); // Usamos useRef para acceder al contenedor
     const {
@@ -17,8 +17,6 @@ export const TarjetaImagen = ({ indexImageDate,image, index }) => {
         , quantityImagePerPage } = useAuth();
     const [SearchParams, setSearchParams] = useSearchParams();
     const location = useLocation();
-    const { hash, pathname, search } = location;
-    const { proyectoId, puntoID, albumID, fechaImagen } = useParams()
 
   
     const handleMouseOver = () => {
@@ -30,22 +28,11 @@ export const TarjetaImagen = ({ indexImageDate,image, index }) => {
     };
 
     const handleOpenTagger = () => setIsTaggerActive(true);
+    
     const handleInitImage = () => {
-        let pageImageNumber = 1;
-        if (pathname === `/gestor/proyectos/${proyectoId}/puntos/${puntoID}/albumes/${albumID}/imagenes/` ||
-            pathname === `/gestor/proyectos/${proyectoId}/puntos/${puntoID}/albumes/${albumID}/imagenes`
-        ) {
-            console.log("estas en imagenes")
-            // calcula la pocision de la imagen sumando en que numero de grid esta
-            let ImagePosition = 0
-            for(let i = 0;i < indexImageDate;i++){
-                ImagePosition+= dateUbication[i]
-            }
-            pageImageNumber = (index + 1) + ImagePosition   
-        } else {
-            const ImagePosition = SearchParams.get('image-position') ? Number(SearchParams.get('image-position')) :0 
-            pageImageNumber = ((index + 1) + (pageImage - 1) * quantityImagePerPage) + ImagePosition
-        }
+        
+        const pageImageNumber = ((index + 1) + (pageImage - 1) * quantityImagePerPage)
+        
         setSearchParams((prev) => {
             prev.set("is-active-tagger", true);
             prev.set("image-page", pageImageNumber);
@@ -80,6 +67,7 @@ export const TarjetaImagen = ({ indexImageDate,image, index }) => {
             onMouseOver={handleMouseOver}
             onMouseOut={handleMouseOut}
             className="z-10 relative w-full h-full">
+            
             {!isHover ? (
                 <img
                     src={image.link}
