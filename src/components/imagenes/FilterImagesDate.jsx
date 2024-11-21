@@ -1,42 +1,35 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faFilter } from '@fortawesome/free-solid-svg-icons'
-import { useState } from 'react'
+import { useRef, useState } from 'react'
+import TagsSelection from './filterComponents/TagsSelection';
 
 function FilterImagesDate() {
     
     const [isGoodForm,setIsGoodForm]= useState(true)
     const [dateRange,setDateRange]= useState({initDate:'',endDate:''});
-    const [isOpenFilterOverlays,setIsOPenFiltersOverlays] = useState({icp:false})
+
+    // filtros de etiquetas
+    const [modalPositionTags, setModalPositionTags] = useState({ x: 0, y: 0 })
+    const   buttonTagsRef = useRef(null)
+    const modalTagsRef = useRef(null)
+    const [modalActiveTags,setModalActiveTags] = useState(false)
+    
+    const handleClickTags = (event) => {
+        event.stopPropagation(); // Evitar cierre accidental
+        const rect = buttonTagsRef.current.getBoundingClientRect();
+        setModalPositionTags({ x: rect.left, y: rect.bottom-120 });
+        setModalActiveTags(prev=>!prev); // Abrir el modal si está cerrado
+    };
 
     const getDaysInMonth = (month, year) => {
         // `month` es de 1 a 12, por lo que restamos 1 para ajustarlo al índice (0 a 11)
         return new Date(year, month, 0).getDate();
       }
+
     
     const handleFilter= (e)=>{
         e.preventDefault()
-        // if(initDate > finalDate){
-        //     setIsGoodForm(false)
-        //     return
-        // }
-
-        // console.log("dia inicial: ", initDate)
-        // console.log("dia final: ", finalDate)
-
-        // const endpointImages = `pictures/show_picture_from_album?album_id=${albumID}&start_date=${initDate}&end_date=${finalDate}`;
-        // handleGetData(endpointImages, token).then((data) => {
-        //     setImages(data.response);
-        //     console.log("respuesta del servidor: ", data.response);
-        //     setDateUbication(data.response.map((date) => date.total_pictures));
-        // }).catch((error) => {
-        //     console.error('Error al cargar las imágenes:', error);
-        // });
-
-        // setSearchParams((prev) => {
-        //     prev.set('initial-date',initDate)
-        //     prev.set('final-date',finalDate);
-        //     return prev;
-        // });
+       
 
     }
 
@@ -44,6 +37,13 @@ function FilterImagesDate() {
     return (
     <>
         <form onSubmit={handleFilter} className=' mb-10 w-full flex justify-center items-center  gap-5 flex-col'>
+            <TagsSelection 
+            modalActive={modalActiveTags}
+            modalRef={modalTagsRef}
+            position={modalPositionTags}
+            setModalActive={setModalActiveTags}  
+            buttonRef={buttonTagsRef}/>
+
             <div className='flex flex-col sm:flex-col gap-5'>
                 <div className='flex flex-col xl:flex-row lg:flex-row gap-y-2 gap-5'>
                     
@@ -67,7 +67,6 @@ function FilterImagesDate() {
                         htmlFor='init-date'
                         className='text-2xl text-gray-400'>Fecha inicio</label>
                         <input
-                        required
                         value={dateRange.initDate}
                         onChange={(e) => setDateRange((range)=>{
                             if(range.endDate === ''){
@@ -86,7 +85,6 @@ function FilterImagesDate() {
                         htmlFor='end-date'
                         className='text-2xl text-gray-400'>Fecha final</label>
                         <input 
-                        required
                         value={dateRange.endDate}
                         onChange={(e) => setDateRange((range)=>{
                             if(range.initDate === ''){
@@ -100,11 +98,13 @@ function FilterImagesDate() {
                         type='month' 
                         className= {`${!isGoodForm?'border border-red-500':""} w-[300px] h-[36px] text-center px-2 rounded-md bg-zinc-700 text-white text-2xl`} />
                     </div>
-                    <div className='flex flex-col gap-y-2 items-center'>
+                    <div  className='flex flex-col gap-y-2 items-center'>
                     <p
                     className='text-2xl text-gray-400'
                     >Etiquetas</p>
-                        <div className='w-[300px] h-[36px] text-center px-2 rounded-md bg-zinc-700 text-white text-2xl '>
+                        <div 
+                        onClick={handleClickTags} ref={buttonTagsRef}
+                        className='w-[300px] h-[36px] text-center px-2 rounded-md bg-zinc-700 text-white text-2xl '>
                             p
                         </div>
                     </div>

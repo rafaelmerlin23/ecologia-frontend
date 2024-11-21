@@ -1,23 +1,22 @@
-const FilterWrapper = ({modalRef,isActive,position,children})=>{
-    if(!isActive) return null
+const FilterWrapper = ({ modalRef, isActive, position, children }) => {
+    if (!isActive) return null;
+
     return (
-            <div
+        <div
             ref={modalRef}
-            className="z-40">
-                <div
-                className={`md:flex sm:flex w-60 flex-col gap-2 flex items-start justify-center  bg-gray-400   shadow-xl border border-gray-500 rounded-lg z-50 `}
+            className="absolute top-0 left-0 z-20 pointer-events-none"
+        >
+            <div
+                className="absolute w-60 flex flex-col gap-2 items-start justify-center bg-gray-400 shadow-xl bg-zinc-700 rounded-md pointer-events-auto"
                 style={{
-                    top: position.y, // 10px debajo del botón
-                    left: position.x-10,
+                    top: position.y, // Posición dinámica en el eje Y
+                    left: position.x, // Ajuste dinámico en el eje X
                 }}
-                >
-                   {children}
-                    
-                </div>
+            >
+                {children}
             </div>
-      );
-    
-}
+        </div>
+    );
+};
 
-
-export default FilterWrapper
+export default FilterWrapper;
