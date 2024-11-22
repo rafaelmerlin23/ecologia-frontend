@@ -1,13 +1,14 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faFilter } from '@fortawesome/free-solid-svg-icons'
-import { useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import TagsSelection from './filterComponents/TagsSelection';
+import { useAuth } from '../../AuthProvider';
 
 function FilterImagesDate() {
     
     const [isGoodForm,setIsGoodForm]= useState(true)
     const [dateRange,setDateRange]= useState({initDate:'',endDate:''});
-
+    const {tagsFilters} = useAuth()
     // filtros de etiquetas
     const [modalPositionTags, setModalPositionTags] = useState({ x: 0, y: 0 })
     const   buttonTagsRef = useRef(null)
@@ -32,6 +33,10 @@ function FilterImagesDate() {
        
 
     }
+
+    useEffect(()=>{
+        console.log(tagsFilters)
+    },[tagsFilters])
 
     
     return (
@@ -98,15 +103,18 @@ function FilterImagesDate() {
                         type='month' 
                         className= {`${!isGoodForm?'border border-red-500':""} w-[300px] h-[36px] text-center px-2 rounded-md bg-zinc-700 text-white text-2xl`} />
                     </div>
-                    <div  className='flex flex-col gap-y-2 items-center'>
-                    <p
-                    className='text-2xl text-gray-400'
-                    >Etiquetas</p>
-                        <div 
-                        onClick={handleClickTags} ref={buttonTagsRef}
-                        className='w-[300px] h-[36px] text-center px-2 rounded-md bg-zinc-700 text-white text-2xl '>
-                            p
-                        </div>
+                    <div className='flex flex-col gap-y-2 items-center'>
+                    <p className='text-2xl text-gray-400'>Etiquetas</p>
+                    <div
+                        onClick={handleClickTags}
+                        ref={buttonTagsRef}
+                        className='w-[300px] h-[36px] text-center px-2 rounded-md bg-zinc-700 text-white text-2xl overflow-hidden whitespace-nowrap text-ellipsis'>
+                        {tagsFilters.map((tag, index) => (
+                        `${tag.tagName}${tagsFilters.length - 1 === index ? "" : ", "}`
+                        ))}
+                        {tagsFilters.length === 0? "No especificado": ""}
+
+                    </div>
                     </div>
                 </div>
                     <div className='flex flex-col gap-y-2 items-center'>
