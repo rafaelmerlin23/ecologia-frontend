@@ -3,24 +3,29 @@ import { faFilter } from '@fortawesome/free-solid-svg-icons'
 import { useEffect, useRef, useState } from 'react'
 import TagsSelection from './filterComponents/TagsSelection';
 import { useAuth } from '../../AuthProvider';
+import useModal from '../../helpers/useModal';
 
 function FilterImagesDate() {
     
     const [isGoodForm,setIsGoodForm]= useState(true)
     const [dateRange,setDateRange]= useState({initDate:'',endDate:''});
     const {tagsFilters} = useAuth()
-    // filtros de etiquetas
-    const [modalPositionTags, setModalPositionTags] = useState({ x: 0, y: 0 })
-    const   buttonTagsRef = useRef(null)
-    const modalTagsRef = useRef(null)
-    const [modalActiveTags,setModalActiveTags] = useState(false)
     
-    const handleClickTags = (event) => {
-        event.stopPropagation(); // Evitar cierre accidental
-        const rect = buttonTagsRef.current.getBoundingClientRect();
-        setModalPositionTags({ x: rect.left, y: rect.bottom-120 });
-        setModalActiveTags(prev=>!prev); // Abrir el modal si está cerrado
-    };
+    const {
+        modalActive,
+        modalRef,
+        buttonRef,
+        position,
+        openModal,
+        closeModal,
+      } = useModal();
+      
+      const openTagsFilter = (event) => {
+        const rect = event.target.getBoundingClientRect();
+        openModal(rect.left + window.scrollX, rect.bottom + window.scrollY);
+
+      };
+
 
     const getDaysInMonth = (month, year) => {
         // `month` es de 1 a 12, por lo que restamos 1 para ajustarlo al índice (0 a 11)
@@ -43,11 +48,9 @@ function FilterImagesDate() {
     <>
         <form onSubmit={handleFilter} className=' mb-10 w-full flex justify-center items-center  gap-5 flex-col'>
             <TagsSelection 
-            modalActive={modalActiveTags}
-            modalRef={modalTagsRef}
-            position={modalPositionTags}
-            setModalActive={setModalActiveTags}  
-            buttonRef={buttonTagsRef}/>
+            modalActive={modalActive}
+            modalRef={modalRef}
+            position={position}/>
 
             <div className='flex flex-col sm:flex-col gap-5'>
                 <div className='flex flex-col xl:flex-row lg:flex-row gap-y-2 gap-5'>
@@ -106,8 +109,8 @@ function FilterImagesDate() {
                     <div className='flex flex-col gap-y-2 items-center'>
                     <p className='text-2xl text-gray-400'>Etiquetas</p>
                     <div
-                        onClick={handleClickTags}
-                        ref={buttonTagsRef}
+                        onClick={openTagsFilter}
+                        ref={buttonRef}
                         className='w-[300px] h-[36px] text-center px-2 rounded-md bg-zinc-700 text-white text-2xl overflow-hidden whitespace-nowrap text-ellipsis'>
                         {tagsFilters.map((tag, index) => (
                         `${tag.tagName}${tagsFilters.length - 1 === index ? "" : ", "}`
