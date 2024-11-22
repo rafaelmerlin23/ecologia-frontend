@@ -16,16 +16,10 @@ function FilterImagesDate() {
         modalRef,
         buttonRef,
         position,
-        openModal,
-        closeModal,
+        openTagsFilter
       } = useModal();
       
-      const openTagsFilter = (event) => {
-        const rect = event.target.getBoundingClientRect();
-        openModal(rect.left + window.scrollX, rect.bottom + window.scrollY);
-
-      };
-
+    
 
     const getDaysInMonth = (month, year) => {
         // `month` es de 1 a 12, por lo que restamos 1 para ajustarlo al índice (0 a 11)
