@@ -17,7 +17,7 @@ export const TarjetaImagen = ({indexImageDate, image, totalImages, month }) => {
     return (
         <div
             onClick={handleNavigate}
-            className="z-10 relative w-full h-full">
+            className=" relative w-full h-full">
 
             <div className="hover:cursor-pointer">
                 <div className="relative w-full h-48 min-h-[12rem] bg-gray-200 flex items-center justify-center aspect-[16/9]">

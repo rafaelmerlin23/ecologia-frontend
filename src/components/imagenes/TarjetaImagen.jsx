@@ -66,7 +66,7 @@ export const TarjetaImagen = ({image, index }) => {
             ref={containerRef} // Añadimos el ref al contenedor
             onMouseOver={handleMouseOver}
             onMouseOut={handleMouseOut}
-            className="z-10 relative w-full h-full">
+            className="relative w-full h-full">
             
             {!isHover ? (
                 <img

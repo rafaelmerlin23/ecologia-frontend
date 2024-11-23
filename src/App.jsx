@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Route, Routes, Navigate, useLocation, Link, Outlet } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes, Navigate, useLocation, Link } from 'react-router-dom';
 import Login from './pages/auth/Login';
 import Proyectos from './pages/Proyectos';
 import Puntos from './pages/Puntos';
@@ -6,13 +6,12 @@ import { AuthProvider, useAuth } from './AuthProvider';
 import Albumes from './pages/Albumes';
 import Imagenes from './pages/Imagenes';
 import CreateAccount from './pages/auth/CreateAccount';
-import NavBarImagenes from './components/imagenes/NavBarImagenes';
 import CategoriaEtiqueta from './pages/CategoriaEtiqueta';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faArrowLeft, faBars, faRightFromBracket } from '@fortawesome/free-solid-svg-icons';
+import {  faBars, faRightFromBracket } from '@fortawesome/free-solid-svg-icons';
 import Error404 from './components/Error404';
 import ImagesDate from './components/imagenes/ImagesDate';
-import { Children, useEffect, useRef, useState } from 'react';
+import {  useEffect, useRef, useState } from 'react';
 import ProjectsNavBar from './components/projects/ProjectsNavBar';
 
   function PrivateRoute({ element, ...rest }) {
@@ -119,9 +118,9 @@ function Navigation() {
   if (!mostrarNavigation) return null;
 
   return (
-    <div className='p-0  relative'>
+    <div className='p-0 relative'>
       
-      <div className={`justify-end items-center h-16 w-screen bg-gray-800 z-30 flex xl:hidden lg:hidden md:hidden sm:flex fixed top-0 left-0  right-0 `}>
+      <div className={`z-30 justify-end items-center h-16 w-screen bg-gray-800  flex xl:hidden lg:hidden md:hidden sm:flex fixed top-0 left-0  right-0 `}>
       <Menu 
         handleClose={onCloseMenu} 
         isActive={isMenuOpen} 
@@ -136,7 +135,7 @@ function Navigation() {
       </div>
 
       <div
-        className={`hidden xl:flex lg:flex md:flex bg-gray-800 z-20 p-0 w-screen h-16 shadow-md  items-center justify-end fixed top-0 left-0 right-0 transition-opacity duration-300 ${isScrolled ? 'opacity-90' : 'opacity-70'
+        className={`z-30 hidden xl:flex lg:flex md:flex bg-gray-800  p-0 w-screen h-16 shadow-md  items-center justify-end fixed top-0 left-0 right-0 transition-opacity duration-300 ${isScrolled ? 'opacity-90' : 'opacity-70'
           }`}
       >
         
@@ -184,7 +183,7 @@ const Menu =({pathname,logout,projectsPath,isActive,handleClose})=>{
     <div
     ref={menuRef}
     onClick={handleClose}
-    className='pt-6 gap-6 z-30 bg-gray-800 text-1xl xl:hidden lg:hidden md:hidden h-screen w-64 fixed top-0 right-0 flex flex-col'>
+    className='pt-6 gap-6 bg-gray-800 text-1xl xl:hidden lg:hidden md:hidden h-screen w-64 fixed top-0 right-0 flex flex-col'>
       <NavElements logout={logout} pathname={pathname} projectsPath={projectsPath}/>
     </div>
   )

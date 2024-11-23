@@ -39,7 +39,7 @@ function FilterImagesDate() {
 
     
     return (
-    <>
+    <div className=''>
         <form onSubmit={handleFilter} className=' mb-10 w-full flex justify-center items-center  gap-5 flex-col'>
             <TagsSelection 
             modalActive={modalActive}
@@ -136,7 +136,7 @@ function FilterImagesDate() {
             {!isGoodForm?<p className='text-1xl text-red-500'>El inicio no puede ser mayor al final</p>:""}
         </form>
 
-    </>
+    </div>
   )
 }
 

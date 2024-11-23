@@ -19,3 +19,8 @@ Para poder empezar con la organización es necesario crear un proyecto, este con
 Existirán categorías como: Substractos, árboles altos, árboles medianos, etc. Cada una de estas tendrán medidas a calificar según la categoría a la que pertenecen.
 Es decir que:
 Imagen -> Etiqueta -> Categoría
+
+z-20 contenido
+z-30 barra de navegacion
+z-40 etiquetador
+z-50 vista completa de imagenes

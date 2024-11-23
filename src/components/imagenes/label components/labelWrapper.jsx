@@ -14,7 +14,7 @@ function LabelWrapper({children,handleClose}) {
             exit={{ opacity: 0, scale: 1.2 }}
             transition={{ duration: 0.02 }}
             onClick={handleClose}
-            className=' fixed z-30 inset-0 bg-black bg-opacity-20 backdrop-blur-sm flex justify-center items-center'
+            className=' fixed z-40 inset-0 bg-black bg-opacity-20 backdrop-blur-sm flex justify-center items-center'
             >
 
             <div
@@ -28,7 +28,7 @@ function LabelWrapper({children,handleClose}) {
                 <p
                 className='text-[1em]'
                 >Usuario: <span className="text-sky-300">{userName}</span></p>
-               
+              
                 </div>
                 <div>
                 {children}

@@ -6,7 +6,7 @@ function LabelEditorButton({handleRatingChange,handleSelect,tag,index}) {
     <div className=" flex justify-center items-center flex-col" key={index}>
         <button
             onClick={(e) => handleSelect(e, tag)}
-            className={`z-30 w-full px-4 ${
+            className={` w-full px-4 ${
               !tag.isSelect && tag.oldRating !== undefined && tag.ratingID !== undefined?
               "bg-red-800"
               :tag.isSelect 
@@ -25,7 +25,7 @@ function LabelEditorButton({handleRatingChange,handleSelect,tag,index}) {
                     animate={{ opacity: 1, y: 0 }}  
                     exit={{ opacity: 0, y: -20 }} // Cambié -20 a 20 para que se mueva hacia abajo al desaparecer
                     transition={{ duration: 0.05 }}  
-                    className="z-10 flex items-center justify-center flex-col"
+                    className=" flex items-center justify-center flex-col"
                 >
                     <p>Selecciona la calificación de la etiqueta: <span className="text-sky-300">{tag.rating}</span></p>
                     <input

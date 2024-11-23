@@ -220,7 +220,7 @@ export const CategoriaEtiqueta = () => {
             <button
                 id="ad-bottom"
                 onClick={addField}
-                className="fixed bottom-5 right-20 w-auto z-30 text-gray-700 bg-blue-400 rounded-full mt-4 mb-10 px-4 py-2">
+                className="fixed bottom-5 right-20 w-auto text-gray-700 bg-blue-400 rounded-full mt-4 mb-10 px-4 py-2">
                 <FontAwesomeIcon icon={faPlus} />
             </button>
 

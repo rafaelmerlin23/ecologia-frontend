@@ -6,9 +6,9 @@ import {faCalendar} from '@fortawesome/free-solid-svg-icons';
 function ModalIMagen({image,isActive,handleClose}) {
     if(!isActive) return null
     return (
-    <div onClick={handleClose} className='overflow-y-auto fixed z-50 inset-0 bg-black bg-opacity-70 backdrop-blur-sm flex justify-center items-center'>
+    <div onClick={handleClose} className='z-50 overflow-y-auto fixed inset-0 bg-black bg-opacity-70 backdrop-blur-sm flex justify-center items-center'>
         <div className='flex justify-center items-center flex-col'>
-        <img src={image.link} className='z-40' alt="no src" />
+        <img src={image.link} className='' alt="no src" />
         <div className='w-full  py-2 flex flex-row justify-center items-center gap-2'>
           < FontAwesomeIcon className='text-2xl' icon={faCalendar}/>
         <p className='font-bold text-3xl text-white'>

@@ -130,7 +130,7 @@ export const ProjectsNavBar = () => {
             params={{albumID,proyectoId,puntoID,fechaImagen}}
             path={location.pathname} />
 
-            <div className={`xl:py-0 lg:py-10 pl-2 flex items-center fixed top-16 left-0  h-14 z-20 bg-gray-400 w-screen transition-opacity duration-300 ${isScrolled ? 'opacity-90' : 'opacity-100'}`}>
+            <div className={`z-30 xl:py-0 lg:py-10 pl-2 flex items-center fixed top-16 left-0  h-14 bg-gray-400 w-screen transition-opacity duration-300 ${isScrolled ? 'opacity-90' : 'opacity-100'}`}>
                 <ul className="text-2xl xl:hidden lg:hidden md:flex sm:flex flex-row sm:flex-row md:flex-row">
                 {location.pathname !== '/gestor/proyectos' && location.pathname !== `/gestor/proyectos/${proyectoId}/puntos`?
                     <div className="flex flex-row justify-center items-center gap-2">
@@ -268,9 +268,9 @@ const ModalRoutes = ({path,modalRef,params,pathParts,isActive,position,handleCLo
     return (
             <div
             ref={modalRef}
-            className="z-40 relative">
+            className=" relative">
                 <div
-                className={`fixed xl:hidden lg:hidden md:flex sm:flex w-60 flex-col gap-2 flex items-start justify-center  bg-gray-400   shadow-xl border border-gray-500 rounded-lg z-50 ${isScrolled ? 'opacity-90' : 'opacity-100'}`}
+                className={`z-30 fixed xl:hidden lg:hidden md:flex sm:flex w-60 flex-col gap-2 flex items-start justify-center  bg-gray-400   shadow-xl border border-gray-500 rounded-lg  ${isScrolled ? 'opacity-90' : 'opacity-100'}`}
                 style={{
                     top: position.y, // 10px debajo del botón
                     left: position.x-10,

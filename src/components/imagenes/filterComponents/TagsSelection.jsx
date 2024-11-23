@@ -1,8 +1,7 @@
 import React, { useEffect, useState} from 'react'
-import FilterWrapper from './FilterWrapper'
 import handleGetData from '../../../helpers/handleGetData'
 import { useAuth } from '../../../AuthProvider';
-function TagsSelection({modalRef,modalActive,position}) {
+function TagsSelection() {
     
     const [tagsInfo,setTagsInfo] = useState([])
     const {setTagsFilters,userData} = useAuth()
@@ -95,8 +94,7 @@ function TagsSelection({modalRef,modalActive,position}) {
 
     
     return (
-    <FilterWrapper isActive={modalActive} modalRef={modalRef} position={position}>
-        <div className='w-[310px] p-4   max-h-[20rem] overflow-y-auto bg-zinc-700 rounded-md '>
+        <div   className=' w-[310px] p-4   max-h-[20rem] overflow-y-auto bg-zinc-700 rounded-md '>
             
            <div className='font-bold flex gap-3 flex-col '>
             {
@@ -119,7 +117,6 @@ function TagsSelection({modalRef,modalActive,position}) {
             }
             </div> 
         </div>
-    </FilterWrapper>
   )
 }
 
