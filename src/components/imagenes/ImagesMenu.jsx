@@ -10,12 +10,12 @@ import FilterImagesDate from './FilterImagesDate'
 
 function ImagesMenu() {
   const { albumID, proyectoId, puntoID, fechaImagen } = useParams()
-  const {setImages,images,setIsTaggerActive,setCardImagePage,setImage,setMaxPage,setPageImage, pageImage, setBackRoute, backRoute, userData, quantityImagePerPage } = useAuth()
+  const { setImages, images, setIsTaggerActive, setCardImagePage, setImage, setMaxPage, setPageImage, pageImage, setBackRoute, backRoute, userData, quantityImagePerPage } = useAuth()
   const token = userData.token
   const [searchParams, setSearchParams] = useSearchParams()
   const [maxPageGrid, setMaxPageGrid] = useState(1)
 
-  
+
 
   const handleTagger = () => {
 
@@ -23,23 +23,23 @@ function ImagesMenu() {
     const endPoint = `pictures/show_picture_from_album?page=${searchParams.get('image-page')}&quantity=${1}&album_id=${albumID}`
 
     handleGetData(endPoint, token).then((data) => {
-    if (data && data.status == 'success') {
+      if (data && data.status == 'success') {
         const newImages = data.response.map((response) => (
-        {
+          {
             link: response[0],
             id: response[1],
             date: response[2],
-        }
+          }
         ))
         setImage(newImages[0])
         setCardImagePage(Number(searchParams.get('image-page')))
         setIsTaggerActive(true)
         setMaxPage(data.total_pages)
-    }
+      }
     }).catch((error) => {
-    console.error('Error:', error);
+      console.error('Error:', error);
     });
-}
+  }
 
   // const getDaysInMonth = (month, year) => {
   //   // `month` es de 1 a 12, por lo que restamos 1 para ajustarlo al índice (0 a 11)
@@ -80,7 +80,7 @@ function ImagesMenu() {
       return params;
     });
 
-    setPageImage(currentPage ? Number(currentPage):1)
+    setPageImage(currentPage ? Number(currentPage) : 1)
 
     // startDate=${minDate}&endDate=${maxDate}
     const pictureEndpoint = `pictures/show_picture_from_album?album_id=${albumID}&quantity=${quantityImagePerPage}&page=${pageImage}`
@@ -102,17 +102,14 @@ function ImagesMenu() {
       console.error(error)
     })
 
-    if(searchParams.get('is-active-tagger')){
+    if (searchParams.get('is-active-tagger')) {
       handleTagger()
     }
   }, [pageImage, maxPageGrid])
 
   return (
-    <div className=' flex flex-col justify-center items-center'>
-      <div className='flex justify-center items-center gap-3 mb-4 '>
-
-      </div>
-      <FilterImagesDate/>
+    <div className=' flex flex-col justify-center items-center w-full'>
+      <FilterImagesDate />
       <GridImages images={images} />
       <Paginacion handleNext={handleNext} handlePrevious={handlePrevious} maxPage={maxPageGrid} />
     </div>

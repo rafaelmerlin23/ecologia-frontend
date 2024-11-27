@@ -5,12 +5,12 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCalendar } from '@fortawesome/free-solid-svg-icons';
 import { useLocation, useParams, useSearchParams } from "react-router-dom";
 
-export const TarjetaImagen = ({image, index }) => {
+export const TarjetaImagen = ({ image, index }) => {
     const [isHover, setIsHover] = useState(false);
     const containerRef = useRef(null); // Usamos useRef para acceder al contenedor
     const {
         dateUbication
-        ,setIsTaggerActive
+        , setIsTaggerActive
         , setImage
         , pageImage
         , setCardImagePage
@@ -18,7 +18,7 @@ export const TarjetaImagen = ({image, index }) => {
     const [SearchParams, setSearchParams] = useSearchParams();
     const location = useLocation();
 
-  
+
     const handleMouseOver = () => {
         setIsHover(true);
     };
@@ -28,11 +28,11 @@ export const TarjetaImagen = ({image, index }) => {
     };
 
     const handleOpenTagger = () => setIsTaggerActive(true);
-    
+
     const handleInitImage = () => {
-        
+
         const pageImageNumber = ((index + 1) + (pageImage - 1) * quantityImagePerPage)
-        
+
         setSearchParams((prev) => {
             prev.set("is-active-tagger", true);
             prev.set("image-page", pageImageNumber);
@@ -59,7 +59,7 @@ export const TarjetaImagen = ({image, index }) => {
         };
     }, []);
 
-   
+
 
     return (
         <div
@@ -67,7 +67,7 @@ export const TarjetaImagen = ({image, index }) => {
             onMouseOver={handleMouseOver}
             onMouseOut={handleMouseOut}
             className="relative w-full h-full">
-            
+
             {!isHover ? (
                 <img
                     src={image.link}

@@ -1,123 +1,95 @@
-import React, { useEffect, useState} from 'react'
-import handleGetData from '../../../helpers/handleGetData'
+import React, { useEffect, useState } from 'react';
+import handleGetData from '../../../helpers/handleGetData';
 import { useAuth } from '../../../AuthProvider';
+
 function TagsSelection() {
-    
-    const [tagsInfo,setTagsInfo] = useState([])
-    const {setTagsFilters,userData} = useAuth()
-    const token = userData.token
-    
-    
-    const removeFilterTags = (tag) => {
-        // Filtrar las etiquetas en tagsFilters
-        setTagsFilters((prevTagsFilters) => 
-            prevTagsFilters.filter((filterTag) => filterTag.tagID !== tag.tagID)
-        );
-    
-        // Actualizar tagsInfo para reflejar el cambio
-        const newTagsInfo = tagsInfo.map((category) => {
-            if (category[0] === tag.categoryID) {
-                return [
-                    category[0],
-                    category[1],
-                    category[2].map( (tagEach) =>
-                        tagEach.tagID === tag.tagID ? { ...tagEach, isSelected: false } : tagEach
-                    ),
-                ]
-            }
-            return category;
-        })
-    
-        setTagsInfo(newTagsInfo);
-    }
-    
 
-    const onClickTags = (indexCategory, indexTag) => {
-        // Obtén la etiqueta seleccionada
-        const tag = tagsInfo[indexCategory][2][indexTag];
-    
-        // Si la etiqueta ya está seleccionada, eliminarla del filtro
-        if (tag.isSelected) {
-            
-            // Llamar a la función que elimina el filtro
-            removeFilterTags(tag);
-    
-            // Aquí puedes actualizar el estado de tagsInfo para cambiar isSelected a false
-            const newTagsInfo = [...tagsInfo];
-            newTagsInfo[indexCategory][2][indexTag] = { ...tag, isSelected: false };
-            setTagsInfo(newTagsInfo);
-        } else {
-            
-            // Agregar la etiqueta a los filtros
-            setTagsFilters(tagsFilter => [...tagsFilter, tag]);
-    
-            // Actualiza el estado de tagsInfo para cambiar isSelected a true
-            const newTagsInfo = [...tagsInfo];
-            newTagsInfo[indexCategory][2][indexTag] = { ...tag, isSelected: true };
-            setTagsInfo(newTagsInfo);
+    const [searchString, setSearchString] = useState('');
+    const { groupedTags
+        , setGroupedTags, userData } = useAuth();
+
+    const token = userData.token;
+
+    useEffect(() => {
+        if (Object.keys(groupedTags).length !== 0) {
+            return
         }
-        
-    };
-    
-    
+        const getData = async () => {
+            const endpointCategories = `tag_system/show_categories`;
+            const categories = await handleGetData(endpointCategories, token);
+            const response = categories.response;
 
+            const groupedInfo = {}; // Objeto para agrupar por categoría
 
-    useEffect(()=>{
-        const getData = async () =>{
-            const endpointCategories = `tag_system/show_categories`
-            const categories = await handleGetData(endpointCategories,token)
-            const response = categories.response
-            
-            const newInformationTags = []
+            for (let i = 0; i < response.length; i++) {
+                if (response[i][0] !== 1) {
+                    const endPointTags = `tag_system/show_tags?category_id=${response[i][0]}`;
+                    const tagsCategories = await handleGetData(endPointTags, token);
+                    const responseTags = tagsCategories.response;
 
-            for(let i = 0; i< response.length; i++){
-                if(response[i][0] !== 1){
-                    const endPointTags = `tag_system/show_tags?category_id=${response[i][0]}`
-                    const tagsCategories = await handleGetData(endPointTags,token)
-                    const responseTags = tagsCategories.response 
-                    const newTags = responseTags.map((tag)=>(
-                        {
-                            tagID:tag[0],
-                            tagName:tag[1],
-                            categoryID:tag[2],
-                            isSelected:false
+                    responseTags.forEach(tag => {
+                        const categoryName = response[i][1];
+                        if (!groupedInfo[categoryName]) {
+                            groupedInfo[categoryName] = [];
                         }
-                    ))
-                    newInformationTags.push([response[i][1],response[i][0],newTags])    
+                        groupedInfo[categoryName].push({
+                            tagID: tag[0],
+                            tagName: tag[1],
+                            categoryID: tag[2],
+                            isSelected: false,
+                        });
+                    });
                 }
-                
             }
-            setTagsInfo(newInformationTags)
-        }
-        getData()
-    },[])
 
-    
+            setGroupedTags(groupedInfo); // Actualiza el estado con la información agrupada
+            console.log("Tags agrupados por categoría: ", groupedInfo);
+        };
+
+        getData();
+    }, []);
+
     return (
-        <div   className=' w-[310px] p-4   max-h-[20rem] overflow-y-auto bg-zinc-700 rounded-md '>
-            
-           <div className='font-bold flex gap-3 flex-col '>
-            {
-                tagsInfo.map((category,indexC)=>(
-                    <div 
-                    key={indexC}>
-                        <p className=' mb-2'>{category[0]}</p>
-                        <div className='flex gap-2 flex-col '>
-                        {category[2].map((tag,indexT)=>(
-                            <button 
-                            onClick={e => onClickTags(indexC,indexT)}
-                            className={` text-sm justify-center flex items-center ${tag.isSelected? 'brightness-200 bg-transparent border-4 border-green-800 text-green-900':' border-4 border-zinc-800 bg-zinc-800'}`}
-                            key={indexT}>
-                                {tag.tagName}
-                            </button>
-                        ))}
-                        </div>
+        <div className='w-[310px] p-4 max-h-[20rem] overflow-y-auto bg-zinc-700 rounded-md'>
+            {/* Barra de búsqueda */}
+            <input
+                type="text"
+                placeholder="Buscar etiquetas..."
+                value={searchString}
+                onChange={(e) => setSearchString(e.target.value)}
+                className="w-full mb-4 p-2 rounded-md text-sm bg-zinc-800 text-white focus:outline-none focus:ring-2 focus:ring-green-500"
+            />
+
+            {/* Renderizado de tags agrupados */}
+            {Object.entries(groupedTags).map(([categoryName, tags]) => (
+                <div key={categoryName} className="mb-4">
+                    <h3 className="text-green-500 font-bold">{tags.filter(tag => tag.tagName.toLowerCase().includes(searchString.toLowerCase())).length > 0 && tags.length > 0 ? categoryName : ""}</h3>
+                    <div className="flex flex-col gap-2 mt-2">
+                        {tags
+                            .filter(tag => tag.tagName.toLowerCase().includes(searchString.toLowerCase())) // Filtrar por búsqueda
+                            .map(tag => (
+                                <button
+                                    key={tag.tagID}
+                                    className={`overflow-hidden whitespace-nowrap text-ellipsis px-2  hover:brightness-200 hover:bg-transparent hover:border-4 hover:border-green-700 hover:text-green-500 text-sm flex 
+                                        ${tag.isSelected
+                                            ? 'brightness-200 bg-transparent border-4 border-green-800 text-green-900'
+                                            : ' border-4 border-zinc-800 bg-zinc-800'}`}
+                                    onClick={() => {
+                                        // Cambiar estado de selección
+                                        const updatedTags = { ...groupedTags };
+                                        const tagIndex = updatedTags[categoryName].findIndex(t => t.tagID === tag.tagID);
+                                        updatedTags[categoryName][tagIndex].isSelected = !tag.isSelected;
+                                        setGroupedTags(updatedTags);
+                                    }}
+                                >
+                                    {tag.tagName}
+                                </button>
+                            ))}
                     </div>
-                ))
-            }
-            </div> 
+                </div>
+            ))}
         </div>
-  )
+    );
 }
 
-export default TagsSelection
+export default TagsSelection;

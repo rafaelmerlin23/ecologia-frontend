@@ -62,7 +62,7 @@ function ModalImagenes({ closeModal, children }) {
 
   return (
     <div>
-      <div className="fixed inset-0  flex items-center justify-center bg-gray-700 ">
+      <div className="fixed inset-0 z-40 flex items-center justify-center bg-gray-700 ">
         <div className="relative w-full h-full bg-gray-800">
           <div className="flex justify-between items-center p-4 border-b">
             <FontAwesomeIcon icon={faUpload}></FontAwesomeIcon>
@@ -73,7 +73,7 @@ function ModalImagenes({ closeModal, children }) {
               ×
             </button>
           </div>
-          
+
           {/* Contenido con scroll */}
           <div className="h-[80vh] overflow-y-auto p-6">
             <div className='flex items-center justify-center flex-col gap-2'>

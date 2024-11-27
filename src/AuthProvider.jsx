@@ -60,19 +60,28 @@ export const AuthProvider = ({ children }) => {
 
     const [groupImages, setGroupImages] = useState([])
 
-    const [projectsPath,setProjectsPath] = useState('/gestor/proyectos')
+    const [projectsPath, setProjectsPath] = useState('/gestor/proyectos')
 
-    const [dateUbication,setDateUbication] = useState([])
-    
-    const [indexDateUbicationImagesDate,setIndexDateUbicationImagesDate] = useState(1)
+    const [dateUbication, setDateUbication] = useState([])
 
-    const [initialDate,setInitialDate] = useState('');
+    const [indexDateUbicationImagesDate, setIndexDateUbicationImagesDate] = useState(1)
 
-    const [endDate,SetEndDate] = useState('');
+    const [initialDate, setInitialDate] = useState('');
 
-    const [scores, setScores] = useState([])
+    const [endDate, SetEndDate] = useState('');
 
-    const [tagsFilters,setTagsFilters] = useState([])
+    const [ranges, setRanges] = useState({ 0: false, 0.5: false, 1: false, 1.5: false, 2: false, 2.5: false, 3: false })
+
+    const [isActiveSelect, setIsActiveSelect] = useState(true)
+
+    const [projectsToFilter, SetProjectToFilter] = useState([])
+
+    const [groupedTags, setGroupedTags] = useState({}); //
+
+    const [locationToFilter, setLocationToFilter] = useState({})
+
+    const [albumsToFilter, setAlbumsToFilter] = useState({})
+
 
     const handleCategoryMenu = () => {
         setIsCategoryMenuActivate(prev => !prev)
@@ -195,8 +204,19 @@ export const AuthProvider = ({ children }) => {
             , setInitialDate
             , endDate
             , SetEndDate
-            , setTagsFilters
-            , tagsFilters
+            , ranges
+            , setRanges
+            , isActiveSelect
+            , setIsActiveSelect
+            , projectsToFilter
+            , SetProjectToFilter
+            , groupedTags
+            , setGroupedTags
+            , locationToFilter
+            , setLocationToFilter
+            , albumsToFilter
+            , setAlbumsToFilter
+
 
 
         }}>

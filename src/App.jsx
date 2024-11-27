@@ -8,17 +8,17 @@ import Imagenes from './pages/Imagenes';
 import CreateAccount from './pages/auth/CreateAccount';
 import CategoriaEtiqueta from './pages/CategoriaEtiqueta';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import {  faBars, faRightFromBracket } from '@fortawesome/free-solid-svg-icons';
+import { faBars, faRightFromBracket } from '@fortawesome/free-solid-svg-icons';
 import Error404 from './components/Error404';
 import ImagesDate from './components/imagenes/ImagesDate';
-import {  useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import ProjectsNavBar from './components/projects/ProjectsNavBar';
 
-  function PrivateRoute({ element, ...rest }) {
-    const { isAuthenticated } = useAuth();
-    const location = useLocation()
-    return isAuthenticated ? element : <Navigate to={location} />;
-  }
+function PrivateRoute({ element, ...rest }) {
+  const { isAuthenticated } = useAuth();
+  const location = useLocation()
+  return isAuthenticated ? element : <Navigate to={location} />;
+}
 
 function App() {
   return (
@@ -36,16 +36,16 @@ function App() {
           <Route path="/cuentas" element={<p>cuentas</p>} />
 
           {/* Rutas privadas */}
-            <Route path="/categoria-etiqueta" element={<PrivateRoute element={<CategoriaEtiqueta />}/>} />
+          <Route path="/categoria-etiqueta" element={<PrivateRoute element={<CategoriaEtiqueta />} />} />
 
-            {/* Rutas bajo /gestor */}
-            <Route path="/gestor" element={<PrivateRoute element={<ProjectsNavBar />}/>}>
-              <Route path="proyectos" element={<PrivateRoute element={<Proyectos />}/>} />
-              <Route path="proyectos/:proyectoId/puntos" element={<PrivateRoute element={<Puntos />}/>} />
-              <Route path="proyectos/:proyectoId/puntos/:puntoID/albumes" element={<PrivateRoute element={<Albumes />}/>} />
-              <Route path="proyectos/:proyectoId/puntos/:puntoID/albumes/:albumID/imagenes" element={<PrivateRoute element={<Imagenes />}/>} />
-              <Route path="proyectos/:proyectoId/puntos/:puntoID/albumes/:albumID/imagenes/:fechaImagen" element={<PrivateRoute element={<ImagesDate />}/>} />
-            </Route>
+          {/* Rutas bajo /gestor */}
+          <Route path="/gestor" element={<PrivateRoute element={<ProjectsNavBar />} />}>
+            <Route path="proyectos" element={<PrivateRoute element={<Proyectos />} />} />
+            <Route path="proyectos/:proyectoId/puntos" element={<PrivateRoute element={<Puntos />} />} />
+            <Route path="proyectos/:proyectoId/puntos/:puntoID/albumes" element={<PrivateRoute element={<Albumes />} />} />
+            <Route path="proyectos/:proyectoId/puntos/:puntoID/albumes/:albumID/imagenes" element={<PrivateRoute element={<Imagenes />} />} />
+            <Route path="proyectos/:proyectoId/puntos/:puntoID/albumes/:albumID/imagenes/:fechaImagen" element={<PrivateRoute element={<ImagesDate />} />} />
+          </Route>
 
           {/* Ruta para página 404 */}
           <Route path="*" element={<Error404 />} />
@@ -60,15 +60,15 @@ export default App
 function Navigation() {
   const location = useLocation();
   const { pathname } = location;
-  const { backRoute, logout,projectsPath } = useAuth();
+  const { backRoute, logout, projectsPath } = useAuth();
   const [isScrolled, setIsScrolled] = useState(false);
-  const [isMenuOpen,setIsMenuOpen] = useState(false)
+  const [isMenuOpen, setIsMenuOpen] = useState(false)
 
-  const onCloseMenu = ()=>{
+  const onCloseMenu = () => {
     setIsMenuOpen(false)
   }
 
-  const onOpenMenuOpen = ()=>{
+  const onOpenMenuOpen = () => {
     setIsMenuOpen(true)
   }
 
@@ -119,18 +119,18 @@ function Navigation() {
 
   return (
     <div className='p-0 relative'>
-      
+
       <div className={`z-30 justify-end items-center h-16 w-screen bg-gray-800  flex xl:hidden lg:hidden md:hidden sm:flex fixed top-0 left-0  right-0 `}>
-      <Menu 
-        handleClose={onCloseMenu} 
-        isActive={isMenuOpen} 
-        logout={logout} 
-        pathname={pathname} 
-        projectsPath={projectsPath}/>
-        <button   
-        onClick={onOpenMenuOpen}
-        className=' flex sm:flex xl:hidden lg:hidden md:hidden'>
-          <FontAwesomeIcon className='hover:text-blue-100 text-2xl mr-6 text-blue-200' icon={faBars}/>
+        <Menu
+          handleClose={onCloseMenu}
+          isActive={isMenuOpen}
+          logout={logout}
+          pathname={pathname}
+          projectsPath={projectsPath} />
+        <button
+          onClick={onOpenMenuOpen}
+          className=' flex sm:flex xl:hidden lg:hidden md:hidden'>
+          <FontAwesomeIcon className='hover:text-blue-100 text-2xl mr-6 text-blue-200' icon={faBars} />
         </button>
       </div>
 
@@ -138,87 +138,87 @@ function Navigation() {
         className={`z-30 hidden xl:flex lg:flex md:flex bg-gray-800  p-0 w-screen h-16 shadow-md  items-center justify-end fixed top-0 left-0 right-0 transition-opacity duration-300 ${isScrolled ? 'opacity-90' : 'opacity-70'
           }`}
       >
-        
-        
+
+
         <ul className='hidden lg:flex md:flex xl:flex p-0 text-2xl mr-10 items-center flex-row gap-7 '>
-        <NavElements 
-          logout={logout} 
-          pathname={pathname}
-           projectsPath={projectsPath} /> 
+          <NavElements
+            logout={logout}
+            pathname={pathname}
+            projectsPath={projectsPath} />
         </ul>
-        
+
       </div>
     </div >
   );
 }
 
-const Menu =({pathname,logout,projectsPath,isActive,handleClose})=>{
+const Menu = ({ pathname, logout, projectsPath, isActive, handleClose }) => {
   const menuRef = useRef(null)
-  
+
   const handleClickOutside = (event) => {
     if (
 
-        menuRef.current &&
-        !menuRef.current.contains(event.target)
+      menuRef.current &&
+      !menuRef.current.contains(event.target)
     ) {
-        handleClose()
+      handleClose()
     }
-};
+  };
 
 
   useEffect(() => {
-      if (isActive) {
-          document.addEventListener('mousedown', handleClickOutside);
-      } else {
-          document.removeEventListener('mousedown', handleClickOutside);
-      }
-      // Cleanup en caso de que el modal cambie rápido
-      return () => {
-          document.removeEventListener('mousedown', handleClickOutside);
-      };
+    if (isActive) {
+      document.addEventListener('mousedown', handleClickOutside);
+    } else {
+      document.removeEventListener('mousedown', handleClickOutside);
+    }
+    // Cleanup en caso de que el modal cambie rápido
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
   }, [isActive]);
 
-  if(!isActive) return
-  return(
+  if (!isActive) return
+  return (
     <div
-    ref={menuRef}
-    onClick={handleClose}
-    className='pt-6 gap-6 bg-gray-800 text-1xl xl:hidden lg:hidden md:hidden h-screen w-64 fixed top-0 right-0 flex flex-col'>
-      <NavElements logout={logout} pathname={pathname} projectsPath={projectsPath}/>
+      ref={menuRef}
+      onClick={handleClose}
+      className='z-30 pt-6 gap-6 bg-gray-800 text-1xl xl:hidden lg:hidden md:hidden h-screen w-64 fixed top-0 right-0 flex flex-col'>
+      <NavElements logout={logout} pathname={pathname} projectsPath={projectsPath} />
     </div>
   )
 }
 
-const NavElements = ({pathname,logout,projectsPath})=>{
-  return(
+const NavElements = ({ pathname, logout, projectsPath }) => {
+  return (
     <>
-      <ListMember isActive={pathname.includes('/usuario')} name={"Usuario"} to={'/usuario'}/>
-            
-      <ListMember isActive={pathname.includes('/cuentas')} name={"Cuentas"} to={"/cuentas"}/>
-          
-      <ListMember isActive={pathname.includes('/categoria-etiqueta')} name={"Categorias/Etiquetas"} to={'/categoria-etiqueta'}/>
-            
-      <ListMember isActive={pathname.includes('/proyectos')} to={projectsPath} name='Proyectos'/>
-           
+      <ListMember isActive={pathname.includes('/usuario')} name={"Usuario"} to={'/usuario'} />
+
+      <ListMember isActive={pathname.includes('/cuentas')} name={"Cuentas"} to={"/cuentas"} />
+
+      <ListMember isActive={pathname.includes('/categoria-etiqueta')} name={"Categorias/Etiquetas"} to={'/categoria-etiqueta'} />
+
+      <ListMember isActive={pathname.includes('/proyectos')} to={projectsPath} name='Proyectos' />
+
       <ListMember to={"/login"} onClick={logout} >
-          <FontAwesomeIcon
-            className='text-red-500'
-            icon={faRightFromBracket} />
+        <FontAwesomeIcon
+          className='text-red-500'
+          icon={faRightFromBracket} />
       </ListMember>
     </>
   )
 }
 
-const ListMember = ({ name="", isActive,to,children ,onClick= ()=>{}}) => {
+const ListMember = ({ name = "", isActive, to, children, onClick = () => { } }) => {
   return (
     <li className='list-none'>
-      <Link 
-      onClick={onClick}
-      to={to}>
+      <Link
+        onClick={onClick}
+        to={to}>
         <div
-        className={`py-2 pl-3 justify-start p-0 flex items-center  hover:text-slate-200 hover:border-slate-200  hover:border-b-4 ${isActive ? 'text-sky-500 border-sky-500 border-b-4' : ''}`}>
-            {name}
-            {children}
+          className={`py-2 pl-3 justify-start p-0 flex items-center  hover:text-slate-200 hover:border-slate-200  hover:border-b-4 ${isActive ? 'text-sky-500 border-sky-500 border-b-4' : ''}`}>
+          {name}
+          {children}
         </div>
       </Link>
     </li>
