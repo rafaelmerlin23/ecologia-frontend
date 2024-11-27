@@ -109,7 +109,10 @@ function ImagesMenu() {
 
   return (
     <div className=' flex flex-col justify-center items-center w-full'>
-      <FilterImagesDate />
+      <section>
+        <FilterImagesDate />
+
+      </section>
       <GridImages images={images} />
       <Paginacion handleNext={handleNext} handlePrevious={handlePrevious} maxPage={maxPageGrid} />
     </div>

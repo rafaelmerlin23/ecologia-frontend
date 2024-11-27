@@ -12,12 +12,22 @@ body {
 .popover-container {
   position: relative;
   display: inline-block;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  padding: 0;
 }
 
 .popover-trigger {
   color: white;
   border: none;
   border-radius: 4px;
+  /* display: flex;
+  align-items: center;
+  justify-content: center; */
+  margin: 0;
+  padding: 0;
 }
 
 .popover-content {

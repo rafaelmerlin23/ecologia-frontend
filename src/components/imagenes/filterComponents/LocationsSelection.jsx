@@ -5,14 +5,13 @@ import { useAuth } from '../../../AuthProvider';
 function TagsSelection() {
 
     const [searchString, setSearchString] = useState('');
-    const { locationToFilter, setLocationToFilter, userData, projectsToFilter } = useAuth();
+    const { locationToFilter, setLocationToFilter, userData, projectsToFilter, setAlbumsToFilter } = useAuth();
 
     const token = userData.token;
 
     // Obtener proyectos al cargar el componente
     useEffect(() => {
-
-
+        setAlbumsToFilter({})
         const getProjects = async () => {
             let newLocationInformation = {}
             for (let i = 0; i < projectsToFilter.length; i++) {

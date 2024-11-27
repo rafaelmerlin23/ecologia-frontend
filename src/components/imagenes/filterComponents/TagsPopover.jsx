@@ -28,15 +28,16 @@ const TagsPopover = ({ children, content, isDisabled = false }) => {
     }, []);
 
     return (
-        <div className="popover-container">
+        <div className={`popover-container `}>
             <button
                 ref={triggerRef}
                 onClick={toggleVisibility}
-                className={`popover-trigger ${isDisabled ? 'opacity-50 cursor-not-allowed' : ''}`}
+                className={`popover-trigger  ${isDisabled ? 'opacity-50 cursor-not-allowed' : ''}`}
                 aria-haspopup="true"
                 aria-expanded={isVisible}
                 aria-controls="popover-content"
             >
+
                 {children}
             </button>
             {isVisible && (
