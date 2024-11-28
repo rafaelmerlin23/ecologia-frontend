@@ -3,9 +3,17 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFilter } from '@fortawesome/free-solid-svg-icons';
 import { useState } from "react";
 import ModalFilters from "./filterComponents/ModalFilters";
+import ButtonsTofilter from "./filterComponents/ButtonsTofilter";
+import { useAuth } from "../../AuthProvider";
 
 function FilterImagesDate() {
     const [isModalFilterActive, setIsModalFilterActive] = useState(false)
+    const {projectsToFilter
+        , groupedTags
+        , locationToFilter
+        , albumsToFilter
+        , dateRange
+        , ranges} = useAuth()
 
     const handelCloseModalFilter = () => {
         setIsModalFilterActive(false)
@@ -15,32 +23,92 @@ function FilterImagesDate() {
         setIsModalFilterActive(true)
     }
 
+    const getDaysInMonth = (month, year) => {
+        // `month` es de 1 a 12, por lo que restamos 1 para ajustarlo al índice (0 a 11)
+        return new Date(year, month, 0).getDate();
+    }
+
     const onSubmit = (e) => {
         e.preventDefault()
+        const projects = []
+        const ICPs = []
+        const tags = []
+        let initDate = ""
+        let endDate = ""
+        const locations = []
+        const albums = []
+        
+        if(dateRange.initDate &&dateRange.endDate){
+            endDate = `${getDaysInMonth(dateRange.endDate.slice(5,7),dateRange.initDate.slice(0,4))}-${dateRange.endDate.slice(5,7)}-${dateRange.endDate.slice(0,4)}`
+            initDate = `01-${dateRange.endDate.slice(5,7)}-${dateRange.endDate.slice(0,4)}`
+        }
+
+        // ordenar por
+        // fecha de inicio
+        // fecha final
+        // etiquetas
+        // ICP
+        // proyectos
+        // puntos
+        // albumes
+        
+        projectsToFilter.forEach(project => {
+            if(project.isSelected){
+                projects.push(project)
+            }
+        })
+
+        Object.entries(ranges).forEach(([key, value])=>{
+            if(value){
+                ICPs.push(key)
+            }
+        }) 
+
+        Object.entries(groupedTags).forEach(([categoryName, tagsEach]) => {
+            tagsEach.forEach(tag => {
+                if (tag.isSelected) {
+                    tags.push(tag)
+                }
+            })
+        })
+
+        Object.entries(locationToFilter).forEach(([project, locationsEach]) => {
+            locationsEach.forEach(location => {
+                if (location.isSelected) {
+                    locations.push(location)
+                }
+            })
+        })
+
+        Object.entries(albumsToFilter).forEach(([location, albumsEach]) => {
+            albumsEach.forEach(album => {
+                if (album.isSelected) {
+                    albums.push(album)
+                }
+            })
+        })
+
+        console.log("estos son proyectos: ",projects)
+        console.log("estos son los ICPS:",ICPs)
+        console.log("estas son las etiquetas:",tags )
+        console.log("estas son las locaciones:", locations)
+        console.log("estas son las Albumes:", albums)
     }
 
     return (
         <>
-            <form onSubmit={onSubmit} className='xl:flex lg:flex hidden md:hidden sm:hidden mb-10 w-full flex-col'>
-                <div className='grid grid-cols-4 gap-4'>
-                    <FilterGrouped />
-                    <div className='col-span-4 flex justify-end gap-6'>
-                        <button
-                            className='h-10 flex justify-center items-center text-1xl bg-amber-950  text-red-500 font-medium px-2 rounded-md hover:opacity-70 focus:opacity-50'>
-                            Resetear
-                        </button>
+            <form onSubmit={onSubmit} className='xl:flex lg:flex hidden md:flex sm:hidden mb-10 w-full flex-col'>
 
-                        <button type='submit' className='h-10 gap-2 flex justify-center items-center text-1xl bg-blue-600 px-2 rounded-md hover:opacity-70 focus:opacity-50'>
-                            <FontAwesomeIcon className='text-sm' icon={faFilter} /> Filtrar
-                        </button>
-                    </div>
+                <div className=''>
+                    <FilterGrouped />
+                    <ButtonsTofilter/>
                 </div>
 
             </form>
             <ModalFilters isActive={isModalFilterActive} onClose={handelCloseModalFilter} />
             <button
                 onClick={handelOpenModalFilter}
-                className='xl:hidden lg:hidden md:flex  sm:flex flex h-10 gap-2 justify-center items-center text-1xl bg-zinc-700 px-2 rounded-md hover:opacity-70 focus:opacity-50'>
+                className='xl:hidden lg:hidden md:hidden  sm:flex flex h-10 gap-2 justify-center items-center text-1xl bg-zinc-700 px-2 rounded-md hover:opacity-70 focus:opacity-50'>
                 <FontAwesomeIcon className='text-sm' icon={faFilter} /> Abrir filtros
             </button>
         </>

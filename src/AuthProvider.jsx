@@ -82,6 +82,8 @@ export const AuthProvider = ({ children }) => {
 
     const [albumsToFilter, setAlbumsToFilter] = useState({})
 
+    const [dateRange, setDateRange] = useState({ initDate: '', endDate: '' });
+
 
     const handleCategoryMenu = () => {
         setIsCategoryMenuActivate(prev => !prev)
@@ -216,6 +218,8 @@ export const AuthProvider = ({ children }) => {
             , setLocationToFilter
             , albumsToFilter
             , setAlbumsToFilter
+            , dateRange
+            , setDateRange
 
 
 

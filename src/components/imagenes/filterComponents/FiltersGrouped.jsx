@@ -11,12 +11,8 @@ import AlbumSelection from './AlbumSelection'
 
 export const FilterGrouped = () => {
     const [isGoodForm, setIsGoodForm] = useState(true)
-    const [dateRange, setDateRange] = useState({ initDate: '', endDate: '' });
-    const { ranges, groupedTags, projectsToFilter, locationToFilter, setLocationToFilter, albumsToFilter } = useAuth()
-    const getDaysInMonth = (month, year) => {
-        // `month` es de 1 a 12, por lo que restamos 1 para ajustarlo al índice (0 a 11)
-        return new Date(year, month, 0).getDate();
-    }
+    const {dateRange, setDateRange, ranges, groupedTags, projectsToFilter, locationToFilter , albumsToFilter } = useAuth()
+  
 
 
 
@@ -90,7 +86,7 @@ export const FilterGrouped = () => {
     }
 
     return (
-        <>
+        <div className='xl:grid  xl:grid-cols-4 xl:gap-x-4 md:grid md:grid-cols-2  md:gap-x-6'>
             <div className='flex flex-col gap-y-2 items-center'>
                 <p className='text-2xl text-gray-400'>
                     Ordenar por
@@ -201,7 +197,7 @@ export const FilterGrouped = () => {
 
 
             {!isGoodForm ? <p className='col-span-4 text-1xl text-red-500'>El inicio no puede ser mayor al final</p> : ""}
-        </>
+        </div>
     )
 }
 

@@ -3,7 +3,7 @@ import { handleGetData } from "../../../helpers/handleGetData";
 import { useAuth } from "../../../AuthProvider";
 
 export const ProjectsSelection = () => {
-    const { userData, projectsToFilter, SetProjectToFilter, setLocationToFilter } = useAuth();
+    const { userData, projectsToFilter, SetProjectToFilter, setLocationToFilter,setAlbumsToFilter } = useAuth();
     const [searchText, setSearchText] = useState("");
     const [filteredProjects, setFilteredProjects] = useState([]);
     const token = userData.token;
@@ -16,6 +16,7 @@ export const ProjectsSelection = () => {
 
     // Obtener proyectos al cargar el componente
     useEffect(() => {
+        setAlbumsToFilter({})
         setLocationToFilter({})
         const getProjects = async () => {
             if (projectsToFilter.length > 0) return;
