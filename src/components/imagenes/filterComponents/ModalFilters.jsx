@@ -2,7 +2,7 @@ import { useEffect } from "react";
 import FilterGrouped from "./FiltersGrouped";
 import ButtonsTofilter from "./ButtonsTofilter";
 
-export const ModalFilters = ({ isActive, onClose }) => {
+export const ModalFilters = ({ isActive, onClose, onSubmit }) => {
     useEffect(() => {
         if (isActive) {
             // Oculta el scroll al activar el modal
@@ -32,7 +32,7 @@ export const ModalFilters = ({ isActive, onClose }) => {
     if (!isActive) return null;
 
     return (
-        <div className="xl:hidden md:hidden lg:hidden z-40 fixed inset-0 bg-zinc-900">
+        <form onSubmit={onSubmit} className="xl:hidden md:hidden lg:hidden z-40 fixed inset-0 bg-zinc-900">
             <div className="mb-4 flex flex-row items-center justify-between">
                 <p className="ml-2 text-4xl">Filtros</p>
                 <button
@@ -41,9 +41,9 @@ export const ModalFilters = ({ isActive, onClose }) => {
                     x
                 </button>
             </div>
-                <FilterGrouped/>
-                <ButtonsTofilter/>
-        </div>
+            <FilterGrouped />
+            <ButtonsTofilter />
+        </form>
     );
 };
 

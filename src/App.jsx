@@ -13,6 +13,8 @@ import Error404 from './components/Error404';
 import ImagesDate from './components/imagenes/ImagesDate';
 import { useEffect, useRef, useState } from 'react';
 import ProjectsNavBar from './components/projects/ProjectsNavBar';
+import GestorCuentas from './components/Accounts/GestorCuentas';
+import Usuario from './components/Accounts/Usuario';
 
 function PrivateRoute({ element, ...rest }) {
   const { isAuthenticated } = useAuth();
@@ -32,8 +34,9 @@ function App() {
           {/* Rutas independientes */}
           <Route path="/login" element={<Login />} />
           <Route path="/crear_cuenta" element={<CreateAccount />} />
-          <Route path="/usuario" element={<p>usuario</p>} />
-          <Route path="/cuentas" element={<p>cuentas</p>} />
+          <Route path="/usuario" element={<PrivateRoute element={<Usuario />} />} />
+          <Route path="/cuentas" element={<PrivateRoute element={<GestorCuentas />} />} />
+          <Route path="/imagenes" element={<PrivateRoute element={<Imagenes />} />} />
 
           {/* Rutas privadas */}
           <Route path="/categoria-etiqueta" element={<PrivateRoute element={<CategoriaEtiqueta />} />} />
@@ -77,6 +80,7 @@ function Navigation() {
     "/gestor/proyectos/",
     "/usuario",
     "/cuentas",
+    "/imagenes",
     "/categoria-etiqueta",
     "/categoria-etiqueta/",
     "/gestor/proyectos/:proyectoId/puntos",
@@ -194,6 +198,8 @@ const NavElements = ({ pathname, logout, projectsPath }) => {
     <>
       <ListMember isActive={pathname.includes('/usuario')} name={"Usuario"} to={'/usuario'} />
 
+      <ListMember isActive={pathname === ('/imagenes')} name={"Imagenes"} to={'/imagenes'} />
+
       <ListMember isActive={pathname.includes('/cuentas')} name={"Cuentas"} to={"/cuentas"} />
 
       <ListMember isActive={pathname.includes('/categoria-etiqueta')} name={"Categorias/Etiquetas"} to={'/categoria-etiqueta'} />
@@ -216,7 +222,7 @@ const ListMember = ({ name = "", isActive, to, children, onClick = () => { } }) 
         onClick={onClick}
         to={to}>
         <div
-          className={`py-2 pl-3 justify-start p-0 flex items-center  hover:text-slate-200 hover:border-slate-200  hover:border-b-4 ${isActive ? 'text-sky-500 border-sky-500 border-b-4' : ''}`}>
+          className={`py-2 pl-3 justify-start p-0 flex items-center  hover:text-slate-200 border-b-4 hover:border-slate-200  hover:border-b-4 ${isActive ? 'text-sky-500 border-sky-500' : ' border-gray-800'}`}>
           {name}
           {children}
         </div>

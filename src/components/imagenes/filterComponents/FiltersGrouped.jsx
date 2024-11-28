@@ -8,13 +8,20 @@ import RangesOptions from './RangesOptions';
 import ProjectsSelection from './ProjectsSelection';
 import LocationSelection from './LocationsSelection';
 import AlbumSelection from './AlbumSelection'
+import { useLocation } from 'react-router-dom';
 
 export const FilterGrouped = () => {
     const [isGoodForm, setIsGoodForm] = useState(true)
-    const {dateRange, setDateRange, ranges, groupedTags, projectsToFilter, locationToFilter , albumsToFilter } = useAuth()
-  
+    const { setSelectedOrderFilter, dateRange, setDateRange, ranges, groupedTags, projectsToFilter, locationToFilter, albumsToFilter } = useAuth()
+    const location = useLocation()
 
+    useEffect(() => {
+        console.log(location.pathname)
+    }, [])
 
+    const handleSelectChange = (event) => {
+        setSelectedOrderFilter(event.target.value); // Obtiene el valor seleccionado
+    };
 
     useEffect(() => {
     }, [ranges, groupedTags, projectsToFilter, locationToFilter, albumsToFilter])
@@ -93,12 +100,13 @@ export const FilterGrouped = () => {
                 </p>
                 <select
                     className='text-center px-2 w-[300px] h-[36px] rounded-md bg-zinc-700 text-white text-2xl'
-                    name="" id="">
+                    name="" id=""
+                    onChange={handleSelectChange}>
                     <option value="None"> Ninguno</option>
                     <option value="score asc">Score ascendente</option>
                     <option value="score desc">Score descendente</option>
-                    <option value="fecha asc">Fecha ascendente</option>
-                    <option value="fecha desc">Fecha descendente</option>
+                    <option value="date asc">Fecha ascendente</option>
+                    <option value="date desc">Fecha descendente</option>
                 </select>
             </div>
 
@@ -163,36 +171,41 @@ export const FilterGrouped = () => {
                 </div>
             </TagsPopover>
 
-            <TagsPopover content={<ProjectsSelection />} >
-                <div className='flex flex-col gap-y-2 items-center'>
-                    <p className='text-2xl text-gray-400'>Proyectos</p>
-                    <div
-                        className='w-[300px] h-[36px] text-center px-2 rounded-md bg-zinc-700 text-white text-2xl overflow-hidden whitespace-nowrap text-ellipsis'>
-                        {showProjects()}
-                    </div>
-                </div>
-            </TagsPopover>
+            {
+                location.pathname === "/imagenes" ? <>
+                    <TagsPopover content={<ProjectsSelection />} >
+                        <div className='flex flex-col gap-y-2 items-center'>
+                            <p className='text-2xl text-gray-400'>Proyectos</p>
+                            <div
+                                className='w-[300px] h-[36px] text-center px-2 rounded-md bg-zinc-700 text-white text-2xl overflow-hidden whitespace-nowrap text-ellipsis'>
+                                {showProjects()}
+                            </div>
+                        </div>
+                    </TagsPopover>
 
-            <TagsPopover isDisabled={showProjects() === 'No especificado'} content={<LocationSelection />} >
-                <div
-                    className='flex flex-col gap-y-2 items-center'>
-                    <p className='text-2xl text-gray-400'>Puntos</p>
-                    <div
-                        className='w-[300px] h-[36px] text-center px-2 rounded-md bg-zinc-700 text-white text-2xl overflow-hidden whitespace-nowrap text-ellipsis'>
-                        {showLocations()}
-                    </div>
-                </div>
-            </TagsPopover>
+                    <TagsPopover isDisabled={showProjects() === 'No especificado'} content={<LocationSelection />} >
+                        <div
+                            className='flex flex-col gap-y-2 items-center'>
+                            <p className='text-2xl text-gray-400'>Puntos</p>
+                            <div
+                                className='w-[300px] h-[36px] text-center px-2 rounded-md bg-zinc-700 text-white text-2xl overflow-hidden whitespace-nowrap text-ellipsis'>
+                                {showLocations()}
+                            </div>
+                        </div>
+                    </TagsPopover>
 
-            <TagsPopover isDisabled={showLocations() === 'No especificado'} content={<AlbumSelection />} >
-                <div className='flex flex-col gap-y-2 items-center'>
-                    <p className='text-2xl text-gray-400'>Albumes</p>
-                    <div
-                        className='w-[300px] h-[36px] text-center px-2 rounded-md bg-zinc-700 text-white text-2xl overflow-hidden whitespace-nowrap text-ellipsis'>
-                        {showAlbums()}
-                    </div>
-                </div>
-            </TagsPopover>
+                    <TagsPopover isDisabled={showLocations() === 'No especificado'} content={<AlbumSelection />} >
+                        <div className='flex flex-col gap-y-2 items-center'>
+                            <p className='text-2xl text-gray-400'>Albumes</p>
+                            <div
+                                className='w-[300px] h-[36px] text-center px-2 rounded-md bg-zinc-700 text-white text-2xl overflow-hidden whitespace-nowrap text-ellipsis'>
+                                {showAlbums()}
+                            </div>
+                        </div>
+                    </TagsPopover>
+
+                </> : ""
+            }
 
 
 
