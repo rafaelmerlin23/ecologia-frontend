@@ -12,21 +12,21 @@ function TagsSelection() {
 
     const token = userData.token;
 
-    const onClickCategory = (categoryName)=>{
-        const newGroupedTags = {...groupedTags}
-        newGroupedTags[categoryName] = newGroupedTags[categoryName].map((tag)=>({
+    const onClickCategory = (categoryName) => {
+        const newGroupedTags = { ...groupedTags }
+        newGroupedTags[categoryName] = newGroupedTags[categoryName].map((tag) => ({
             ...tag,
-            isSelected:!tag.isSelected
+            isSelected: !tag.isSelected
         }))
         setGroupedTags(newGroupedTags)
-    } 
+    }
 
-    const isAllTagsOfCategorySelected = (categoryName)=>{
+    const isAllTagsOfCategorySelected = (categoryName) => {
         let isAll = true
-        groupedTags[categoryName].forEach((tag)=>{
-            if(!tag.isSelected){
+        groupedTags[categoryName].forEach((tag) => {
+            if (!tag.isSelected) {
                 isAll = false
-                
+
             }
         })
         return isAll
@@ -85,16 +85,16 @@ function TagsSelection() {
             {/* Renderizado de tags agrupados */}
             {Object.entries(groupedTags).map(([categoryName, tags]) => (
                 <div key={categoryName} className="mb-4">
-                    <button 
-                    onClick={e=>onClickCategory(categoryName)}
-                    className="hover:brightness-150 flex gap-2 justify-center items-center text-green-500 font-bold">
-                        {tags.filter(tag => tag.tagName.toLowerCase().includes(searchString.toLowerCase())).length > 0 && tags.length > 0 ? categoryName : ""}
-                        {isAllTagsOfCategorySelected(categoryName)? 
-                        <FontAwesomeIcon 
-                        className='brightness-150 text-green-500 font-bold'
-                        icon={faCheck}/>
-                        :
-                        ""
+                    <button
+                        onClick={e => onClickCategory(categoryName)}
+                        className="hover:brightness-150 flex gap-2 justify-center items-center text-green-500 font-bold break-word-button">
+                        {tags.filter(tag => tag.tagName.toLowerCase().includes(searchString.toLowerCase())).length > 0 && tags.length > 0 ? categoryName.length > 29 ? categoryName.slice(0, 27) + "..." : categoryName : ""}
+                        {isAllTagsOfCategorySelected(categoryName) ?
+                            <FontAwesomeIcon
+                                className='brightness-150 text-green-500 font-bold'
+                                icon={faCheck} />
+                            :
+                            ""
                         }
                     </button>
                     <div className="flex flex-col gap-2 mt-2">

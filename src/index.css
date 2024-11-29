@@ -42,3 +42,11 @@ body {
   z-index: 1000;
   white-space: nowrap;
 }
+
+
+.break-word-button {
+  word-wrap: break-word;
+  /* Compatibilidad con navegadores antiguos */
+  overflow-wrap: break-word;
+  /* Propiedad moderna */
+}
