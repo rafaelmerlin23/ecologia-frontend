@@ -8,7 +8,7 @@ function TagsSelection() {
 
     const [searchString, setSearchString] = useState('');
     const { groupedTags
-        , setGroupedTags, userData } = useAuth();
+        , setGroupedTags, userData,setRanges } = useAuth();
 
     const token = userData.token;
 
@@ -33,6 +33,7 @@ function TagsSelection() {
     }
 
     useEffect(() => {
+        setRanges({ 0: false, 0.5: false, 1: false, 1.5: false, 2: false, 2.5: false, 3: false })
         if (Object.keys(groupedTags).length !== 0) {
             return
         }
@@ -86,6 +87,7 @@ function TagsSelection() {
             {Object.entries(groupedTags).map(([categoryName, tags]) => (
                 <div key={categoryName} className="mb-4">
                     <button
+                        type='button'
                         onClick={e => onClickCategory(categoryName)}
                         className="hover:brightness-150 flex gap-2 justify-center items-center text-green-500 font-bold break-word-button">
                         {tags.filter(tag => tag.tagName.toLowerCase().includes(searchString.toLowerCase())).length > 0 && tags.length > 0 ? categoryName.length > 29 ? categoryName.slice(0, 27) + "..." : categoryName : ""}
@@ -102,6 +104,7 @@ function TagsSelection() {
                             .filter(tag => tag.tagName.toLowerCase().includes(searchString.toLowerCase())) // Filtrar por búsqueda
                             .map(tag => (
                                 <button
+                                    type='button'
                                     key={tag.tagID}
                                     className={`overflow-hidden whitespace-nowrap text-ellipsis px-2  hover:brightness-200 hover:bg-transparent hover:border-4 hover:border-green-700 hover:text-green-500 text-sm flex 
                                         ${tag.isSelected

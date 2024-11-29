@@ -62,6 +62,7 @@ function AlbumSelection() {
                             .filter(album => album.name.toLowerCase().includes(searchString.toLowerCase())) // Filtrar por búsqueda
                             .map(album => (
                                 <button
+                                    type='button'
                                     key={album.index}
                                     className={`overflow-hidden whitespace-nowrap text-ellipsis px-2  hover:brightness-200 hover:bg-transparent hover:border-4 hover:border-green-700 hover:text-green-500 text-sm  flex  
                                         ${album.isSelected

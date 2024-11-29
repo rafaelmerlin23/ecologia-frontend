@@ -35,8 +35,8 @@ function FilterImagesDate() {
         const projects = []
         const ICPs = []
         const tags = []
-        let initDate = ""
-        let endDate = ""
+        let initDate = undefined
+        let endDate = undefined
         const locations = []
         const albums = []
 
@@ -96,6 +96,18 @@ function FilterImagesDate() {
         console.log("estas son las locaciones:", locations)
         console.log("estas son las Albumes:", albums)
         console.log("valor de orden seleccinado: ", selectedOrderFilter)
+        const form = new FormData()
+
+        initDate && form.append('date_begin', initDate);
+        endDate && form.append('date_end', endDate);
+        (tags || []).forEach((tag) => form.append('tags', tag));
+        (albums || []).forEach((album) => form.append('albums', album));
+        (locations || []).forEach((location) => form.append('locations', location));
+        (projects || []).forEach((project) => form.append('projects', project));
+        (ICPs || []).forEach((score) => form.append('scores', score));
+        
+        
+
     }
 
     return (

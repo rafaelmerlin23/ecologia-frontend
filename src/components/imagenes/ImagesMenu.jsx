@@ -10,7 +10,7 @@ import FilterImagesDate from './FilterImagesDate'
 
 function ImagesMenu() {
   const { albumID, proyectoId, puntoID, fechaImagen } = useParams()
-  const { setImages, images, setIsTaggerActive, setCardImagePage, setImage, setMaxPage, setPageImage, pageImage, setBackRoute, backRoute, userData, quantityImagePerPage } = useAuth()
+  const {filter, setImages, images, setIsTaggerActive, setCardImagePage, setImage, setMaxPage, setPageImage, pageImage, setBackRoute, backRoute, userData, quantityImagePerPage } = useAuth()
   const token = userData.token
   const [searchParams, setSearchParams] = useSearchParams()
   const [maxPageGrid, setMaxPageGrid] = useState(1)
@@ -19,7 +19,7 @@ function ImagesMenu() {
 
   const handleTagger = () => {
 
-    // const paramsFilters =initialDate &&finalDate?`&startDate=${initialDate}&endDate=${finalDate}`:""
+    // remplazar aqui tambien
     const endPoint = `pictures/show_picture_from_album?page=${searchParams.get('image-page')}&quantity=${1}&album_id=${albumID}`
 
     handleGetData(endPoint, token).then((data) => {
@@ -82,7 +82,7 @@ function ImagesMenu() {
 
     setPageImage(currentPage ? Number(currentPage) : 1)
 
-    // startDate=${minDate}&endDate=${maxDate}
+    // remplazar esta api por la que te di
     const pictureEndpoint = `pictures/show_picture_from_album?album_id=${albumID}&quantity=${quantityImagePerPage}&page=${pageImage}`
     handleGetData(pictureEndpoint, token).then(data => {
       if (data && data.response) {
@@ -105,7 +105,7 @@ function ImagesMenu() {
     if (searchParams.get('is-active-tagger')) {
       handleTagger()
     }
-  }, [pageImage, maxPageGrid])
+  }, [pageImage, maxPageGrid,filter])
 
   return (
     <div className=' flex flex-col justify-center items-center w-full'>

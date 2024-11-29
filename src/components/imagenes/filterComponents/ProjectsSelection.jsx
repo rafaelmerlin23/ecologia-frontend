@@ -63,6 +63,7 @@ export const ProjectsSelection = () => {
             <div className="font-bold flex gap-3 flex-col">
                 {filteredProjects.map((project, index) => (
                     <button
+                        type='button'
                         onClick={() => onSelect(index)}
                         className={`overflow-hidden whitespace-nowrap text-ellipsis px-2  hover:brightness-200 hover:bg-transparent hover:border-4 hover:border-green-700 hover:text-green-500 disabled:opacity-40 text-sm  flex  ${project.isSelected
                             ? "brightness-200 bg-transparent border-4 border-green-800 text-green-900"

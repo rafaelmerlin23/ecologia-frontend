@@ -30,6 +30,7 @@ const TagsPopover = ({ children, content, isDisabled = false }) => {
     return (
         <div className={`popover-container `}>
             <button
+                type='button'
                 ref={triggerRef}
                 onClick={toggleVisibility}
                 className={`popover-trigger  ${isDisabled ? 'opacity-50 cursor-not-allowed' : ''}`}

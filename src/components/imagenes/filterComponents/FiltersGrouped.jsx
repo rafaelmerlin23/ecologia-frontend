@@ -92,6 +92,18 @@ export const FilterGrouped = () => {
 
     }
 
+    const isTagsSelected = () =>{
+        let isSelected = false
+        Object.entries(groupedTags).forEach(([categoryName, tags]) => {
+            tags.forEach(tag => {
+                if (tag.isSelected) {
+                    isSelected = true
+                }
+            })
+        })
+        return isSelected
+    }
+
     return (
         <div className='xl:grid  xl:grid-cols-4 xl:gap-x-4 md:grid md:grid-cols-2  md:gap-x-6'>
             <div className='flex flex-col gap-y-2 items-center'>
@@ -103,10 +115,15 @@ export const FilterGrouped = () => {
                     name="" id=""
                     onChange={handleSelectChange}>
                     <option value="None"> Ninguno</option>
-                    <option value="score asc">Score ascendente</option>
-                    <option value="score desc">Score descendente</option>
-                    <option value="date asc">Fecha ascendente</option>
-                    <option value="date desc">Fecha descendente</option>
+                    {isTagsSelected()?
+
+                        <>
+                            <option value="r.score asc">Score ascendente</option>
+                            <option value="r.score desc">Score descendente</option>
+                        </>:""
+                    }
+                    <option value="p.date asc">Fecha ascendente</option>
+                    <option value="p.date desc">Fecha descendente</option>
                 </select>
             </div>
 
@@ -160,7 +177,7 @@ export const FilterGrouped = () => {
             </TagsPopover>
 
 
-            <TagsPopover content={<RangesOptions />} >
+            <TagsPopover isDisabled={!isTagsSelected()} content={<RangesOptions />} >
                 <div className='flex flex-col gap-y-2 items-center'>
                     <p className='text-2xl text-gray-400'>ICP</p>
                     <div
