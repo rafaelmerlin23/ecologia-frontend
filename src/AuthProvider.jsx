@@ -86,7 +86,7 @@ export const AuthProvider = ({ children }) => {
 
     const [selectedOrderFilter, setSelectedOrderFilter] = useState("None");
 
-    const [filter,setFilter] = useState({})
+    const [filter,setFilter] = useState(new FormData())
 
     const handleCategoryMenu = () => {
         setIsCategoryMenuActivate(prev => !prev)

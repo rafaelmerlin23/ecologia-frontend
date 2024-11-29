@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { useParams, useSearchParams } from 'react-router-dom'
+import { useLocation, useParams, useSearchParams } from 'react-router-dom'
 import { useAuth } from '../../AuthProvider'
 import handleGetData from '../../helpers/handleGetData'
 import GridImages from './GridImagenes'
@@ -10,10 +10,30 @@ import FilterImagesDate from './FilterImagesDate'
 
 function ImagesMenu() {
   const { albumID, proyectoId, puntoID, fechaImagen } = useParams()
-  const {filter, setImages, images, setIsTaggerActive, setCardImagePage, setImage, setMaxPage, setPageImage, pageImage, setBackRoute, backRoute, userData, quantityImagePerPage } = useAuth()
+  const {setFilter,filter, setImages, images, setIsTaggerActive, setCardImagePage, setImage, setMaxPage, setPageImage, pageImage, setBackRoute, backRoute, userData, quantityImagePerPage } = useAuth()
   const token = userData.token
   const [searchParams, setSearchParams] = useSearchParams()
   const [maxPageGrid, setMaxPageGrid] = useState(1)
+  const location = useLocation()
+  
+  useEffect(()=>{
+    if(location.pathname !== "/imagenes"){
+      console.log("formData con esas madres")
+      const updatedFormData = new FormData();
+      filter.forEach((value, key) => {
+        updatedFormData.append(key, value);
+      });
+  
+      // Agrega o actualiza el valor del nuevo campo
+      updatedFormData.append('projects',proyectoId );
+      updatedFormData.append('locations',puntoID );
+      updatedFormData.append('albums',albumID );
+      setFilter(updatedFormData)
+    }else{
+      console.log("formData vacio")
+      setFilter(new FormData())
+    }
+  },[location.pathname])
 
 
 

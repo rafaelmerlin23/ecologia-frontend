@@ -7,6 +7,8 @@ import handleGet from '../helpers/handleGet'
 import placeHolderImage from '../assets/place_holder_project.png'
 import EditarProyecto from './EditarProyecto'
 import Eliminar from './Eliminar'
+import handleCreate from '../helpers/handleCreate'
+import prefixUrl from '../helpers/ip'
 
 function GridProyecto() {
 
@@ -40,11 +42,14 @@ function GridProyecto() {
 
           // Procesar cada imagen de manera asíncrona
           for (const image of response) {
-            let imageProject = await fetchImageProject(image[0])
+            const imageProject = await fetchImageProject(image[0])
+            
+            console.log("imagenes",imageProject)
+
             let urlImage = placeHolderImage;
-            if (imageProject.length > 0) {
-              urlImage = imageProject[0][0]
-            }
+            // if (imageProject.length > 0) {
+            //   urlImage = imageProject[0][0]
+            // }
             newImagesInformation.push({
               indice: image[0],
               imagen: urlImage,
@@ -65,9 +70,34 @@ function GridProyecto() {
     };
 
     const fetchImageProject = async (projectId) => {
-      const imageEndPoint = `pictures/show_picture_from_project?project_id=${projectId}&page=1&quantity=1`;
-      return await handleGet(imageEndPoint, token);
-
+      // project_id=${projectId}&page=1&quantity=1
+      console.log("id projecto ",projectId)
+      const form = new FormData()
+      form.append('max_groups',1)
+      form.append('page',1)
+      form.append('projects',projectId)
+      const imageEndPoint = `${prefixUrl}pictures/show_picture`;
+      
+      try {
+        const response = await fetch(imageEndPoint, {
+          method: "POST",
+          body: form,
+        });
+    
+        if (!response.ok) {
+          throw new Error(`Error ${response.status}: ${response.statusText}`);
+        }
+    
+        const data = await response.json();
+    
+        if (data.status === "success") {
+          // Manejar imágenes recibidas
+        } else {
+          console.log("Mensaje:", data.message);
+        }
+      } catch (error) {
+        console.error("Error al consumir la API:", error);
+      }
 
     }
 

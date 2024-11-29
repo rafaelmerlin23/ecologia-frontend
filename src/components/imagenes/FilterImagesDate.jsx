@@ -15,6 +15,7 @@ function FilterImagesDate() {
         , dateRange
         , ranges
         , selectedOrderFilter
+        , setFilter
     } = useAuth()
 
     const handelCloseModalFilter = () => {
@@ -105,9 +106,7 @@ function FilterImagesDate() {
         (locations || []).forEach((location) => form.append('locations', location));
         (projects || []).forEach((project) => form.append('projects', project));
         (ICPs || []).forEach((score) => form.append('scores', score));
-        
-        
-
+        setFilter(form)
     }
 
     return (
