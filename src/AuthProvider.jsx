@@ -86,6 +86,8 @@ export const AuthProvider = ({ children }) => {
 
     const [selectedOrderFilter, setSelectedOrderFilter] = useState("None");
 
+    const [filter,setFilter] = useState({})
+
     const handleCategoryMenu = () => {
         setIsCategoryMenuActivate(prev => !prev)
     }
@@ -223,6 +225,9 @@ export const AuthProvider = ({ children }) => {
             , setDateRange
             , selectedOrderFilter
             , setSelectedOrderFilter
+            , filter
+            , setFilter
+            
 
 
 

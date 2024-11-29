@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import handleGetData from '../../../helpers/handleGetData';
 import { useAuth } from '../../../AuthProvider';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCheck } from '@fortawesome/free-solid-svg-icons';
 
 function TagsSelection() {
 
@@ -9,6 +11,26 @@ function TagsSelection() {
         , setGroupedTags, userData } = useAuth();
 
     const token = userData.token;
+
+    const onClickCategory = (categoryName)=>{
+        const newGroupedTags = {...groupedTags}
+        newGroupedTags[categoryName] = newGroupedTags[categoryName].map((tag)=>({
+            ...tag,
+            isSelected:!tag.isSelected
+        }))
+        setGroupedTags(newGroupedTags)
+    } 
+
+    const isAllTagsOfCategorySelected = (categoryName)=>{
+        let isAll = true
+        groupedTags[categoryName].forEach((tag)=>{
+            if(!tag.isSelected){
+                isAll = false
+                
+            }
+        })
+        return isAll
+    }
 
     useEffect(() => {
         if (Object.keys(groupedTags).length !== 0) {
@@ -63,7 +85,18 @@ function TagsSelection() {
             {/* Renderizado de tags agrupados */}
             {Object.entries(groupedTags).map(([categoryName, tags]) => (
                 <div key={categoryName} className="mb-4">
-                    <h3 className="text-green-500 font-bold">{tags.filter(tag => tag.tagName.toLowerCase().includes(searchString.toLowerCase())).length > 0 && tags.length > 0 ? categoryName : ""}</h3>
+                    <button 
+                    onClick={e=>onClickCategory(categoryName)}
+                    className="hover:brightness-150 flex gap-2 justify-center items-center text-green-500 font-bold">
+                        {tags.filter(tag => tag.tagName.toLowerCase().includes(searchString.toLowerCase())).length > 0 && tags.length > 0 ? categoryName : ""}
+                        {isAllTagsOfCategorySelected(categoryName)? 
+                        <FontAwesomeIcon 
+                        className='brightness-150 text-green-500 font-bold'
+                        icon={faCheck}/>
+                        :
+                        ""
+                        }
+                    </button>
                     <div className="flex flex-col gap-2 mt-2">
                         {tags
                             .filter(tag => tag.tagName.toLowerCase().includes(searchString.toLowerCase())) // Filtrar por búsqueda
