@@ -1,12 +1,10 @@
 import { useEffect, useState } from 'react'
 import { useLocation, useParams, useSearchParams } from 'react-router-dom'
 import { useAuth } from '../../AuthProvider'
-import handleGetData from '../../helpers/handleGetData'
 import GridImages from './GridImagenes'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faCalendar } from '@fortawesome/free-solid-svg-icons'
 import { Paginacion } from './Paginacion'
 import FilterImagesDate from './FilterImagesDate'
+import HandleFetchPictures from '../../helpers/HandleFetchPictures'
 
 function ImagesMenu() {
   const { albumID, proyectoId, puntoID, fechaImagen } = useParams()
@@ -23,8 +21,11 @@ function ImagesMenu() {
       filter.forEach((value, key) => {
         updatedFormData.append(key, value);
       });
-  
+
       // Agrega o actualiza el valor del nuevo campo
+      updatedFormData.delete('projects');
+      updatedFormData.delete('locations');
+      updatedFormData.delete('albums');
       updatedFormData.append('projects',proyectoId );
       updatedFormData.append('locations',puntoID );
       updatedFormData.append('albums',albumID );
@@ -40,25 +41,45 @@ function ImagesMenu() {
   const handleTagger = () => {
 
     // remplazar aqui tambien
-    const endPoint = `pictures/show_picture_from_album?page=${searchParams.get('image-page')}&quantity=${1}&album_id=${albumID}`
+    // const endPoint = `pictures/show_picture_from_album?page=${searchParams.get('image-page')}&quantity=${1}&album_id=${albumID}`
 
-    handleGetData(endPoint, token).then((data) => {
-      if (data && data.status == 'success') {
-        const newImages = data.response.map((response) => (
-          {
-            link: response[0],
-            id: response[1],
-            date: response[2],
-          }
-        ))
-        setImage(newImages[0])
-        setCardImagePage(Number(searchParams.get('image-page')))
-        setIsTaggerActive(true)
-        setMaxPage(data.total_pages)
-      }
-    }).catch((error) => {
-      console.error('Error:', error);
-    });
+    // handleGetData(endPoint, token).then((data) => {
+    //   if (data && data.status == 'success') {
+    //     const newImages = data.response.map((response) => (
+    //       {
+    //         link: response[0],
+    //         id: response[1],
+    //         date: response[2],
+    //       }
+    //     ))
+    //     setImage(newImages[0])
+    //     setCardImagePage(Number(searchParams.get('image-page')))
+    //     setIsTaggerActive(true)
+    //     setMaxPage(data.total_pages)
+    //   }
+    // }).catch((error) => {
+    //   console.error('Error:', error);
+    // });
+    const getData = async() =>{
+      const form = new FormData()
+      form.append('projects',proyectoId );
+      form.append('locations',puntoID );
+      form.append('albums',albumID );
+      form.append('max_groups', 1);
+      form.append('page', searchParams.get('image-page'));
+      const data = await HandleFetchPictures(form)
+      const newImages = data.filtered_pictures.map((picture)=>({
+        link:picture.url,
+        id:picture.id,
+        date: picture.date
+      }))
+      console.log("se muestra esto",data.total_pages)
+      setImage(newImages[0])
+      setCardImagePage(Number(searchParams.get('image-page')))
+      setIsTaggerActive(true)
+      setMaxPage(data.total_pages)
+    } 
+    getData()
   }
 
   // const getDaysInMonth = (month, year) => {
@@ -103,24 +124,40 @@ function ImagesMenu() {
     setPageImage(currentPage ? Number(currentPage) : 1)
 
     // remplazar esta api por la que te di
-    const pictureEndpoint = `pictures/show_picture_from_album?album_id=${albumID}&quantity=${quantityImagePerPage}&page=${pageImage}`
-    handleGetData(pictureEndpoint, token).then(data => {
-      if (data && data.response) {
-        console.log(data)
-        setImages(data.response);
-        const newData = data.response.map((image) => ({
-          link: image[0],
-          id: image[1],
-          date: image[2]
-        }))
-        console.log(newData)
-        console.log("se hizo", data.total_pages)
-        setImages(newData)
-        setMaxPageGrid(data.total_pages)
-      }
-    }).catch((error) => {
-      console.error(error)
-    })
+    // handleGetData(pictureEndpoint, token).then(data => {
+    //   if (data && data.response) {
+    //     console.log(data)
+    //     setImages(data.response);
+    //     const newData = data.response.map((image) => ({
+    //       link: image[0],
+    //       id: image[1],
+    //       date: image[2]
+    //     }))
+    //     console.log(newData)
+    //     console.log("se hizo", data.total_pages)
+    //     setImages(newData)
+    //     setMaxPageGrid(data.total_pages)
+    //   }
+    // }).catch((error) => {
+    //   console.error(error)
+    // })
+
+    const getData = async ()=>{
+      const data = await HandleFetchPictures(filter)
+      console.log("datos datos datos",data)
+      const newData = data.filtered_pictures.map((picture)=>({
+        link:picture.url,
+        id:picture.id,
+        date: picture.date
+      }))
+      setImages(newData)
+      setMaxPageGrid(data.total_pages)
+    }
+
+    filter && getData()
+   
+    const formObject = Object.fromEntries(filter.entries());
+    console.log("esta chimoltrufiada",formObject);
 
     if (searchParams.get('is-active-tagger')) {
       handleTagger()

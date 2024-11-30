@@ -7,6 +7,7 @@ import handleGet from "../../helpers/handleGet"
 import { useParams } from "react-router-dom"
 import { EditarAlbum } from "./EditarAlbum"
 import Eliminar from "../Eliminar"
+import fetchPicture from '../../helpers/HandleFetchPictures'
 
 export const GridAlbum = () => {
   const {setBackRoute, setLocationInformation, userData, shouldRefresh } = useAuth()
@@ -42,10 +43,17 @@ export const GridAlbum = () => {
           const newAlbumInformation = [];
           // Procesar cada imagen de manera asíncrona
           for (const album of response) {
-            let imageAlbum = await fetchImageProject(album[0])
+
+            const form = new FormData();
+
+            form.append('max_groups', 1);
+            form.append('page', 1);
+            form.append('locations', album[0]);
+
+            let imageAlbum = await fetchPicture(form)
             let urlImage = placeHolderAlbum;
-            if (imageAlbum.length > 0) {
-              urlImage = imageAlbum[0][0]
+            if (imageAlbum.filtered_pictures.length > 0) {
+              urlImage = imageAlbum.filtered_pictures[0].url
             }
             newAlbumInformation.push({
               index: album[0],

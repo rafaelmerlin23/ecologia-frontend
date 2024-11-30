@@ -42,8 +42,8 @@ function FilterImagesDate() {
         const albums = []
 
         if (dateRange.initDate && dateRange.endDate) {
-            endDate = `${getDaysInMonth(dateRange.endDate.slice(5, 7), dateRange.initDate.slice(0, 4))}-${dateRange.endDate.slice(5, 7)}-${dateRange.endDate.slice(0, 4)}`
-            initDate = `01-${dateRange.endDate.slice(5, 7)}-${dateRange.endDate.slice(0, 4)}`
+            endDate = `${dateRange.endDate.slice(0, 4)}-${dateRange.endDate.slice(5, 7)}-${getDaysInMonth(dateRange.endDate.slice(5, 7), dateRange.initDate.slice(0, 4))}`
+            initDate = `${dateRange.endDate.slice(0, 4)}-${dateRange.endDate.slice(5, 7)}-01`
         }
 
         // ordenar por
@@ -101,11 +101,13 @@ function FilterImagesDate() {
 
         initDate && form.append('date_begin', initDate);
         endDate && form.append('date_end', endDate);
-        (tags || []).forEach((tag) => form.append('tags', tag));
-        (albums || []).forEach((album) => form.append('albums', album));
-        (locations || []).forEach((location) => form.append('locations', location));
-        (projects || []).forEach((project) => form.append('projects', project));
-        (ICPs || []).forEach((score) => form.append('scores', score));
+        
+        (tags || []).forEach((tag) => form.append('tags', tag.tagID));
+        (albums || []).forEach((album) => form.append('albums', album.index));
+        (locations || []).forEach((location) => form.append('locations', location.index));
+        (projects || []).forEach((project) => form.append('projects', project.index));
+        (ICPs || []).forEach((score) => form.append('scores', Number(score)));
+        selectedOrderFilter !== "None" && form.append('order',selectedOrderFilter)  
         setFilter(form)
     }
 

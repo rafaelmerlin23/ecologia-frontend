@@ -7,6 +7,7 @@ import placeHolderLocation from '../assets/place_holder_location.jpg'
 import handleGet from '../helpers/handleGet'
 import EditarPunto from './location/EditarPunto'
 import Eliminar from './Eliminar'
+import fetchPicture from '../helpers/HandleFetchPictures'
 
 function GridPunto() {
   const [locationsInformation, setLocationsInformation] = useState([])
@@ -40,10 +41,17 @@ function GridPunto() {
         if (response && response.length > 0) {
           const newLocationInformation = [];
           for (const location of response) {
-            let imageLocation = await fetchImageProject(location[0]);
+            
+            const form = new FormData();
+            
+            form.append('max_groups', 1);
+            form.append('page', 1);
+            form.append('locations', location[0]);
+
+            let imageLocation = await fetchPicture(form);
             let urlImage = placeHolderLocation;
-            if (imageLocation.length > 0) {
-              urlImage = imageLocation[0][0];
+            if (imageLocation.filtered_pictures.length > 0) {
+              urlImage = imageLocation.filtered_pictures[0].url
             }
             newLocationInformation.push({
               locationId: location[0],

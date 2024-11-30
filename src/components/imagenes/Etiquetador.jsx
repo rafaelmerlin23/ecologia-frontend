@@ -3,18 +3,20 @@ import { useEffect, useState } from "react";
 import ModalIMagen from "./ModalIMagen";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faGreaterThan, faLessThan } from "@fortawesome/free-solid-svg-icons"
-import { useNavigate, useParams, useSearchParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams, useSearchParams } from "react-router-dom";
 import handleGetData from "../../helpers/handleGetData";
 import handleGet from "../../helpers/handleGet";
 import LabelWrapper from "./label components/labelWrapper";
 import LabelImage from "./label components/LabelImage";
 import TagsSelector from "./label components/TagsSelector";
 import RatingsVisualizer from "./label components/RatingsVisualizer";
+import HandleFetchPictures from "../../helpers/HandleFetchPictures";
 
 export const Etiquetador = ({ isActive, handleClose }) => {
 
     const navigate = useNavigate()
     const {
+        filter,
         setMaxPage, maxPage,
         changes, setChanges,
         cardImagePage,
@@ -34,24 +36,33 @@ export const Etiquetador = ({ isActive, handleClose }) => {
     const userID = userData.decoded.user_id
     const [componentToRender, setComponentToRender] = useState(null);
     const [dateParam,setDateParam]=useState({initialDate:null,finalDate:null})
-
+    const location = useLocation()
     useEffect(() => {
         document.body.className = ' bg-gradient-to-r from-gray-900 to-blue-gray-950';
         console.log("esta activado el menu de categorias:", isCategoryMenuActivate)
-        const initialDate =searchParams.get('initial-date')
-        const finalDate =searchParams.get('final-date')
-        if(initialDate && finalDate){
-            // esto lo voy a cambiar creo
-            setDateParam({finalDate:finalDate,initialDate:initialDate})
-        }
-        const paramsFilters =initialDate &&finalDate?`&startDate=${initialDate}&endDate=${finalDate}`:""
-        // conseguir el numero de la ultima pagina 
-        const endPointPage = `pictures/show_picture_from_album?page=${cardImagePage}&quantity=${1}&album_id=${albumID}${paramsFilters}`
-        handleGetData(endPointPage, token).then((data) => {
+
+        //     // conseguir el numero de la ultima pagina 
+        // const endPointPage = `pictures/show_picture_from_album?page=${cardImagePage}&quantity=${1}&album_id=${albumID}${paramsFilters}`
+        // handleGetData(endPointPage, token).then((data) => {
+        //     setMaxPage(data.total_pages)
+        //     handleIsNextPage()
+        // })
+        const getLastPage= async()=>{
+            let filterPage = new FormData() 
+            filter.forEach((value, key) => {
+                filterPage.append(key, value);
+              });
+
+            filterPage.delete('max_groups')
+            filterPage.delete('page')
+            filterPage.append('max_groups',1)
+            filterPage.append('page',cardImagePage)
+            const data = await HandleFetchPictures(filterPage)
+            
             setMaxPage(data.total_pages)
             handleIsNextPage()
-        })
-
+        }
+        getLastPage()
         const endPointCategories = `tag_system/show_categories?page=${1}&quantity=${100}`
 
         //obtener categorias
@@ -69,8 +80,7 @@ export const Etiquetador = ({ isActive, handleClose }) => {
                 }
             }
         ).catch((error) => console.error(error))
-
-
+        
 
     }, [cardImagePage, image, isCategoryMenuActivate]);
 
@@ -89,62 +99,88 @@ export const Etiquetador = ({ isActive, handleClose }) => {
         }
     }
     const handleNext = async () => {
-        const paramsFilters =dateParam.initialDate &&dateParam.finalDate?`&startDate=${dateParam.initialDate}&endDate=${dateParam.finalDate}`:""
-        const endPoint = `pictures/show_picture_from_album?page=${cardImagePage + 1}&quantity=${1}&album_id=${albumID}${paramsFilters}`;
-        try {
-            console.log(endPoint)
-            const data = await handleGet(endPoint, token);
+        // const endPoint = `pictures/show_picture_from_album?page=${cardImagePage + 1}&quantity=${1}&album_id=${albumID}`;
+        
+        // try {
+        //     console.log(endPoint)
+        //     const data = await handleGet(endPoint, token);
             
-            if (data && data.length > 0) {
-                const newImages = data.map((response) => ({
-                    link: response[0],
-                    id: response[1],
-                    date: response[2],
-                }));
-                setImage(newImages[0]);
-                setSearchParams((params) => {
-                    params.set("image-page", cardImagePage + 1);
-                    return params;
-                });
+        //     if (data && data.length > 0) {
+        //         const newImages = data.map((response) => ({
+        //             link: response[0],
+        //             id: response[1],
+        //             date: response[2],
+        //         }));
+        //         setImage(newImages[0]);
+        //         setSearchParams((params) => {
+        //             params.set("image-page", cardImagePage + 1);
+        //             return params;
+        //         });
     
-                setCardImagePage(prevPage => prevPage + 1);  // Asegúrate de actualizar correctamente el estado de la página
-                handleIsNextPage();  // Verifica si hay más páginas después de actualizar el estado
-                setChanges([]); // Resetea los cambios si es necesario
-            }
-        } catch (error) {
-            console.error(error);
-        }
+        //         setCardImagePage(prevPage => prevPage + 1);  // Asegúrate de actualizar correctamente el estado de la página
+        //         handleIsNextPage();  // Verifica si hay más páginas después de actualizar el estado
+        //         setChanges([]); // Resetea los cambios si es necesario
+        //     }
+        // } catch (error) {
+        //     console.error(error);
+        // }
+        let filterPage = new FormData() 
+        filter.forEach((value, key) => {
+            filterPage.append(key, value);
+            });
+
+        filterPage.delete('max_groups')
+        filterPage.delete('page')
+        filterPage.append('max_groups',1)
+        filterPage.append('page',cardImagePage+1)
+        const data = await HandleFetchPictures(filterPage)
+        console.log(data)
+        const newImages = data.filtered_pictures.map(picture=>({
+            link:picture.url,
+            id:picture.id,
+            date: picture.date
+        }))
+
+        setImage(newImages[0])
+        setSearchParams((params) => {
+            params.set("image-page", cardImagePage + 1);
+            return params;
+        });
+
+        setCardImagePage(prevPage => prevPage + 1); 
+        handleIsNextPage();  
+        setChanges([]); 
+
+
     };
         
     const handlePrevious = async () => {
-        const paramsFilters =dateParam.initialDate &&dateParam.finalDate?`&startDate=${dateParam.initialDate}&endDate=${dateParam.finalDate}`:""
-       
-        const endPoint = `pictures/show_picture_from_album?page=${cardImagePage - 1}&quantity=${1}&album_id=${albumID}${paramsFilters}`;
-        console.log(endPoint)
-        
-        let data = [image];
-        try {
-            data = await handleGet(endPoint, token);
-        } catch (error) {
-            console.error(error);
-        }
-    
-        const newImages = data.map((response) => ({
-            link: response[0],
-            id: response[1],
-            date: response[2],
-        }));
-    
-        setImage(newImages[0]);
+        let filterPage = new FormData() 
+        filter.forEach((value, key) => {
+            filterPage.append(key, value);
+            });
+
+        filterPage.delete('max_groups')
+        filterPage.delete('page')
+        filterPage.append('max_groups',1)
+        filterPage.append('page',cardImagePage-1)
+        const data = await HandleFetchPictures(filterPage)
+        console.log(data)
+        const newImages = data.filtered_pictures.map(picture=>({
+            link:picture.url,
+            id:picture.id,
+            date: picture.date
+        }))
+
+        setImage(newImages[0])
         setSearchParams((params) => {
-            params.set("image-page", Number(cardImagePage) - 1);
+            params.set("image-page", cardImagePage - 1);
             return params;
         });
-    
-        // Actualiza correctamente el estado de la página y recalcula si hay una página siguiente
-        setCardImagePage((prevPage) => prevPage - 1);
-        handleIsNextPage();  // Este método se llama después de actualizar el estado de la página
-        setChanges([]);
+
+        setCardImagePage(prevPage => prevPage - 1); 
+        handleIsNextPage();  
+        setChanges([]); 
     };
     
     const handleSelect = (e, tag) => {
@@ -285,7 +321,6 @@ export const Etiquetador = ({ isActive, handleClose }) => {
                 oldRating: undefined,
                 ratingID: undefined
             }));
-            console.log("id id id id id", id)
             // Obtener etiquetas con calificación
             const dataTagsWithRating = await handleGetData(`ratings/show_ratings_from_user?picture_id=${image.id}&user_id=${userID}&category_id=${id}`, token);
             console.log("datos de mierdaaaa :", dataTagsWithRating)
