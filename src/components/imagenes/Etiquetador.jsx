@@ -5,7 +5,6 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faGreaterThan, faLessThan } from "@fortawesome/free-solid-svg-icons"
 import { useLocation, useNavigate, useParams, useSearchParams } from "react-router-dom";
 import handleGetData from "../../helpers/handleGetData";
-import handleGet from "../../helpers/handleGet";
 import LabelWrapper from "./label components/labelWrapper";
 import LabelImage from "./label components/LabelImage";
 import TagsSelector from "./label components/TagsSelector";
@@ -35,7 +34,7 @@ export const Etiquetador = ({ isActive, handleClose }) => {
     const [searchParams, setSearchParams] = useSearchParams()
     const userID = userData.decoded.user_id
     const [componentToRender, setComponentToRender] = useState(null);
-    const [dateParam,setDateParam]=useState({initialDate:null,finalDate:null})
+    const [dateParam, setDateParam] = useState({ initialDate: null, finalDate: null })
     const location = useLocation()
     useEffect(() => {
         document.body.className = ' bg-gradient-to-r from-gray-900 to-blue-gray-950';
@@ -47,18 +46,16 @@ export const Etiquetador = ({ isActive, handleClose }) => {
         //     setMaxPage(data.total_pages)
         //     handleIsNextPage()
         // })
-        const getLastPage= async()=>{
-            let filterPage = new FormData() 
-            filter.forEach((value, key) => {
-                filterPage.append(key, value);
-              });
+        const getLastPage = async () => {
 
-            filterPage.delete('max_groups')
-            filterPage.delete('page')
-            filterPage.append('max_groups',1)
-            filterPage.append('page',cardImagePage)
+            let filterPage = { ...filter }
+            delete filterPage.quantity
+            delete filterPage.page
+
+            filterPage = { ...filterPage, quantity: 1, page: cardImagePage }
+
             const data = await HandleFetchPictures(filterPage)
-            
+            console.log("datos del la ultimapagina : ", data)
             setMaxPage(data.total_pages)
             handleIsNextPage()
         }
@@ -80,7 +77,7 @@ export const Etiquetador = ({ isActive, handleClose }) => {
                 }
             }
         ).catch((error) => console.error(error))
-        
+
 
     }, [cardImagePage, image, isCategoryMenuActivate]);
 
@@ -90,7 +87,7 @@ export const Etiquetador = ({ isActive, handleClose }) => {
         navigate('/categoria-etiqueta');
     };
 
-    
+
     const handleIsNextPage = () => {
         if (cardImagePage < maxPage) {
             setIsNextPage(true)
@@ -100,11 +97,11 @@ export const Etiquetador = ({ isActive, handleClose }) => {
     }
     const handleNext = async () => {
         // const endPoint = `pictures/show_picture_from_album?page=${cardImagePage + 1}&quantity=${1}&album_id=${albumID}`;
-        
+
         // try {
         //     console.log(endPoint)
         //     const data = await handleGet(endPoint, token);
-            
+
         //     if (data && data.length > 0) {
         //         const newImages = data.map((response) => ({
         //             link: response[0],
@@ -116,7 +113,7 @@ export const Etiquetador = ({ isActive, handleClose }) => {
         //             params.set("image-page", cardImagePage + 1);
         //             return params;
         //         });
-    
+
         //         setCardImagePage(prevPage => prevPage + 1);  // Asegúrate de actualizar correctamente el estado de la página
         //         handleIsNextPage();  // Verifica si hay más páginas después de actualizar el estado
         //         setChanges([]); // Resetea los cambios si es necesario
@@ -124,20 +121,18 @@ export const Etiquetador = ({ isActive, handleClose }) => {
         // } catch (error) {
         //     console.error(error);
         // }
-        let filterPage = new FormData() 
-        filter.forEach((value, key) => {
-            filterPage.append(key, value);
-            });
+        let filterPage = { ...filter }
 
-        filterPage.delete('max_groups')
-        filterPage.delete('page')
-        filterPage.append('max_groups',1)
-        filterPage.append('page',cardImagePage+1)
+        delete filterPage.quantity
+        delete filterPage.page
+
+        filterPage = { ...filterPage, quantity: 1, page: cardImagePage + 1 }
+
         const data = await HandleFetchPictures(filterPage)
         console.log(data)
-        const newImages = data.filtered_pictures.map(picture=>({
-            link:picture.url,
-            id:picture.id,
+        const newImages = data.filtered_pictures.map(picture => ({
+            link: picture.url,
+            id: picture.id,
             date: picture.date
         }))
 
@@ -147,28 +142,25 @@ export const Etiquetador = ({ isActive, handleClose }) => {
             return params;
         });
 
-        setCardImagePage(prevPage => prevPage + 1); 
-        handleIsNextPage();  
-        setChanges([]); 
+        setCardImagePage(prevPage => prevPage + 1);
+        handleIsNextPage();
+        setChanges([]);
 
 
     };
-        
-    const handlePrevious = async () => {
-        let filterPage = new FormData() 
-        filter.forEach((value, key) => {
-            filterPage.append(key, value);
-            });
 
-        filterPage.delete('max_groups')
-        filterPage.delete('page')
-        filterPage.append('max_groups',1)
-        filterPage.append('page',cardImagePage-1)
+    const handlePrevious = async () => {
+        let filterPage = { ...filter }
+
+        delete filterPage.quantity
+        delete filterPage.page
+
+        filterPage = { ...filterPage, quantity: 1, page: cardImagePage - 1 }
         const data = await HandleFetchPictures(filterPage)
         console.log(data)
-        const newImages = data.filtered_pictures.map(picture=>({
-            link:picture.url,
-            id:picture.id,
+        const newImages = data.filtered_pictures.map(picture => ({
+            link: picture.url,
+            id: picture.id,
             date: picture.date
         }))
 
@@ -178,11 +170,11 @@ export const Etiquetador = ({ isActive, handleClose }) => {
             return params;
         });
 
-        setCardImagePage(prevPage => prevPage - 1); 
-        handleIsNextPage();  
-        setChanges([]); 
+        setCardImagePage(prevPage => prevPage - 1);
+        handleIsNextPage();
+        setChanges([]);
     };
-    
+
     const handleSelect = (e, tag) => {
         e.preventDefault()
         let newTags = []

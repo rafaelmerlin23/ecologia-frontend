@@ -16,6 +16,7 @@ function FilterImagesDate() {
         , ranges
         , selectedOrderFilter
         , setFilter
+        , quantityImagePerPage
     } = useAuth()
 
     const handelCloseModalFilter = () => {
@@ -97,18 +98,29 @@ function FilterImagesDate() {
         console.log("estas son las locaciones:", locations)
         console.log("estas son las Albumes:", albums)
         console.log("valor de orden seleccinado: ", selectedOrderFilter)
-        const form = new FormData()
+        let query = { 'quantity': quantityImagePerPage }
+        initDate && (query.date_begin = initDate)
+        endDate && (query.date_end = endDate)
 
-        initDate && form.append('date_begin', initDate);
-        endDate && form.append('date_end', endDate);
-        
-        (tags || []).forEach((tag) => form.append('tags', tag.tagID));
-        (albums || []).forEach((album) => form.append('albums', album.index));
-        (locations || []).forEach((location) => form.append('locations', location.index));
-        (projects || []).forEach((project) => form.append('projects', project.index));
-        (ICPs || []).forEach((score) => form.append('scores', Number(score)));
-        selectedOrderFilter !== "None" && form.append('order',selectedOrderFilter)  
-        setFilter(form)
+        // (albums || []).forEach((album) => form.append('albums', album.index));
+        // (locations || []).forEach((location) => form.append('locations', location.index));
+        // (projects || []).forEach((project) => form.append('projects', project.index));
+        // (ICPs || []).forEach((score) => form.append('scores', Number(score)));
+        // form.append('order', selectedOrderFilter)
+
+        tags.length > 0 && (query.tags = tags.map((tag) => tag.tagID));
+
+        albums.length > 0 && (query.albums = albums.map((album) => album.index));
+
+        locations.length > 0 && (query.locations = locations.map((location) => location.index));
+
+        projects.length > 0 && (query.projects = projects.map((project) => project.index))
+
+        ICPs.length > 0 && (query.scores = ICPs)
+
+        selectedOrderFilter !== "None" && (query.order = selectedOrderFilter)
+
+        setFilter(query)
     }
 
     return (

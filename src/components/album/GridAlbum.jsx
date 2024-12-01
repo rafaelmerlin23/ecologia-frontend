@@ -10,29 +10,29 @@ import Eliminar from "../Eliminar"
 import fetchPicture from '../../helpers/HandleFetchPictures'
 
 export const GridAlbum = () => {
-  const {setBackRoute, setLocationInformation, userData, shouldRefresh } = useAuth()
+  const { setBackRoute, setLocationInformation, userData, shouldRefresh } = useAuth()
   const token = userData.token
   const [page] = useState(1)
   const [quantity] = useState(50)
   const [albumsInformation, setAlbumsInformation] = useState([])
-  const { proyectoId,puntoID } = useParams()
+  const { proyectoId, puntoID } = useParams()
 
   const [isEditActive, setIsEditActive] = useState(false)
   const [isDeleteActive, setIsDeleteActive] = useState(false)
 
 
-    const closeEditOverlay = ()=>{
-        setIsEditActive(false)
-    }
+  const closeEditOverlay = () => {
+    setIsEditActive(false)
+  }
 
-    const closeDeleteOverlay = ()=>{
-        setIsDeleteActive(false)
-    }
-  
+  const closeDeleteOverlay = () => {
+    setIsDeleteActive(false)
+  }
+
   useEffect(() => {
     setBackRoute(`/proyectos/${proyectoId}/puntos/`)
     const fetchData = async () => {
-      setLocationInformation((LocationInformation)=>({...LocationInformation,index:puntoID}))
+      setLocationInformation((LocationInformation) => ({ ...LocationInformation, index: puntoID }))
       try {
 
         const endPoint = `projects/show_albums?page=${page}&quantity=${quantity}&location_id=${puntoID}`;
@@ -44,13 +44,13 @@ export const GridAlbum = () => {
           // Procesar cada imagen de manera asíncrona
           for (const album of response) {
 
-            const form = new FormData();
+            const query = {
+              quantity: 1,
+              page: 1,
+              albums: album[0],
+            }
 
-            form.append('max_groups', 1);
-            form.append('page', 1);
-            form.append('locations', album[0]);
-
-            let imageAlbum = await fetchPicture(form)
+            let imageAlbum = await fetchPicture(query)
             let urlImage = placeHolderAlbum;
             if (imageAlbum.filtered_pictures.length > 0) {
               urlImage = imageAlbum.filtered_pictures[0].url
@@ -115,20 +115,20 @@ export const GridAlbum = () => {
   return (
     <>
       <EditarAlbum closeEdit={closeEditOverlay} isActive={isEditActive} ></EditarAlbum>
-      <Eliminar 
-      cerrarOverlay={closeDeleteOverlay} 
-      esActiva={isDeleteActive}
+      <Eliminar
+        cerrarOverlay={closeDeleteOverlay}
+        esActiva={isDeleteActive}
       />
       {
         albumsInformation.length > 0 ?
           <Grid>
             {albumsInformation.map((information) => (
-              <TarjetaAlbum 
-              key={information.index} 
-              album={information}
-              setIsEditActive={setIsEditActive}
-              setIsDeleteActive={setIsDeleteActive}
-               />
+              <TarjetaAlbum
+                key={information.index}
+                album={information}
+                setIsEditActive={setIsEditActive}
+                setIsDeleteActive={setIsDeleteActive}
+              />
             ))}
           </Grid>
           :

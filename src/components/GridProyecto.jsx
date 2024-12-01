@@ -11,7 +11,7 @@ import fetchPicture from '../helpers/HandleFetchPictures'
 
 function GridProyecto() {
 
-  const {imagesInformation,setImagesInformation, userData, shouldRefresh } = useAuth()
+  const { imagesInformation, setImagesInformation, userData, shouldRefresh } = useAuth()
   const token = userData.token
   const page = 1
   const quantity = 50
@@ -22,7 +22,7 @@ function GridProyecto() {
     setEsActivaEditar(false)
   }
 
-  const cerrarOverlayEliminar= () =>{
+  const cerrarOverlayEliminar = () => {
     setEsActivaELiminar(false)
   }
 
@@ -40,11 +40,13 @@ function GridProyecto() {
           const newImagesInformation = [];
           // Procesar cada imagen de manera asíncrona
           for (const image of response) {
-            const form = new FormData();
-            form.append('max_groups', 1);
-            form.append('page', 1);
-            form.append('projects', image[0]);
-            const imageProject = await fetchPicture(form)
+
+            const query = {
+              quantity: 1,
+              page: 1,
+              projects: image[0],
+            }
+            const imageProject = await fetchPicture(query, token)
 
             let urlImage = placeHolderImage;
             if (imageProject.filtered_pictures.length > 0) {
@@ -69,8 +71,8 @@ function GridProyecto() {
       }
     };
 
-    
-    
+
+
 
     // Llamar a la función fetchData dentro del useEffect
     fetchData()
@@ -79,22 +81,22 @@ function GridProyecto() {
   return (
 
     <>
-      <Eliminar cerrarOverlay={cerrarOverlayEliminar} esActiva={esActivaEliminar}/>
+      <Eliminar cerrarOverlay={cerrarOverlayEliminar} esActiva={esActivaEliminar} />
       <EditarProyecto isActive={esActivaEditar} cerrarEditar={cerrarOverlayEditar} />
       {
         imagesInformation.length > 0 ? <Grid >
           {imagesInformation.map((x) => (
             <TarjetaDeproyecto
-            setEsActivaEditar={setEsActivaEditar} 
-            key={x.indice}
-            indice={x.indice}
-            LinkImagen={x.imagen} 
-            fecha={x.fecha} 
-            nombre={x.nombre} 
-            description={x.description}
-            setEsActivaEliminar={setEsActivaELiminar} />
+              setEsActivaEditar={setEsActivaEditar}
+              key={x.indice}
+              indice={x.indice}
+              LinkImagen={x.imagen}
+              fecha={x.fecha}
+              nombre={x.nombre}
+              description={x.description}
+              setEsActivaEliminar={setEsActivaELiminar} />
           ))}
-        
+
         </Grid> :
           <div className='flex justify-center content-center p-5'>
             <div className=''>

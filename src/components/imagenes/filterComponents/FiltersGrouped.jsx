@@ -92,7 +92,7 @@ export const FilterGrouped = () => {
 
     }
 
-    const isTagsSelected = () =>{
+    const isTagsSelected = () => {
         let isSelected = false
         Object.entries(groupedTags).forEach(([categoryName, tags]) => {
             tags.forEach(tag => {
@@ -115,15 +115,15 @@ export const FilterGrouped = () => {
                     name="" id=""
                     onChange={handleSelectChange}>
                     <option value="None"> Ninguno</option>
-                    {isTagsSelected()?
+                    {isTagsSelected() ?
 
                         <>
-                            <option value="r.score asc">Score ascendente</option>
-                            <option value="r.score desc">Score descendente</option>
-                        </>:""
+                            <option value="rating asc">Score ascendente</option>
+                            <option value="rating desc">Score descendente</option>
+                        </> : ""
                     }
-                    <option value="p.date asc">Fecha ascendente</option>
-                    <option value="p.date desc">Fecha descendente</option>
+                    <option value="date asc">Fecha ascendente</option>
+                    <option value="date desc">Fecha descendente</option>
                 </select>
             </div>
 

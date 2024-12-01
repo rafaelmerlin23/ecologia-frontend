@@ -86,7 +86,7 @@ export const AuthProvider = ({ children }) => {
 
     const [selectedOrderFilter, setSelectedOrderFilter] = useState("None");
 
-    const [filter,setFilter] = useState(new FormData())
+    const [filter, setFilter] = useState({ 'quantity': quantityImagePerPage })
 
     const handleCategoryMenu = () => {
         setIsCategoryMenuActivate(prev => !prev)
@@ -227,7 +227,7 @@ export const AuthProvider = ({ children }) => {
             , setSelectedOrderFilter
             , filter
             , setFilter
-            
+
 
 
 

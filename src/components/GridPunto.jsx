@@ -11,7 +11,7 @@ import fetchPicture from '../helpers/HandleFetchPictures'
 
 function GridPunto() {
   const [locationsInformation, setLocationsInformation] = useState([])
-  const { setBackRoute,userData, shouldRefresh,projectInformation,setProjectInformation } = useAuth()
+  const { setBackRoute, userData, shouldRefresh, projectInformation, setProjectInformation } = useAuth()
   const token = userData.token
   const [isEditActive, setIsEditActive] = useState(false)
   const [isDeleteActive, setIsDeleteActive] = useState(false)
@@ -19,19 +19,19 @@ function GridPunto() {
   // Usar useSearchParams para obtener los parámetros de la URL
   const { proyectoId } = useParams();  // Accede al proyectoId desde la URL
 
-  const closeEditOverlay = ()=>{
+  const closeEditOverlay = () => {
     setIsEditActive(false)
   }
 
-  const closeDeleteOverlay = ()=>{
+  const closeDeleteOverlay = () => {
     setIsDeleteActive(false)
   }
 
   useEffect(() => {
     setBackRoute('/proyectos')
-    
+
     const fetchData = async () => {
-      setProjectInformation((projectInformation)=>({...projectInformation,index:proyectoId}))
+      setProjectInformation((projectInformation) => ({ ...projectInformation, index: proyectoId }))
       try {
         // Usa solo 'project_id' en el endpoint
         let endPoint = `projects/show_locations?project_id=${proyectoId}`;
@@ -41,14 +41,13 @@ function GridPunto() {
         if (response && response.length > 0) {
           const newLocationInformation = [];
           for (const location of response) {
-            
-            const form = new FormData();
-            
-            form.append('max_groups', 1);
-            form.append('page', 1);
-            form.append('locations', location[0]);
 
-            let imageLocation = await fetchPicture(form);
+            const query = {
+              quantity: 1,
+              page: 1,
+              locations: location[0],
+            }
+            let imageLocation = await fetchPicture(query);
             let urlImage = placeHolderLocation;
             if (imageLocation.filtered_pictures.length > 0) {
               urlImage = imageLocation.filtered_pictures[0].url
@@ -77,7 +76,7 @@ function GridPunto() {
 
   return (
     <div>
-      <Eliminar cerrarOverlay={closeDeleteOverlay} esActiva={isDeleteActive}/>
+      <Eliminar cerrarOverlay={closeDeleteOverlay} esActiva={isDeleteActive} />
       <EditarPunto isActive={isEditActive} closeEdit={closeEditOverlay} ></EditarPunto>
       {locationsInformation.length > 0 ? (
         <Grid>
