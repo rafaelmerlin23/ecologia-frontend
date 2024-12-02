@@ -1,10 +1,11 @@
 import FilterGrouped from "./filterComponents/FiltersGrouped"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFilter } from '@fortawesome/free-solid-svg-icons';
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ModalFilters from "./filterComponents/ModalFilters";
 import ButtonsTofilter from "./filterComponents/ButtonsTofilter";
 import { useAuth } from "../../AuthProvider";
+import { useLocation, useParams } from "react-router-dom";
 
 function FilterImagesDate() {
     const [isModalFilterActive, setIsModalFilterActive] = useState(false)
@@ -17,7 +18,16 @@ function FilterImagesDate() {
         , selectedOrderFilter
         , setFilter
         , quantityImagePerPage
+        , setDateRange
+        , setGroupedTags
+        , setRanges
+        , setSelectedOrderFilter
     } = useAuth()
+
+
+    const { albumID, proyectoId, puntoID } = useParams()
+
+    const location = useLocation()
 
     const handelCloseModalFilter = () => {
         setIsModalFilterActive(false)
@@ -31,6 +41,10 @@ function FilterImagesDate() {
         // `month` es de 1 a 12, por lo que restamos 1 para ajustarlo al índice (0 a 11)
         return new Date(year, month, 0).getDate();
     }
+
+    useEffect(() => {
+        onReset()
+    }, [location.pathname])
 
     const onSubmit = (e) => {
         e.preventDefault()
@@ -123,13 +137,21 @@ function FilterImagesDate() {
         setFilter(query)
     }
 
+    const onReset = () => {
+        setDateRange({ initDate: '', endDate: '' })
+        setGroupedTags({})
+        setRanges({ 0: false, 0.5: false, 1: false, 1.5: false, 2: false, 2.5: false, 3: false })
+        setSelectedOrderFilter("None")
+        setFilter({ quantity: quantityImagePerPage })
+    }
+
     return (
         <>
             <form onSubmit={onSubmit} className='xl:flex lg:flex hidden md:flex sm:hidden mb-10 w-full flex-col'>
 
                 <div className=''>
                     <FilterGrouped />
-                    <ButtonsTofilter />
+                    <ButtonsTofilter onReset={onReset} />
                 </div>
 
             </form>

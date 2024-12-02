@@ -14,13 +14,11 @@ function Imagenes() {
     , setAlbumInformation
     , images
     , filter
+    , quantityImagePerPage
   } = useAuth()
   const location = useLocation()
   // const [searchParams, setSearchParams] = useSearchParams()
   const { albumID } = useParams()
-
-
-
 
 
   const openImageOverlay = () => {
@@ -30,6 +28,27 @@ function Imagenes() {
     setIsActiveUploadImages(false)
   };
 
+  const areObjectsEqual = (obj1, obj2) => {
+    const keys1 = Object.keys(obj1);
+    const keys2 = Object.keys(obj2);
+
+    if (keys1.length !== keys2.length) {
+      return false;
+    }
+
+    for (const key of keys1) {
+      if (obj1[key] !== obj2[key]) {
+        return false;
+      }
+    }
+
+    return true;
+  }
+
+  const isDefaultFilter = () => {
+
+    return areObjectsEqual(filter, { quantity: quantityImagePerPage })
+  }
 
 
 
@@ -47,8 +66,8 @@ function Imagenes() {
         closeOverlay={closeImageOverlay}
         isActive={isActiveUploadImages}
       />
-      <div className={`flex flex-col w-full items-center justify-center ${images.length > 0 ? "mt-32" : "h-screen"}`}>
-        {images.length > 0 ?
+      <div className={`flex flex-col w-full items-center justify-center ${images.length > 0 || (images.length === 0 && !isDefaultFilter()) ? "mt-32" : "h-screen"}`}>
+        {images.length > 0 || (images.length === 0 && !isDefaultFilter()) ?
           location.pathname != "/imagenes" ? (
             <button
               id="agregar-imagen"

@@ -7,27 +7,12 @@ import FilterImagesDate from './FilterImagesDate'
 import HandleFetchPictures from '../../helpers/HandleFetchPictures'
 
 function ImagesMenu() {
-  const { albumID, proyectoId, puntoID, fechaImagen } = useParams()
-  const { setFilter, filter, setImages, images, setIsTaggerActive, setCardImagePage, setImage, setMaxPage, setPageImage, pageImage, setBackRoute, backRoute, userData, quantityImagePerPage } = useAuth()
+  const { albumID, proyectoId, puntoID } = useParams()
+  const { shouldRefresh, filter, setImages, images, setIsTaggerActive, setCardImagePage, setImage, setMaxPage, setPageImage, pageImage, userData, quantityImagePerPage } = useAuth()
   const token = userData.token
   const [searchParams, setSearchParams] = useSearchParams()
   const [maxPageGrid, setMaxPageGrid] = useState(1)
   const location = useLocation()
-
-  useEffect(() => {
-    if (location.pathname !== "/imagenes") {
-      console.log("formData con esas madres")
-      let updatedFilter = { ...filter }
-
-      delete updatedFilter.projects
-      delete updatedFilter.locations
-      delete updatedFilter.albums
-      updatedFilter = { ...filter, projects: proyectoId, locations: puntoID, albums: albumID }
-      setFilter(updatedFilter)
-    } else {
-      setFilter({ 'quantity': quantityImagePerPage })
-    }
-  }, [location.pathname])
 
 
 
@@ -54,10 +39,7 @@ function ImagesMenu() {
     getData()
   }
 
-  // const getDaysInMonth = (month, year) => {
-  //   // `month` es de 1 a 12, por lo que restamos 1 para ajustarlo al índice (0 a 11)
-  //   return new Date(year, month, 0).getDate();
-  // }
+
 
   const handleNext = () => {
     const newPage = Number(pageImage) + 1;
@@ -82,11 +64,7 @@ function ImagesMenu() {
   useEffect(() => {
 
 
-    setBackRoute(`/proyectos/${proyectoId}/puntos/${puntoID}/albumes/${albumID}/navbar-imagenes/imagenes/`)
-
-
     const currentPage = searchParams.get("page") || 1; // Usa un valor por defecto
-
     // Actualiza los parámetros de búsqueda si es necesario
     setSearchParams(params => {
       params.set("page", currentPage);
@@ -95,27 +73,20 @@ function ImagesMenu() {
 
     setPageImage(currentPage ? Number(currentPage) : 1)
 
-    // remplazar esta api por la que te di
-    // handleGetData(pictureEndpoint, token).then(data => {
-    //   if (data && data.response) {
-    //     console.log(data)
-    //     setImages(data.response);
-    //     const newData = data.response.map((image) => ({
-    //       link: image[0],
-    //       id: image[1],
-    //       date: image[2]
-    //     }))
-    //     console.log(newData)
-    //     console.log("se hizo", data.total_pages)
-    //     setImages(newData)
-    //     setMaxPageGrid(data.total_pages)
-    //   }
-    // }).catch((error) => {
-    //   console.error(error)
-    // })
+
+    let query = { ...filter }
+    if (location.pathname != "/imagenes") {
+      delete query.projects
+      delete query.locations
+      delete query.albums
+      query = { ...filter, projects: proyectoId, locations: puntoID, albums: albumID }
+
+    } else {
+      query = { ...filter }
+    }
 
     const getData = async () => {
-      const data = await HandleFetchPictures(filter)
+      const data = await HandleFetchPictures(query)
       console.log("datos datos datos", data)
       const newData = data.filtered_pictures.map((picture) => ({
         link: picture.url,
@@ -133,16 +104,45 @@ function ImagesMenu() {
     if (searchParams.get('is-active-tagger')) {
       handleTagger()
     }
-  }, [pageImage, maxPageGrid, filter])
+  }, [pageImage, maxPageGrid, filter, shouldRefresh])
+  const areObjectsEqual = (obj1, obj2) => {
+    const keys1 = Object.keys(obj1);
+    const keys2 = Object.keys(obj2);
+
+    if (keys1.length !== keys2.length) {
+      return false;
+    }
+
+    for (const key of keys1) {
+      if (obj1[key] !== obj2[key]) {
+        return false;
+      }
+    }
+
+    return true;
+  }
+
+  const isDefaultFilter = () => {
+
+    return areObjectsEqual(filter, { quantity: quantityImagePerPage })
+  }
 
   return (
     <div className=' flex flex-col justify-center items-center w-full'>
       <section>
-        <FilterImagesDate />
+        {images.length > 0 || (images.length === 0 && !isDefaultFilter()) ? <FilterImagesDate /> : ""}
 
       </section>
-      <GridImages images={images} />
-      <Paginacion handleNext={handleNext} handlePrevious={handlePrevious} maxPage={maxPageGrid} />
+      {images.length > 0 ? <GridImages images={images} /> :
+        ""}
+
+      {images.length === 0 && !isDefaultFilter() ?
+        <div>
+          Sin resultados
+        </div>
+        : ""}
+
+      {images.length > 0 ? <Paginacion handleNext={handleNext} handlePrevious={handlePrevious} maxPage={maxPageGrid} /> : ""}
     </div>
   )
 }
