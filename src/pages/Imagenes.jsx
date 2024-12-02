@@ -66,7 +66,7 @@ function Imagenes() {
         closeOverlay={closeImageOverlay}
         isActive={isActiveUploadImages}
       />
-      <div className={`flex flex-col w-full items-center justify-center ${images.length > 0 || (images.length === 0 && !isDefaultFilter()) ? "mt-32" : "h-screen"}`}>
+      <div className={`flex flex-col items-center justify-center ${images.length > 0 || (images.length === 0 && !isDefaultFilter()) ? "mt-32" : "h-screen"}`}>
         {images.length > 0 || (images.length === 0 && !isDefaultFilter()) ?
           location.pathname != "/imagenes" ? (
             <button

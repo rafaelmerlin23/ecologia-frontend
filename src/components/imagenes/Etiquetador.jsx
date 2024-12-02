@@ -24,12 +24,13 @@ export const Etiquetador = ({ isActive, handleClose }) => {
         image,
         userData,
         isCategoryMenuActivate,
+        isNextPage,
+        setIsNextPage
     } = useAuth()
     const token = userData.token
     const [categories, setCategories] = useState([])
     const [tags, setTags] = useState([])
     const [isModalActive, setIsModalActive] = useState(false)
-    const [isNextPage, setIsNextPage] = useState(true)
     const { albumID } = useParams()
     const [searchParams, setSearchParams] = useSearchParams()
     const userID = userData.decoded.user_id
@@ -40,12 +41,6 @@ export const Etiquetador = ({ isActive, handleClose }) => {
         document.body.className = ' bg-gradient-to-r from-gray-900 to-blue-gray-950';
         console.log("esta activado el menu de categorias:", isCategoryMenuActivate)
 
-        //     // conseguir el numero de la ultima pagina 
-        // const endPointPage = `pictures/show_picture_from_album?page=${cardImagePage}&quantity=${1}&album_id=${albumID}${paramsFilters}`
-        // handleGetData(endPointPage, token).then((data) => {
-        //     setMaxPage(data.total_pages)
-        //     handleIsNextPage()
-        // })
         const getLastPage = async () => {
 
             let filterPage = { ...filter }
@@ -79,7 +74,7 @@ export const Etiquetador = ({ isActive, handleClose }) => {
         ).catch((error) => console.error(error))
 
 
-    }, [cardImagePage, image, isCategoryMenuActivate]);
+    }, [cardImagePage, image, isCategoryMenuActivate,isNextPage,filter]);
 
 
     const handleClick = () => {
@@ -89,11 +84,14 @@ export const Etiquetador = ({ isActive, handleClose }) => {
 
 
     const handleIsNextPage = () => {
+        console.log("pagina",cardImagePage)
+        console.log("maxima pagina",maxPage)
         if (cardImagePage < maxPage) {
             setIsNextPage(true)
         } else {
             setIsNextPage(false)
         }
+        console.log("HAY SIGUIENTE PAGINA",isNextPage)
     }
     const handleNext = async () => {
         // const endPoint = `pictures/show_picture_from_album?page=${cardImagePage + 1}&quantity=${1}&album_id=${albumID}`;

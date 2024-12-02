@@ -13,7 +13,7 @@ function ImagesMenu() {
   const [searchParams, setSearchParams] = useSearchParams()
   const [maxPageGrid, setMaxPageGrid] = useState(1)
   const location = useLocation()
-
+  const [loadingComplete,setLoadingComplete] = useState(false)
 
 
   const handleTagger = () => {
@@ -79,10 +79,10 @@ function ImagesMenu() {
       delete query.projects
       delete query.locations
       delete query.albums
-      query = { ...filter, projects: proyectoId, locations: puntoID, albums: albumID }
+      query = { ...filter, page:pageImage,projects: proyectoId, locations: puntoID, albums: albumID }
 
     } else {
-      query = { ...filter }
+      query = { ...filter ,page:pageImage }
     }
 
     const getData = async () => {
@@ -96,15 +96,16 @@ function ImagesMenu() {
       setImages(newData)
       setMaxPageGrid(data.total_pages)
     }
-
+    
     filter && getData()
-
+    images && setLoadingComplete(true)
     console.log("esta chimoltrufiada", filter);
 
     if (searchParams.get('is-active-tagger')) {
       handleTagger()
     }
   }, [pageImage, maxPageGrid, filter, shouldRefresh])
+
   const areObjectsEqual = (obj1, obj2) => {
     const keys1 = Object.keys(obj1);
     const keys2 = Object.keys(obj2);

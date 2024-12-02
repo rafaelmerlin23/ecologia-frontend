@@ -48,6 +48,11 @@ function LabelImage({image,changes,handleOpenModal,setTags,setChanges}) {
     data.append('user_id',userID)
     data.append('tag_id',change.idTag)
     data.append('rating_score',change.rating)
+    
+    console.log('picture_id',image.id)
+    console.log('user_id',userID)
+    console.log('tag_id',change.idTag)
+    console.log('rating_score',change.rating)
 
     handleCreate(endPointUrl,token,data,(responseData)=>{
         console.log("datostos",responseData.rating_id)

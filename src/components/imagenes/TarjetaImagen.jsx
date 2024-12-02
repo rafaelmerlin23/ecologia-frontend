@@ -9,12 +9,13 @@ export const TarjetaImagen = ({ image, index }) => {
     const [isHover, setIsHover] = useState(false);
     const containerRef = useRef(null); // Usamos useRef para acceder al contenedor
     const {
-        dateUbication
-        , setIsTaggerActive
+         setIsTaggerActive
         , setImage
+        , maxPage
         , pageImage
         , setCardImagePage
-        , quantityImagePerPage } = useAuth();
+        , quantityImagePerPage
+         } = useAuth();
     const [SearchParams, setSearchParams] = useSearchParams();
     const location = useLocation();
 
@@ -29,6 +30,8 @@ export const TarjetaImagen = ({ image, index }) => {
 
     const handleOpenTagger = () => setIsTaggerActive(true);
 
+    
+    
     const handleInitImage = () => {
 
         const pageImageNumber = ((index + 1) + (pageImage - 1) * quantityImagePerPage)
@@ -38,9 +41,9 @@ export const TarjetaImagen = ({ image, index }) => {
             prev.set("image-page", pageImageNumber);
             return prev;
         });
-        setCardImagePage(pageImageNumber);
-        setImage(image);
-        handleOpenTagger();
+        setCardImagePage(pageImageNumber)
+        setImage(image)
+        handleOpenTagger()
     };
 
     // Agregamos el EventListener en el montaje del componente
