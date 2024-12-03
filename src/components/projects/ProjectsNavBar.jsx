@@ -224,6 +224,8 @@ export const ProjectsNavBar = () => {
 
 const NavElement = ({ name, path, isNext, isActive }) => {
     if (!isActive) return null
+    
+
     return (
         <li className="flex justify-center items-center ">
             <Link
@@ -310,10 +312,8 @@ const ModalRoutes = ({ path, modalRef, params, pathParts, isActive, position, ha
 }
 
 const ModalRouteElement = ({ name, path, isActive, onClose }) => {
-    const navigate = useNavigate()
-
     const handleClick = () => {
-        navigate(path)
+        setImages([])
         onClose() // Close the modal after navigation
     };
 

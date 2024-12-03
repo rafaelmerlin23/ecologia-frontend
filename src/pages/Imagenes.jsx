@@ -5,6 +5,7 @@ import SubirImagenes from "../components/imagenes/SubirImagenes";
 import { useAuth } from "../AuthProvider";
 import { useLocation, useParams } from "react-router-dom";
 import ImagesMenu from "../components/imagenes/ImagesMenu";
+import ImagesLoader from "../components/Loaders/ImagesLoader";
 
 
 function Imagenes() {
@@ -15,6 +16,8 @@ function Imagenes() {
     , images
     , filter
     , quantityImagePerPage
+    , loadingComplete
+  
   } = useAuth()
   const location = useLocation()
   // const [searchParams, setSearchParams] = useSearchParams()
@@ -66,8 +69,9 @@ function Imagenes() {
         closeOverlay={closeImageOverlay}
         isActive={isActiveUploadImages}
       />
-      <div className={`flex flex-col items-center justify-center ${images.length > 0 || (images.length === 0 && !isDefaultFilter()) ? "mt-32" : "h-screen"}`}>
-        {images.length > 0 || (images.length === 0 && !isDefaultFilter()) ?
+      <div className={`   flex flex-col items-center justify-center ${images.length > 0 || (images.length === 0 && !isDefaultFilter()) ? "mt-32" : "h-screen"}`}>
+        
+        {(images.length > 0 || (images.length === 0 && !isDefaultFilter()))  ?
           location.pathname != "/imagenes" ? (
             <button
               id="agregar-imagen"
@@ -83,8 +87,8 @@ function Imagenes() {
               </p>
             </button>) : ""
 
-          :
-          <div className=" w-screen flex justify-center items-center">
+          :""}
+          {(loadingComplete && images.length === 0 && isDefaultFilter()) && <div className=" w-screen flex justify-center items-center">
             <div className="flex flex-col items-center justify-center gap-4">
               <div className="flex justify-center items-center h-42 w-42">
                 <div className="p-4 border rounded-full h-full w-full flex justify-center items-center">
@@ -95,8 +99,7 @@ function Imagenes() {
               <p className="text-1xl text-gray-200">Cuando subas fotos aparecerán aquí</p>
               <a onClick={openImageOverlay} className="text-blue-500 hover:cursor-pointer hover:text-blue-200">Sube tus fotos aquí</a>
             </div>
-          </div>
-        }
+          </div>}
       </div >
       <ImagesMenu />
 

@@ -89,6 +89,9 @@ export const AuthProvider = ({ children }) => {
     const [filter, setFilter] = useState({ 'quantity': quantityImagePerPage })
 
     const [isNextPage, setIsNextPage] = useState(true)
+    
+    const [loadingComplete,setLoadingComplete] = useState(false)
+
 
 
     const handleCategoryMenu = () => {
@@ -232,8 +235,8 @@ export const AuthProvider = ({ children }) => {
             , setFilter
             , isNextPage
             , setIsNextPage
-
-
+            , loadingComplete
+            , setLoadingComplete
 
 
         }}>

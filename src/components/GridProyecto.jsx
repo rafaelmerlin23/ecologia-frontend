@@ -8,6 +8,7 @@ import placeHolderImage from '../assets/place_holder_project.png'
 import EditarProyecto from './EditarProyecto'
 import Eliminar from './Eliminar'
 import fetchPicture from '../helpers/HandleFetchPictures'
+import EstructuraLoader from './Loaders/EstructuraLoader'
 
 function GridProyecto() {
 
@@ -17,6 +18,7 @@ function GridProyecto() {
   const quantity = 50
   const [esActivaEditar, setEsActivaEditar] = useState(false)
   const [esActivaEliminar, setEsActivaELiminar] = useState(false)
+  const [isLoading,setIsLoading] = useState(false)
 
   const cerrarOverlayEditar = () => {
     setEsActivaEditar(false)
@@ -28,6 +30,7 @@ function GridProyecto() {
 
 
   useEffect(() => {
+    setIsLoading(false)
     const fetchData = async () => {
       try {
 
@@ -63,7 +66,9 @@ function GridProyecto() {
 
           // Actualiza el estado con la nueva información
           setImagesInformation(newImagesInformation);
-
+          setTimeout(() => {
+            setIsLoading(true)
+          }, 600);
         }
 
       } catch (error) {
@@ -83,8 +88,7 @@ function GridProyecto() {
     <>
       <Eliminar cerrarOverlay={cerrarOverlayEliminar} esActiva={esActivaEliminar} />
       <EditarProyecto isActive={esActivaEditar} cerrarEditar={cerrarOverlayEditar} />
-      {
-        imagesInformation.length > 0 ? <Grid >
+      {imagesInformation.length > 0 && isLoading? <Grid >
           {imagesInformation.map((x) => (
             <TarjetaDeproyecto
               setEsActivaEditar={setEsActivaEditar}
@@ -97,14 +101,15 @@ function GridProyecto() {
               setEsActivaEliminar={setEsActivaELiminar} />
           ))}
 
-        </Grid> :
-          <div className='flex justify-center content-center p-5'>
+        </Grid> :""}
+        {!isLoading && <EstructuraLoader/>}
+          {isLoading && imagesInformation.length == 0? <div className='flex justify-center content-center p-5'>
             <div className=''>
               <p className='text-1xl text-gray-500'>-- No tienes Proyectos, comienza uno --</p>
             </div>
 
-          </div>
-      }
+          </div>:""}
+      
     </>
 
   )

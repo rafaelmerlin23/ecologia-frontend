@@ -1,11 +1,25 @@
 import { motion } from 'framer-motion'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useAuth } from '../../../AuthProvider'
+import handleGetData from '../../../helpers/handleGetData'
 
 function LabelWrapper({children,handleClose}) {
-  const {userData,handleCategoryMenu} =useAuth()
+  const {userData,handleCategoryMenu,image} =useAuth()
   const userName = userData.userName
-  
+  const token = userData.token
+  const [pathName,setPathName] = useState()
+
+  useEffect(()=>{
+    const getPath = async()=>{
+      const endpoint = `pictures/show_path_picture?picture_id=${image.id}`
+      console.log("imagen datos nuevos 2",image.id)
+      const path = await handleGetData(endpoint,token)
+      console.log("informacion del path: ",path.image)
+      setPathName(`${path.image.project_name}/${path.image.location_name}/${path.image.album_name}`)
+    }
+
+    image != null && getPath()
+  },[])
 
   return (
     <motion.div
@@ -25,10 +39,15 @@ function LabelWrapper({children,handleClose}) {
                 </button>
                 <div className='mb-0'>
                 <div className='mb-3 mt-0 flex flex-row'>
+                <div className='flex flex-col'>
                 <p
                 className='text-[1em]'
                 >Usuario: <span className="text-sky-300">{userName}</span></p>
+                <p
+                className='text-[1em]'
+                >Dirección: <span className="text-sky-300">{pathName}</span></p>
               
+                </div>
                 </div>
                 <div>
                 {children}

@@ -5,15 +5,20 @@ import GridImages from './GridImagenes'
 import { Paginacion } from './Paginacion'
 import FilterImagesDate from './FilterImagesDate'
 import HandleFetchPictures from '../../helpers/HandleFetchPictures'
+import ImagesLoader from '../Loaders/ImagesLoader'
 
 function ImagesMenu() {
   const { albumID, proyectoId, puntoID } = useParams()
-  const { shouldRefresh, filter, setImages, images, setIsTaggerActive, setCardImagePage, setImage, setMaxPage, setPageImage, pageImage, userData, quantityImagePerPage } = useAuth()
+  const { 
+    setLoadingComplete,loadingComplete,shouldRefresh, filter, setImages, images, setIsTaggerActive,
+     setCardImagePage, setImage, setMaxPage, setPageImage,
+      pageImage, userData, quantityImagePerPage } = useAuth()
   const token = userData.token
   const [searchParams, setSearchParams] = useSearchParams()
   const [maxPageGrid, setMaxPageGrid] = useState(1)
   const location = useLocation()
-  const [loadingComplete,setLoadingComplete] = useState(false)
+
+
 
 
   const handleTagger = () => {
@@ -63,7 +68,7 @@ function ImagesMenu() {
 
   useEffect(() => {
 
-
+    setLoadingComplete(false)
     const currentPage = searchParams.get("page") || 1; // Usa un valor por defecto
     // Actualiza los parámetros de búsqueda si es necesario
     setSearchParams(params => {
@@ -98,7 +103,11 @@ function ImagesMenu() {
     }
     
     filter && getData()
+
+    setTimeout(() => {
     images && setLoadingComplete(true)
+    }, 600);
+
     console.log("esta chimoltrufiada", filter);
 
     if (searchParams.get('is-active-tagger')) {
@@ -130,12 +139,15 @@ function ImagesMenu() {
 
   return (
     <div className=' flex flex-col justify-center items-center w-full'>
+      
       <section>
-        {images.length > 0 || (images.length === 0 && !isDefaultFilter()) ? <FilterImagesDate /> : ""}
+        {(images.length > 0 || (images.length === 0 && !isDefaultFilter()))  ? <FilterImagesDate /> : ""}
 
       </section>
-      {images.length > 0 ? <GridImages images={images} /> :
+      {images.length > 0 &&  loadingComplete ? <GridImages images={images} /> :
         ""}
+
+      {!loadingComplete ? <ImagesLoader/>:""}
 
       {images.length === 0 && !isDefaultFilter() ?
         <div>
@@ -144,6 +156,7 @@ function ImagesMenu() {
         : ""}
 
       {images.length > 0 ? <Paginacion handleNext={handleNext} handlePrevious={handlePrevious} maxPage={maxPageGrid} /> : ""}
+
     </div>
   )
 }

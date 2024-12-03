@@ -16,6 +16,7 @@ import ProjectsNavBar from './components/projects/ProjectsNavBar';
 import GestorCuentas from './components/Accounts/GestorCuentas';
 import Usuario from './components/Accounts/Usuario';
 import ImagesLoader from './components/Loaders/ImagesLoader';
+import EstructuraLoader from './components/Loaders/EstructuraLoader';
 
 function PrivateRoute({ element, ...rest }) {
   const { isAuthenticated } = useAuth();
@@ -41,7 +42,7 @@ function App() {
 
           {/* Rutas privadas */}
           <Route path="/categoria-etiqueta" element={<PrivateRoute element={<CategoriaEtiqueta />} />} />
-          <Route path='/loader' element={<ImagesLoader/>}/>
+          <Route path='/loader' element={<EstructuraLoader/>}/>
 
           {/* Rutas bajo /gestor */}
           <Route path="/gestor" element={<PrivateRoute element={<ProjectsNavBar />} />}>
