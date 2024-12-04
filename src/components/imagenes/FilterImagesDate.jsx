@@ -22,6 +22,9 @@ function FilterImagesDate() {
         , setGroupedTags
         , setRanges
         , setSelectedOrderFilter
+        , setLocationToFilter
+        , SetProjectToFilter
+        , setAlbumsToFilter
     } = useAuth()
 
 
@@ -142,6 +145,9 @@ function FilterImagesDate() {
         setGroupedTags({})
         setRanges({ 0: false, 0.5: false, 1: false, 1.5: false, 2: false, 2.5: false, 3: false })
         setSelectedOrderFilter("None")
+        SetProjectToFilter([])
+        setLocationToFilter({})
+        setAlbumsToFilter({})
         setFilter({ quantity: quantityImagePerPage })
     }
 

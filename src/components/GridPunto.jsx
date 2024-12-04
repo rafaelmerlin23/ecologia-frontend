@@ -8,10 +8,12 @@ import handleGet from '../helpers/handleGet'
 import EditarPunto from './location/EditarPunto'
 import Eliminar from './Eliminar'
 import fetchPicture from '../helpers/HandleFetchPictures'
+import EstructuraLoader from './Loaders/EstructuraLoader'
 
 function GridPunto() {
   const [locationsInformation, setLocationsInformation] = useState([])
-  const { setBackRoute, userData, shouldRefresh, projectInformation, setProjectInformation } = useAuth()
+  const { isLoadingStructure
+    , setIsLoadingStructure, setBackRoute, userData, shouldRefresh, projectInformation, setProjectInformation } = useAuth()
   const token = userData.token
   const [isEditActive, setIsEditActive] = useState(false)
   const [isDeleteActive, setIsDeleteActive] = useState(false)
@@ -28,7 +30,7 @@ function GridPunto() {
   }
 
   useEffect(() => {
-    setBackRoute('/proyectos')
+    setIsLoadingStructure((prev) => ({ ...prev, location: false }))
 
     const fetchData = async () => {
       setProjectInformation((projectInformation) => ({ ...projectInformation, index: proyectoId }))
@@ -37,6 +39,11 @@ function GridPunto() {
         let endPoint = `projects/show_locations?project_id=${proyectoId}`;
 
         const response = await handleGet(endPoint, token);
+        if (response) {
+          setTimeout(() => {
+            setIsLoadingStructure((prev) => ({ ...prev, location: true }))
+          }, 600);
+        }
 
         if (response && response.length > 0) {
           const newLocationInformation = [];
@@ -60,6 +67,8 @@ function GridPunto() {
             });
           }
           setLocationsInformation(newLocationInformation);
+
+
         }
       } catch (error) {
         console.error('Error en la obtención de datos:', error);
@@ -72,13 +81,14 @@ function GridPunto() {
     };
 
     fetchData();
-  }, [shouldRefresh, token]);
+  }, [shouldRefresh,]);
 
   return (
     <div>
       <Eliminar cerrarOverlay={closeDeleteOverlay} esActiva={isDeleteActive} />
       <EditarPunto isActive={isEditActive} closeEdit={closeEditOverlay} ></EditarPunto>
-      {locationsInformation.length > 0 ? (
+      {!isLoadingStructure.location && <EstructuraLoader />}
+      {locationsInformation.length > 0 && isLoadingStructure.location ?
         <Grid>
           {locationsInformation.map(location => (
             <TarjetaPuntos
@@ -92,13 +102,14 @@ function GridPunto() {
             />
           ))}
         </Grid>
-      ) : (
+        : ""}
+      {isLoadingStructure.location && locationsInformation.length === 0 ?
         <div className='flex justify-center content-center p-5 bg-gradient-to-r from-gray-900 to-blue-gray-950'>
           <div className=''>
             <p className='text-1xl text-gray-500'>-- No tienes Puntos, comienza uno --</p>
           </div>
         </div>
-      )}
+        : ""}
     </div>
   );
 }

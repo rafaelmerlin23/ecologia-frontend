@@ -89,8 +89,10 @@ export const AuthProvider = ({ children }) => {
     const [filter, setFilter] = useState({ 'quantity': quantityImagePerPage })
 
     const [isNextPage, setIsNextPage] = useState(true)
-    
-    const [loadingComplete,setLoadingComplete] = useState(false)
+
+    const [loadingComplete, setLoadingComplete] = useState(false)
+
+    const [isLoadingStructure, setIsLoadingStructure] = useState({ project: false, location: false, album: false })
 
 
 
@@ -237,7 +239,8 @@ export const AuthProvider = ({ children }) => {
             , setIsNextPage
             , loadingComplete
             , setLoadingComplete
-
+            , isLoadingStructure
+            , setIsLoadingStructure
 
         }}>
             {children}

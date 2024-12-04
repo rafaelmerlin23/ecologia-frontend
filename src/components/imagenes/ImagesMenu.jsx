@@ -9,10 +9,10 @@ import ImagesLoader from '../Loaders/ImagesLoader'
 
 function ImagesMenu() {
   const { albumID, proyectoId, puntoID } = useParams()
-  const { 
-    setLoadingComplete,loadingComplete,shouldRefresh, filter, setImages, images, setIsTaggerActive,
-     setCardImagePage, setImage, setMaxPage, setPageImage,
-      pageImage, userData, quantityImagePerPage } = useAuth()
+  const {
+    setLoadingComplete, loadingComplete, shouldRefresh, filter, setImages, images, setIsTaggerActive,
+    setCardImagePage, setImage, setMaxPage, setPageImage,
+    pageImage, userData, quantityImagePerPage } = useAuth()
   const token = userData.token
   const [searchParams, setSearchParams] = useSearchParams()
   const [maxPageGrid, setMaxPageGrid] = useState(1)
@@ -84,10 +84,10 @@ function ImagesMenu() {
       delete query.projects
       delete query.locations
       delete query.albums
-      query = { ...filter, page:pageImage,projects: proyectoId, locations: puntoID, albums: albumID }
+      query = { ...filter, page: pageImage, projects: proyectoId, locations: puntoID, albums: albumID }
 
     } else {
-      query = { ...filter ,page:pageImage }
+      query = { ...filter, page: pageImage }
     }
 
     const getData = async () => {
@@ -101,11 +101,11 @@ function ImagesMenu() {
       setImages(newData)
       setMaxPageGrid(data.total_pages)
     }
-    
+
     filter && getData()
 
     setTimeout(() => {
-    images && setLoadingComplete(true)
+      images && setLoadingComplete(true)
     }, 600);
 
     console.log("esta chimoltrufiada", filter);
@@ -113,6 +113,10 @@ function ImagesMenu() {
     if (searchParams.get('is-active-tagger')) {
       handleTagger()
     }
+    return () => {
+      setLoadingComplete(false);
+    };
+
   }, [pageImage, maxPageGrid, filter, shouldRefresh])
 
   const areObjectsEqual = (obj1, obj2) => {
@@ -139,19 +143,19 @@ function ImagesMenu() {
 
   return (
     <div className=' flex flex-col justify-center items-center w-full'>
-      
+
       <section>
-        {(images.length > 0 || (images.length === 0 && !isDefaultFilter()))  ? <FilterImagesDate /> : ""}
+        {(images.length > 0 || (images.length === 0 && !isDefaultFilter())) ? <FilterImagesDate /> : ""}
 
       </section>
-      {images.length > 0 &&  loadingComplete ? <GridImages images={images} /> :
+      {images.length > 0 && loadingComplete ? <GridImages images={images} /> :
         ""}
 
-      {!loadingComplete ? <ImagesLoader/>:""}
+      {!loadingComplete ? <ImagesLoader /> : ""}
 
       {images.length === 0 && !isDefaultFilter() ?
-        <div>
-          Sin resultados
+        <div className='opacity-70 rounded-2xl bg-zinc-700 w-[65%] p-2 text-center'>
+          Sin resultados.
         </div>
         : ""}
 

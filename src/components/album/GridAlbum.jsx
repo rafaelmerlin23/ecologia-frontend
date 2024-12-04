@@ -8,9 +8,13 @@ import { useParams } from "react-router-dom"
 import { EditarAlbum } from "./EditarAlbum"
 import Eliminar from "../Eliminar"
 import fetchPicture from '../../helpers/HandleFetchPictures'
+import EstructuraLoader from "../Loaders/EstructuraLoader"
 
 export const GridAlbum = () => {
-  const { setBackRoute, setLocationInformation, userData, shouldRefresh } = useAuth()
+  const { setBackRoute,
+    isLoadingStructure
+    , setIsLoadingStructure
+    , setLocationInformation, userData, shouldRefresh } = useAuth()
   const token = userData.token
   const [page] = useState(1)
   const [quantity] = useState(50)
@@ -30,7 +34,7 @@ export const GridAlbum = () => {
   }
 
   useEffect(() => {
-    setBackRoute(`/proyectos/${proyectoId}/puntos/`)
+    setIsLoadingStructure((prev) => ({ ...prev, album: false }))
     const fetchData = async () => {
       setLocationInformation((LocationInformation) => ({ ...LocationInformation, index: puntoID }))
       try {
@@ -39,6 +43,11 @@ export const GridAlbum = () => {
         // Hacer la petición GET principal
         const response = await handleGet(endPoint, token);
 
+        if (response) {
+          setTimeout(() => {
+            setIsLoadingStructure((prev) => ({ ...prev, album: true }))
+          }, 600);
+        }
         if (response && response.length > 0) {
           const newAlbumInformation = [];
           // Procesar cada imagen de manera asíncrona
@@ -65,7 +74,9 @@ export const GridAlbum = () => {
 
           }
           setAlbumsInformation(newAlbumInformation)
-
+          setTimeout(() => {
+            setIsLoadingStructure((prev) => ({ ...prev, album: true }))
+          }, 600);
           // Actualiza el estado con la nueva información
         }
 
@@ -77,7 +88,6 @@ export const GridAlbum = () => {
     const fetchImageProject = async (albumId) => {
       const imageEndPoint = `pictures/show_picture_from_album?album_id=${albumId}&page=1&quantity=1`;
       return await handleGet(imageEndPoint, token);
-
 
     }
 
@@ -119,24 +129,25 @@ export const GridAlbum = () => {
         cerrarOverlay={closeDeleteOverlay}
         esActiva={isDeleteActive}
       />
+      {!isLoadingStructure.album && <EstructuraLoader />}
+      {(albumsInformation.length > 0 && isLoadingStructure.album) && <Grid>
+        {albumsInformation.map((information) => (
+          <TarjetaAlbum
+            key={information.index}
+            album={information}
+            setIsEditActive={setIsEditActive}
+            setIsDeleteActive={setIsDeleteActive}
+          />
+        ))}
+      </Grid>}
+
       {
-        albumsInformation.length > 0 ?
-          <Grid>
-            {albumsInformation.map((information) => (
-              <TarjetaAlbum
-                key={information.index}
-                album={information}
-                setIsEditActive={setIsEditActive}
-                setIsDeleteActive={setIsDeleteActive}
-              />
-            ))}
-          </Grid>
-          :
-          <div className='flex justify-center content-center p-5 bg-gradient-to-r from-gray-900 to-blue-gray-950'>
-            <div className=''>
-              <p className='text-1xl text-gray-500'>-- No tienes Albumes, crea uno --</p>
-            </div>
+        (isLoadingStructure.album && albumsInformation.length === 0) &&
+        <div className='flex justify-center content-center p-5 bg-gradient-to-r from-gray-900 to-blue-gray-950'>
+          <div className=''>
+            <p className='text-1xl text-gray-500'>-- No tienes Albumes, crea uno --</p>
           </div>
+        </div>
       }
     </>
   )

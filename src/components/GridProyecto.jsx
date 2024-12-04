@@ -12,13 +12,13 @@ import EstructuraLoader from './Loaders/EstructuraLoader'
 
 function GridProyecto() {
 
-  const { imagesInformation, setImagesInformation, userData, shouldRefresh } = useAuth()
+  const { imagesInformation, setImagesInformation, userData, shouldRefresh, isLoadingStructure
+    , setIsLoadingStructure } = useAuth()
   const token = userData.token
   const page = 1
   const quantity = 50
   const [esActivaEditar, setEsActivaEditar] = useState(false)
   const [esActivaEliminar, setEsActivaELiminar] = useState(false)
-  const [isLoading,setIsLoading] = useState(false)
 
   const cerrarOverlayEditar = () => {
     setEsActivaEditar(false)
@@ -30,7 +30,8 @@ function GridProyecto() {
 
 
   useEffect(() => {
-    setIsLoading(false)
+    setIsLoadingStructure((prev) => ({ ...prev, project: false }))
+
     const fetchData = async () => {
       try {
 
@@ -38,7 +39,11 @@ function GridProyecto() {
 
         // Hacer la petición GET principal
         const response = await handleGet(endPoint, token);
-
+        if (response) {
+          setTimeout(() => {
+            setIsLoadingStructure((prev) => ({ ...prev, project: true }))
+          }, 600);
+        }
         if (response && response.length > 0) {
           const newImagesInformation = [];
           // Procesar cada imagen de manera asíncrona
@@ -67,7 +72,7 @@ function GridProyecto() {
           // Actualiza el estado con la nueva información
           setImagesInformation(newImagesInformation);
           setTimeout(() => {
-            setIsLoading(true)
+            setIsLoadingStructure((prev) => ({ ...prev, project: true }))
           }, 600);
         }
 
@@ -88,28 +93,28 @@ function GridProyecto() {
     <>
       <Eliminar cerrarOverlay={cerrarOverlayEliminar} esActiva={esActivaEliminar} />
       <EditarProyecto isActive={esActivaEditar} cerrarEditar={cerrarOverlayEditar} />
-      {imagesInformation.length > 0 && isLoading? <Grid >
-          {imagesInformation.map((x) => (
-            <TarjetaDeproyecto
-              setEsActivaEditar={setEsActivaEditar}
-              key={x.indice}
-              indice={x.indice}
-              LinkImagen={x.imagen}
-              fecha={x.fecha}
-              nombre={x.nombre}
-              description={x.description}
-              setEsActivaEliminar={setEsActivaELiminar} />
-          ))}
+      {!isLoadingStructure.project && <EstructuraLoader />}
+      {imagesInformation.length > 0 && isLoadingStructure.project ? <Grid >
+        {imagesInformation.map((x) => (
+          <TarjetaDeproyecto
+            setEsActivaEditar={setEsActivaEditar}
+            key={x.indice}
+            indice={x.indice}
+            LinkImagen={x.imagen}
+            fecha={x.fecha}
+            nombre={x.nombre}
+            description={x.description}
+            setEsActivaEliminar={setEsActivaELiminar} />
+        ))}
 
-        </Grid> :""}
-        {!isLoading && <EstructuraLoader/>}
-          {isLoading && imagesInformation.length == 0? <div className='flex justify-center content-center p-5'>
-            <div className=''>
-              <p className='text-1xl text-gray-500'>-- No tienes Proyectos, comienza uno --</p>
-            </div>
+      </Grid> : ""}
+      {isLoadingStructure.project && imagesInformation.length == 0 ? <div className='flex justify-center content-center p-5'>
+        <div className=''>
+          <p className='text-1xl text-gray-500'>-- No tienes Proyectos, comienza uno --</p>
+        </div>
 
-          </div>:""}
-      
+      </div> : ""}
+
     </>
 
   )
