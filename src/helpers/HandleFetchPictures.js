@@ -1,6 +1,6 @@
 import prefixUrl from "./ip";
 
-const toParam = (params) => {
+export const toParam = (params) => {
   const queryString = new URLSearchParams(
     Object.entries(params).reduce((acc, [key, value]) => {
       if (Array.isArray(value)) {

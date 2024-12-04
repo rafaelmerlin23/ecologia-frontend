@@ -75,17 +75,23 @@ function Imagenes() {
           location.pathname != "/imagenes" ? (
             <button
               id="agregar-imagen"
-              className={isActiveUploadImages ? "" : 'flex items-center justify-center flex-col  h-3/5 w-3/5 pb-4 pt-4 group hover:cursor-pointer'}
-              onClick={openImageOverlay}>
-
+              className={`${
+                isActiveUploadImages
+                  ? ""
+                  : "flex items-center justify-center flex-col h-3/5 w-3/5 pb-4 pt-4 group hover:cursor-pointer"
+              } overflow-hidden`}
+              onClick={openImageOverlay}
+            >
               <FontAwesomeIcon
-                className=" text-6xl text-gray-400 group-hover:text-gray-300"
+                className="text-6xl text-gray-400 group-hover:text-gray-300"
                 icon={faImage}
               />
-              <p className=" mb-2 w-screen text-2xl mt-2 font-bold text-gray-400 group-hover:text-gray-300">
+              <p className="mb-2 w-full text-center text-2xl mt-2 font-bold text-gray-400 group-hover:text-gray-300">
                 Subir imágenes
               </p>
-            </button>) : ""
+            </button>
+
+            ) : ""
 
           :""}
           {(loadingComplete && images.length === 0 && isDefaultFilter()) && <div className=" w-screen flex justify-center items-center">

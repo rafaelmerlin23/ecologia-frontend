@@ -15,8 +15,10 @@ export const AdministrarCuentas = () => {
         const formData = new FormData();
         // user_id = request.form.get('user_id', type=int)
         // user_status = request.form.get('user_status', type=int)
-        formData.append('user_id', user_id)
-        formData.append('user_status', newStatus)
+        formData.append('user_id', Number(user_id))
+        formData.append('user_status', newStatus ? 1: 0)
+        const formObject = Object.fromEntries(formData.entries());
+        console.log("datos ",formObject)
         handleUpdate(url, token, formData, () => { })
     }
 

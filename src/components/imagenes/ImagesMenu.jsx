@@ -6,7 +6,7 @@ import { Paginacion } from './Paginacion'
 import FilterImagesDate from './FilterImagesDate'
 import HandleFetchPictures from '../../helpers/HandleFetchPictures'
 import ImagesLoader from '../Loaders/ImagesLoader'
-
+  
 function ImagesMenu() {
   const { albumID, proyectoId, puntoID } = useParams()
   const {
@@ -135,6 +135,7 @@ function ImagesMenu() {
 
     return true;
   }
+  
 
   const isDefaultFilter = () => {
 
@@ -158,7 +159,7 @@ function ImagesMenu() {
           Sin resultados.
         </div>
         : ""}
-
+      
       {images.length > 0 ? <Paginacion handleNext={handleNext} handlePrevious={handlePrevious} maxPage={maxPageGrid} /> : ""}
 
     </div>
@@ -166,3 +167,5 @@ function ImagesMenu() {
 }
 
 export default ImagesMenu
+
+

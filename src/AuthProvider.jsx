@@ -94,7 +94,7 @@ export const AuthProvider = ({ children }) => {
 
     const [isLoadingStructure, setIsLoadingStructure] = useState({ project: false, location: false, album: false })
 
-
+    const [noTagsFilter,setNotagsFilter] = useState(false)
 
     const handleCategoryMenu = () => {
         setIsCategoryMenuActivate(prev => !prev)
@@ -241,6 +241,8 @@ export const AuthProvider = ({ children }) => {
             , setLoadingComplete
             , isLoadingStructure
             , setIsLoadingStructure
+            , noTagsFilter
+            ,setNotagsFilter
 
         }}>
             {children}
