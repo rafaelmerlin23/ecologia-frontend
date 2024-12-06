@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { useAuth } from '../../AuthProvider';
 import ModalImagenes from './ModalImagenes';
 import DropZone from './DropZone';
@@ -6,11 +6,23 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
 
 export function SubirImagenes({ closeOverlay, isActive }) {
-  if (!isActive) return null
   const { files, setFiles } = useAuth();
+  
+  
+  useEffect(() => {
+    if (isActive) {
+        // Oculta el scroll vertical y horizontal
+        document.body.style.overflow = 'hidden';
+        document.documentElement.style.overflow = 'hidden';
+    } else {
+        // Restaura el scroll
+        document.body.style.overflow = '';
+        document.documentElement.style.overflow = '';
+    }
+}, [isActive]);
 
-
-
+    
+  
   const handleDiscardImage = (file) => {
     let newImagePreviews = []
     for (let fileFor of files) {
@@ -21,9 +33,9 @@ export function SubirImagenes({ closeOverlay, isActive }) {
     }
     setFiles(newImagePreviews)
   }
-
-
-
+  
+    if (!isActive) return null
+    
   return (
     <ModalImagenes closeModal={closeOverlay}>
       <p className='text-3xl'>Sube tus imágenes aquí</p>

@@ -23,6 +23,9 @@ function LabelWrapper({ children, handleClose }) {
     image != null && getPath()
   }, [cardImagePage])
 
+
+
+
   return (
     <motion.div
       initial={{ opacity: 0, scale: 1.2 }}

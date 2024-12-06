@@ -31,12 +31,22 @@ export const Etiquetador = ({ isActive, handleClose }) => {
     const [categories, setCategories] = useState([])
     const [tags, setTags] = useState([])
     const [isModalActive, setIsModalActive] = useState(false)
-    const { albumID } = useParams()
     const [searchParams, setSearchParams] = useSearchParams()
     const userID = userData.decoded.user_id
     const [componentToRender, setComponentToRender] = useState(null);
-    const [dateParam, setDateParam] = useState({ initialDate: null, finalDate: null })
-    const location = useLocation()
+    
+    useEffect(() => {
+        if (isActive) {
+            // Oculta el scroll al activar el modal
+            document.body.style.overflow = 'hidden';
+        } else {
+            // Restaura el scroll al desactivar el modal
+            document.body.style.overflow = '';
+        }
+            
+        
+      }, [isActive, handleClose]);
+
     useEffect(() => {
         document.body.className = ' bg-gradient-to-r from-gray-900 to-blue-gray-950';
         console.log("esta activado el menu de categorias:", isCategoryMenuActivate)

@@ -11,13 +11,13 @@ export const TarjetaImagen = ({ image, index }) => {
     const {
          setIsTaggerActive
         , setImage
-        , maxPage
         , pageImage
         , setCardImagePage
         , quantityImagePerPage
+        , setImagesToDelete
          } = useAuth();
     const [SearchParams, setSearchParams] = useSearchParams();
-    const location = useLocation();
+    const [isCheck,setIsCheck] = useState(false) 
 
 
     const handleMouseOver = () => {
@@ -33,7 +33,6 @@ export const TarjetaImagen = ({ image, index }) => {
     
     
     const handleInitImage = () => {
-
         const pageImageNumber = ((index + 1) + (pageImage - 1) * quantityImagePerPage)
 
         setSearchParams((prev) => {
@@ -71,16 +70,49 @@ export const TarjetaImagen = ({ image, index }) => {
             onMouseOut={handleMouseOut}
             className="relative w-full h-full">
 
-            {!isHover ? (
+            {!isHover && !isCheck? (
+                <>
+                {/* <input 
+                onClick={(e)=> e.stopPropagation()}
+                className="z-30 absolute top-2 left-2 "
+                type="checkbox"/> */}
                 <img
+                
                     src={image.link}
                     alt="burning"
                     className="object-cover w-full h-full aspect-[16/9]"
                 />
+                </>
             ) : (
-                <div onClick={handleInitImage} className="hover:cursor-pointer">
+                <div 
+                onClick={(e) => {
+                    if (e.target.type !== "checkbox") {
+                      handleInitImage();
+                    }
+                  }} 
+                  className="hover:cursor-pointer">
                     <div className="relative w-full h-48 min-h-[12rem] bg-gray-200 flex items-center justify-center aspect-[16/9]">
+                        <input
+                        checked = {isCheck}
+                        onChange={e=> {
+                            e.stopPropagation();
+                            const checked = e.target.checked; // Nuevo valor del checkbox
+                            if(checked){
+                                setImagesToDelete((images)=>[...images,image])
+                            }else{
+                                
+                                setImagesToDelete((images)=>{
+                                    const newImages = images.filter((img)=> img.id !== image.id)
+                                   return newImages
+                                })
+                            }
+                            setIsCheck(checked);
+                        }}
+                        className=" z-30 absolute top-2 left-2 "
+                        type="checkbox"
+                        />
                         {image.link ? (
+                            
                             <img src={image.link} alt="burning" className="object-cover w-full h-full" />
                         ) : (
                             <div className="flex items-center justify-center w-full h-full">

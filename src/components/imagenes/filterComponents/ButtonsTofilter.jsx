@@ -5,10 +5,11 @@
   import DownloadImages from '../../../helpers/DownloadImages'
 
   function ButtonsTofilter({ onReset }) {
-    const {filter} = useAuth()
+    const {filter,maxPage} = useAuth()
     
     const handleDowload = ()=>{
-      DownloadImages(filter)
+      const query = {...filter,quantity:maxPage}
+      DownloadImages(query)
     }
 
     return (

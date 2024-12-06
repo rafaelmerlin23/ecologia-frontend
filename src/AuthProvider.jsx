@@ -96,6 +96,8 @@ export const AuthProvider = ({ children }) => {
 
     const [noTagsFilter,setNotagsFilter] = useState(false)
 
+    const [imagesTodelete,setImagesToDelete] = useState([])
+
     const handleCategoryMenu = () => {
         setIsCategoryMenuActivate(prev => !prev)
     }
@@ -243,6 +245,8 @@ export const AuthProvider = ({ children }) => {
             , setIsLoadingStructure
             , noTagsFilter
             ,setNotagsFilter
+            , imagesTodelete
+            , setImagesToDelete
 
         }}>
             {children}
