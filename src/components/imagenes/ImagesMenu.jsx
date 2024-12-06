@@ -89,7 +89,7 @@ function ImagesMenu() {
     } else {
       query = { ...filter, page: pageImage }
     }
-
+    console.log("pagiina actual",pageImage)
     const getData = async () => {
       const data = await HandleFetchPictures(query)
       console.log("datos datos datos", data)

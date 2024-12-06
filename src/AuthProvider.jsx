@@ -32,7 +32,7 @@ export const AuthProvider = ({ children }) => {
 
     const [isModalCategoryDeleteActive, setIsModalCategoryDeleteActive] = useState(true)
 
-    const [image, setImage] = useState(null);
+    const [image, setImage] = useState({});
 
     const [userName, setUserName] = useState(null)
 

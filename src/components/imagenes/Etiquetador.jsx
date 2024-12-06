@@ -94,31 +94,7 @@ export const Etiquetador = ({ isActive, handleClose }) => {
         console.log("HAY SIGUIENTE PAGINA",isNextPage)
     }
     const handleNext = async () => {
-        // const endPoint = `pictures/show_picture_from_album?page=${cardImagePage + 1}&quantity=${1}&album_id=${albumID}`;
 
-        // try {
-        //     console.log(endPoint)
-        //     const data = await handleGet(endPoint, token);
-
-        //     if (data && data.length > 0) {
-        //         const newImages = data.map((response) => ({
-        //             link: response[0],
-        //             id: response[1],
-        //             date: response[2],
-        //         }));
-        //         setImage(newImages[0]);
-        //         setSearchParams((params) => {
-        //             params.set("image-page", cardImagePage + 1);
-        //             return params;
-        //         });
-
-        //         setCardImagePage(prevPage => prevPage + 1);  // Asegúrate de actualizar correctamente el estado de la página
-        //         handleIsNextPage();  // Verifica si hay más páginas después de actualizar el estado
-        //         setChanges([]); // Resetea los cambios si es necesario
-        //     }
-        // } catch (error) {
-        //     console.error(error);
-        // }
         let filterPage = { ...filter }
 
         delete filterPage.quantity
@@ -371,7 +347,9 @@ export const Etiquetador = ({ isActive, handleClose }) => {
 
     if (!isActive) return null
     return (
-        <LabelWrapper handleClose={handleClose} >
+        ( Object.keys(image).length !== 0 &&
+
+            <LabelWrapper handleClose={handleClose} >
             {cardImagePage != 1 ? <button onClick={handlePrevious}
                 className='z-40 flex justify-center items-center py-3 px-3 bg-white rounded-full absolute top-1/2 left-2 text-white text-xl hover:opacity-70'>
                 <FontAwesomeIcon className="text-sm text-black" icon={faLessThan} />
@@ -401,6 +379,7 @@ export const Etiquetador = ({ isActive, handleClose }) => {
                         handleOpenModal={handleOpenModal} />
                     {/* <CambiosEtiquetas changes={changes}/> */}
                     {/* <div className="sm:invisible visible lg:visible md:visible xl:visible inline-block xl:min-h-[40rem] w-0.5 bg-zinc-600"></div> */}
+                    
                     <TagsSelector
                         categories={categories}
                         handleClick={handleClick}
@@ -408,11 +387,13 @@ export const Etiquetador = ({ isActive, handleClose }) => {
                         handleTags={handleTags}
                         tags={tags}
                         handleRatingChange={handleRatingChange} />
+                        
                 </div>
                 <div className="flex flex-col items-center ">
                 </div>
             </div>
         </LabelWrapper>
+        )
 
     )
 }

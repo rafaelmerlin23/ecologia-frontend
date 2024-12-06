@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import ModalFilters from "./filterComponents/ModalFilters";
 import ButtonsTofilter from "./filterComponents/ButtonsTofilter";
 import { useAuth } from "../../AuthProvider";
-import { useLocation, useParams } from "react-router-dom";
+import { useLocation, useParams, useSearchParams } from "react-router-dom";
 
 function FilterImagesDate() {
     const [isModalFilterActive, setIsModalFilterActive] = useState(false)
@@ -26,7 +26,8 @@ function FilterImagesDate() {
         , SetProjectToFilter
         , setAlbumsToFilter
     } = useAuth()
-
+    
+    const [searchParams, setSearchParams] = useSearchParams()
 
     const { albumID, proyectoId, puntoID } = useParams()
 
@@ -60,8 +61,10 @@ function FilterImagesDate() {
         const albums = []
 
         if (dateRange.initDate && dateRange.endDate) {
-            endDate = `${dateRange.endDate.slice(0, 4)}-${dateRange.endDate.slice(5, 7)}-${getDaysInMonth(dateRange.endDate.slice(5, 7), dateRange.initDate.slice(0, 4))}`
-            initDate = `${dateRange.endDate.slice(0, 4)}-${dateRange.endDate.slice(5, 7)}-01`
+            console.log(dateRange.initDate)
+            console.log(dateRange.endDate)
+            endDate = dateRange.endDate 
+            initDate = dateRange.initDate
         }
 
         // ordenar por
@@ -136,7 +139,10 @@ function FilterImagesDate() {
         ICPs.length > 0 && (query.scores = ICPs)
 
         selectedOrderFilter !== "None" && (query.order = selectedOrderFilter)
-
+        setSearchParams(params => {
+            params.set("page", 1);
+            return params;
+          });
         setFilter(query)
     }
 

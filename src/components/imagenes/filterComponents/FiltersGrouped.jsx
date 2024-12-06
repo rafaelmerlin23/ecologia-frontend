@@ -139,11 +139,11 @@ export const FilterGrouped = () => {
                             setIsGoodForm(true)
                             return { ...range, initDate: e.target.value }
                         }
-                        setIsGoodForm(new Date(`${e.target.value}-01`) <= new Date(`${dateRange.endDate}-01`))
+                        setIsGoodForm(new Date(e.target.value) <= new Date(dateRange.endDate))
                         return { ...range, initDate: e.target.value }
                     })}
                     id="init-date"
-                    type='month'
+                    type='date'
                     className={`${!isGoodForm ? 'border border-red-500' : ""}w-[300px] h-[36px] text-center px-2 rounded-md bg-zinc-700 text-white text-2xl`} />
             </div>
 
@@ -158,11 +158,11 @@ export const FilterGrouped = () => {
                             setIsGoodForm(true)
                             return { ...range, endDate: e.target.value }
                         }
-                        setIsGoodForm(new Date(`${e.target.value}-01`) >= new Date(`${dateRange.initDate}-01`))
+                        setIsGoodForm(new Date(e.target.value) >= new Date(dateRange.initDate))
                         return { ...range, endDate: e.target.value }
                     })}
                     id="end-date"
-                    type='month'
+                    type='date'
                     className={`${!isGoodForm ? 'border border-red-500' : ""} w-[300px] h-[36px] text-center px-2 rounded-md bg-zinc-700 text-white text-2xl`} />
             </div>
 
