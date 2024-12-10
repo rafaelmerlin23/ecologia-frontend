@@ -138,8 +138,8 @@ function LabelImage({image,changes,handleOpenModal,setTags,setChanges}) {
   return (
     <div onClick={handleOpenModal} className="relative w-[100%] xl:w-[600px] h-60 min-h-[30-rem] xl:min-h-[40rem] bg-gray-200 flex items-center justify-center hover:cursor-pointer">
          
-          {image.link ? (
-              <img className="object-cover w-full h-full" src={image.link} alt="sin" />
+          {image.url_original ? (
+              <img className="object-cover w-full h-full" src={image.url_original} alt="sin" />
           ) : (
               <p className="text-gray-500">No Image Available</p>
           )}

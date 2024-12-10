@@ -25,6 +25,8 @@ function FilterImagesDate() {
         , setLocationToFilter
         , SetProjectToFilter
         , setAlbumsToFilter
+        , noTagsFilter
+        , setNotagsFilter
     } = useAuth()
     
     const [searchParams, setSearchParams] = useSearchParams()
@@ -138,6 +140,8 @@ function FilterImagesDate() {
 
         ICPs.length > 0 && (query.scores = ICPs)
 
+        noTagsFilter && (query.rating = 0)
+
         selectedOrderFilter !== "None" && (query.order = selectedOrderFilter)
         setSearchParams(params => {
             params.set("page", 1);
@@ -148,6 +152,7 @@ function FilterImagesDate() {
 
     const onReset = () => {
         setDateRange({ initDate: '', endDate: '' })
+        setNotagsFilter(false)
         setGroupedTags({})
         setRanges({ 0: false, 0.5: false, 1: false, 1.5: false, 2: false, 2.5: false, 3: false })
         setSelectedOrderFilter("None")

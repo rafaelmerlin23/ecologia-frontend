@@ -12,7 +12,15 @@ import { useLocation } from 'react-router-dom';
 
 export const FilterGrouped = () => {
     const [isGoodForm, setIsGoodForm] = useState(true)
-    const { setSelectedOrderFilter, dateRange, setDateRange, ranges, groupedTags, projectsToFilter, locationToFilter, albumsToFilter } = useAuth()
+    const { noTagsFilter
+        ,setSelectedOrderFilter
+        , dateRange
+        , setDateRange
+        , ranges
+        , groupedTags
+        , projectsToFilter
+        , locationToFilter
+        , albumsToFilter } = useAuth()
     const location = useLocation()
 
     useEffect(() => {
@@ -48,6 +56,9 @@ export const FilterGrouped = () => {
     }
 
     const showTags = () => {
+        if(noTagsFilter){
+            return "Sin etiquetas"
+        }
         console.log("se ejecuto")
         let result = []
         Object.entries(groupedTags).forEach(([categoryName, tags]) => {
@@ -105,8 +116,8 @@ export const FilterGrouped = () => {
     }
 
     return (
-        <div className='xl:grid  xl:grid-cols-4 xl:gap-x-4 md:grid md:grid-cols-2  md:gap-x-6'>
-            <div className='flex flex-col gap-y-2 items-center'>
+        <div className=' xl:grid  gap-y-4 xl:grid-cols-4 xl:gap-x-4 md:grid md:grid-cols-2  md:gap-x-6'>
+            <div className=' flex flex-col gap-y-2 items-center'>
                 <p className='text-2xl text-gray-400'>
                     Ordenar por
                 </p>

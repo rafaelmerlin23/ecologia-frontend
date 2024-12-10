@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faImage, faCamera } from '@fortawesome/free-solid-svg-icons';
+import { faImage, faCamera, faDownload, faTrash } from '@fortawesome/free-solid-svg-icons';
 import SubirImagenes from "../components/imagenes/SubirImagenes";
 import { useAuth } from "../AuthProvider";
 import { useLocation, useParams } from "react-router-dom";
@@ -108,6 +108,8 @@ function Imagenes() {
           </div>}
       </div >
       <ImagesMenu />
+      
+
 
 
 

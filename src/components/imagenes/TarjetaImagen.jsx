@@ -15,6 +15,7 @@ export const TarjetaImagen = ({ image, index }) => {
         , setCardImagePage
         , quantityImagePerPage
         , setImagesToDelete
+        ,imagesTodelete
          } = useAuth();
     const [SearchParams, setSearchParams] = useSearchParams();
     const [isCheck,setIsCheck] = useState(false) 
@@ -30,6 +31,18 @@ export const TarjetaImagen = ({ image, index }) => {
 
     const handleOpenTagger = () => setIsTaggerActive(true);
 
+    useEffect(()=>{
+        const img = imagesTodelete.filter((img)=>image.id == img.id);
+        if(img.length == 0 && isCheck){
+            setIsCheck(false)
+        }
+    }
+    ,[imagesTodelete])
+
+
+    useEffect(()=>{
+        setImagesToDelete([])
+    },[pageImage])
     
     
     const handleInitImage = () => {
@@ -108,7 +121,7 @@ export const TarjetaImagen = ({ image, index }) => {
                             }
                             setIsCheck(checked);
                         }}
-                        className=" z-30 absolute top-2 left-2 "
+                        className="w-8 h-8 z-30 absolute top-2 left-2 "
                         type="checkbox"
                         />
                         {image.link ? (

@@ -117,7 +117,8 @@ export const Etiquetador = ({ isActive, handleClose }) => {
         const newImages = data.filtered_pictures.map(picture => ({
             link: picture.url,
             id: picture.id,
-            date: picture.date
+            date: picture.date,
+            url_original :picture.url_original
         }))
 
         setImage(newImages[0])
@@ -145,7 +146,8 @@ export const Etiquetador = ({ isActive, handleClose }) => {
         const newImages = data.filtered_pictures.map(picture => ({
             link: picture.url,
             id: picture.id,
-            date: picture.date
+            date: picture.date,
+            url_original :picture.url_original
         }))
 
         setImage(newImages[0])

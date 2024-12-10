@@ -13,7 +13,7 @@
     }
 
     return (
-      <div className='col-span-4 flex sm:justify-center justify-center md:justify-center xl:justify-end lg:justify-end gap-6 mt-4'>
+      <div className=' col-span-4 flex sm:justify-center justify-center md:justify-center xl:justify-end lg:justify-end gap-6 mt-6'>
         <button
           type='button'
           onClick={onReset}

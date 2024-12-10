@@ -33,7 +33,8 @@ function ImagesMenu() {
       const newImages = data.filtered_pictures.map((picture) => ({
         link: picture.url,
         id: picture.id,
-        date: picture.date
+        date: picture.date,
+        url_original :picture.url_original
       }))
       console.log("se muestra esto", data.total_pages)
       setImage(newImages[0])
@@ -96,7 +97,8 @@ function ImagesMenu() {
       const newData = data.filtered_pictures.map((picture) => ({
         link: picture.url,
         id: picture.id,
-        date: picture.date
+        date: picture.date,
+        url_original :picture.url_original
       }))
       setImages(newData)
       setMaxPageGrid(data.total_pages)

@@ -1,5 +1,5 @@
 import prefixUrl from "./ip";
-export const handleDelete= (endPoint,formData,token,thenFetch)=>{
+export const  handleDelete= (endPoint,formData,token,thenFetch)=>{
     
     const url = prefixUrl+endPoint
     // Hacer la petición DELETE
