@@ -1,4 +1,3 @@
-import React from 'react'
 import TarjetaDeproyecto from '../components/TarjetaDeproyecto'
 import Grid from './Grid'
 import { useEffect, useState } from 'react'

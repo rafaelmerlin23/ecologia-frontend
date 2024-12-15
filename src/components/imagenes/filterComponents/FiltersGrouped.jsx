@@ -1,8 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useAuth } from '../../../AuthProvider';
 import TagsPopover from './TagsPopover';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faFilter } from '@fortawesome/free-solid-svg-icons';
 import TagsSelection from './TagsSelection';
 import RangesOptions from './RangesOptions';
 import ProjectsSelection from './ProjectsSelection';
@@ -13,7 +11,7 @@ import { useLocation } from 'react-router-dom';
 export const FilterGrouped = () => {
     const [isGoodForm, setIsGoodForm] = useState(true)
     const { noTagsFilter
-        ,setSelectedOrderFilter
+        , setSelectedOrderFilter
         , dateRange
         , setDateRange
         , ranges
@@ -56,7 +54,7 @@ export const FilterGrouped = () => {
     }
 
     const showTags = () => {
-        if(noTagsFilter){
+        if (noTagsFilter) {
             return "Sin etiquetas"
         }
         console.log("se ejecuto")
@@ -116,7 +114,7 @@ export const FilterGrouped = () => {
     }
 
     return (
-        <div className=' xl:grid  gap-y-4 xl:grid-cols-4 xl:gap-x-4 md:grid md:grid-cols-2  md:gap-x-6'>
+        <div className='mb-0 xl:grid  gap-y-4 xl:grid-cols-4 xl:gap-x-4 md:grid md:grid-cols-2  md:gap-x-6'>
             <div className=' flex flex-col gap-y-2 items-center'>
                 <p className='text-2xl text-gray-400'>
                     Ordenar por

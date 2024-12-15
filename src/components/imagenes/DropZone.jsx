@@ -21,37 +21,82 @@ function DropZone({ }) {
     e.preventDefault();  // Permitir el drop
   }
 
-  function handleChange(event) {
+  function resizeImage(file, maxWidth, maxHeight) {
+    return new Promise((resolve) => {
+      const img = new Image();
+      img.src = URL.createObjectURL(file);
+      img.onload = () => {
+        const canvas = document.createElement("canvas");
+        const ctx = canvas.getContext("2d");
 
-    const selectedFiles = Array.from(event.files || event.target.files)
-    let combineFiles = selectedFiles
+        // Escalar la imagen
+        let width = img.width;
+        let height = img.height;
+
+        if (width > height) {
+          if (width > maxWidth) {
+            height *= maxWidth / width;
+            width = maxWidth;
+          }
+        } else {
+          if (height > maxHeight) {
+            width *= maxHeight / height;
+            height = maxHeight;
+          }
+        }
+
+        canvas.width = width;
+        canvas.height = height;
+        ctx.drawImage(img, 0, 0, width, height);
+
+        // Convertir de nuevo a Blob
+        canvas.toBlob((blob) => {
+          resolve(URL.createObjectURL(blob));
+        }, "image/jpeg", 0.2);
+      };
+    });
+  }
+
+  async function handleChange(event) {
+    const selectedFiles = Array.from(event.files || event.target.files);
+    let combineFiles = selectedFiles;
 
     if (files.length > 0) {
-      const newFiles = []
-      const oldFiles = files.map((file) => file.file)
+      const newFiles = [];
+      const oldFiles = files.map((file) => file.file);
 
       for (let selectedFile of selectedFiles) {
         const exists = oldFiles.some(
           (oldFile) => oldFile.name === selectedFile.name && selectedFile.size === oldFile.size
-        )
+        );
 
         if (!exists) {
-          newFiles.push(selectedFile)
+          newFiles.push(selectedFile);
         }
       }
-      combineFiles = [...oldFiles, ...newFiles]
-
-
+      combineFiles = [...oldFiles, ...newFiles];
     }
-    const imagePreviews = combineFiles.map((file) => ({
-      url: URL.createObjectURL(file)
-      , file: file
-    }));
-    setFiles(imagePreviews)
 
-    console.log(imagePreviews)
+    const imagePreviews = await Promise.all(
+      combineFiles.map(async (file) => {
+        const resizeFile = await resizeImage(file, 300, 300);
+        const date = new Date(file.lastModifiedDate);
+        date.setMinutes(date.getMinutes() - date.getTimezoneOffset());
 
+        return {
+          url: URL.createObjectURL(file), // Usa la imagen redimensionada
+          file: file,
+          resizeFile: resizeFile,
+          date: date.toISOString().slice(0, 10)
+        };
+      })
+    );
+
+    setFiles(imagePreviews);
+    console.log(imagePreviews);
   }
+
+
 
   return (
     <div

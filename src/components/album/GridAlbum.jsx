@@ -11,7 +11,7 @@ import fetchPicture from '../../helpers/HandleFetchPictures'
 import EstructuraLoader from "../Loaders/EstructuraLoader"
 
 export const GridAlbum = () => {
-  const { setBackRoute,
+  const { 
     isLoadingStructure
     , setIsLoadingStructure
     , setLocationInformation, userData, shouldRefresh } = useAuth()
@@ -19,7 +19,7 @@ export const GridAlbum = () => {
   const [page] = useState(1)
   const [quantity] = useState(50)
   const [albumsInformation, setAlbumsInformation] = useState([])
-  const { proyectoId, puntoID } = useParams()
+  const {  puntoID } = useParams()
 
   const [isEditActive, setIsEditActive] = useState(false)
   const [isDeleteActive, setIsDeleteActive] = useState(false)
@@ -84,40 +84,7 @@ export const GridAlbum = () => {
         console.error('Error en la obtención de datos:', error);
       }
     };
-
-    const fetchImageProject = async (albumId) => {
-      const imageEndPoint = `pictures/show_picture_from_album?album_id=${albumId}&page=1&quantity=1`;
-      return await handleGet(imageEndPoint, token);
-
-    }
-
-    // Llamar a la función fetchData dentro del useEffect
     fetchData()
-    // // Hacer la petición GET
-    // fetch(`${prefixUrl}pictures/show_albums?page=${page}&quantity=${quantity}&location_id=${locationInformation.index}`, {
-    //   method: 'GET',
-    //   headers: {
-    //     'Authorization': token // Envía el token en el encabezado Authorization
-    //   }
-    // })
-    //   .then((res) => res.json())
-    //   .then((data) => {
-    //     console.log('Respuesta del servidor:', data);
-    //     if (data && data.status == 'success') {
-    //       const newAlbumInformation = data.response.map(
-    //         (albumInformation) => ({
-    //           index: albumInformation[0],
-    //           name: albumInformation[2],
-    //           date: albumInformation[3].slice(4, 17),
-    //           image: image,
-    //         }));
-    //       setAlbumsInformation(newAlbumInformation)
-    //     }
-
-    //   })
-    //   .catch((error) => {
-    //     console.error('Error:', error);
-    //   });
 
   }, [shouldRefresh])
 

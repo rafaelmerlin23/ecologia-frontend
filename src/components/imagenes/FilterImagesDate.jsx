@@ -28,7 +28,7 @@ function FilterImagesDate() {
         , noTagsFilter
         , setNotagsFilter
     } = useAuth()
-    
+
     const [searchParams, setSearchParams] = useSearchParams()
 
     const { albumID, proyectoId, puntoID } = useParams()
@@ -65,7 +65,7 @@ function FilterImagesDate() {
         if (dateRange.initDate && dateRange.endDate) {
             console.log(dateRange.initDate)
             console.log(dateRange.endDate)
-            endDate = dateRange.endDate 
+            endDate = dateRange.endDate
             initDate = dateRange.initDate
         }
 
@@ -146,7 +146,7 @@ function FilterImagesDate() {
         setSearchParams(params => {
             params.set("page", 1);
             return params;
-          });
+        });
         setFilter(query)
     }
 
@@ -164,7 +164,7 @@ function FilterImagesDate() {
 
     return (
         <>
-            <form onSubmit={onSubmit} className='xl:flex lg:flex hidden md:flex sm:hidden mb-10 w-full flex-col'>
+            <form onSubmit={onSubmit} className='xl:flex lg:flex hidden md:flex sm:hidden mb-5 w-full flex-col'>
 
                 <div className=''>
                     <FilterGrouped />

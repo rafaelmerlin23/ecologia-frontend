@@ -7,22 +7,39 @@ import { faTrash } from "@fortawesome/free-solid-svg-icons";
 
 export function SubirImagenes({ closeOverlay, isActive }) {
   const { files, setFiles } = useAuth();
-  
-  
+
+
   useEffect(() => {
     if (isActive) {
-        // Oculta el scroll vertical y horizontal
-        document.body.style.overflow = 'hidden';
-        document.documentElement.style.overflow = 'hidden';
+      // Oculta el scroll vertical y horizontal
+      document.body.style.overflow = 'hidden';
+      document.documentElement.style.overflow = 'hidden';
     } else {
-        // Restaura el scroll
-        document.body.style.overflow = '';
-        document.documentElement.style.overflow = '';
+      // Restaura el scroll
+      document.body.style.overflow = '';
+      document.documentElement.style.overflow = '';
     }
-}, [isActive]);
+  }, [isActive]);
 
-    
-  
+  const onDateChange = (index, e) => {
+    const newFiles = files.map((file, idx) => {
+      if (index == idx) {
+        return {
+          ...file,
+          date: e.target.value
+        }
+      }
+      return {
+        ...file
+      }
+
+    })
+    setFiles(newFiles)
+    console.log(newFiles)
+  }
+
+
+
   const handleDiscardImage = (file) => {
     let newImagePreviews = []
     for (let fileFor of files) {
@@ -33,9 +50,9 @@ export function SubirImagenes({ closeOverlay, isActive }) {
     }
     setFiles(newImagePreviews)
   }
-  
-    if (!isActive) return null
-    
+
+  if (!isActive) return null
+
   return (
     <ModalImagenes closeModal={closeOverlay}>
       <p className='text-3xl'>Sube tus imágenes aquí</p>
@@ -46,9 +63,14 @@ export function SubirImagenes({ closeOverlay, isActive }) {
             <div
               className='flex justify-center content-center flex-col '
               key={index}>
+              <input
+                onChange={(e) => onDateChange(index, e)}
+                value={file.date}
+                type='date'
+                className='bg-gray-700 text-center' />
               <img
                 className="object-contain h-48 w-48  m-0  border-dashed border-x-2 border-t-2 border-gray-600"
-                src={file.url}
+                src={file.resizeFile}
                 alt={`Preview ${index}`}
               />
               <button onClick={() => handleDiscardImage(file)} className='bg-red-800 p-1 hover:opacity-50'>

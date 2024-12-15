@@ -9,13 +9,7 @@ function ModalImagenes({ closeModal, children }) {
   const token = userData.token
   const [status, setStatus] = useState('0 imagenes subidas')
   const [isUploading, setIsUploading] = useState(false)
-  const [dateImages, setDateImages] = useState('')
 
-  useEffect(() => {
-    const today = new Date();
-    const formattedDate = today.toLocaleDateString('en-CA'); // 'en-CA' es el formato YYYY-MM-DD
-    setDateImages(formattedDate);
-  }, [])
 
   const handleUploadPicture = async () => {
     if (!files || files.length === 0) {
@@ -24,20 +18,25 @@ function ModalImagenes({ closeModal, children }) {
     }
     setIsUploading(true)
     files.forEach(async (file, index) => {
+
+      const dateString = file.date != "" ? new Date(file.lastModifiedDate) : new Date()
+      date.setMinutes(date.getMinutes() - date.getTimezoneOffset());
+      const date = dateString.toISOString().slice(0, 10)
+
       const formData = new FormData();
 
       formData.append('file', file.file)
 
-      formData.append('album_id', albumInformation.index);  // Cambiar por el valor adecuado
+      formData.append('album_id', albumInformation.index);
 
       formData.append('category_id', 1)
 
-      formData.append('date', dateImages)
+      formData.append('date', date)
 
       await fetch(`${prefixUrl}pictures/upload_picture`, {
         method: 'POST',
         headers: {
-          Authorization: token,  // Si se necesita un token
+          Authorization: token,
         },
         body: formData,
       }).then((res) => res.json())
@@ -77,11 +76,11 @@ function ModalImagenes({ closeModal, children }) {
           {/* Contenido con scroll */}
           <div className="h-[80vh] overflow-y-auto p-6">
             <div className='flex items-center justify-center flex-col gap-2'>
-              <label className='text-2xl'> fecha de las imagenes </label>
-              <input type="date"
+              {/* <label className='text-2xl'> fecha de las imagenes </label> */}
+              {/* <input type="date"
                 value={dateImages}
                 onChange={(e) => setDateImages(e.target.value)}
-                className='px-2 rounded-md bg-zinc-700 text-white text-2xl' />
+                className='px-2 rounded-md bg-zinc-700 text-white text-2xl' /> */}
               {children}
             </div>
           </div>
