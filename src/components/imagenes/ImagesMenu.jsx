@@ -6,7 +6,7 @@ import { Paginacion } from './Paginacion'
 import FilterImagesDate from './FilterImagesDate'
 import HandleFetchPictures from '../../helpers/HandleFetchPictures'
 import ImagesLoader from '../Loaders/ImagesLoader'
-  
+
 function ImagesMenu() {
   const { albumID, proyectoId, puntoID } = useParams()
   const {
@@ -21,47 +21,47 @@ function ImagesMenu() {
 
 
 
-  const handleTagger = () => {
+  // const handleTagger = () => {
 
-    const getData = async () => {
+  //   const getData = async () => {
 
-      let query = { ...filter }
-      delete query.quantity
-      delete query.page
-      query = { ...query, quantity: 1, page: searchParams.get('image-page') }
-      const data = await HandleFetchPictures(query)
-      const newImages = data.filtered_pictures.map((picture) => ({
-        link: picture.url,
-        id: picture.id,
-        date: picture.date,
-        url_original :picture.url_original
-      }))
-      console.log("se muestra esto", data.total_pages)
-      setImage(newImages[0])
-      setCardImagePage(Number(searchParams.get('image-page')))
-      setIsTaggerActive(true)
-      setMaxPage(data.total_pages)
-    }
-    getData()
-  }
+  //     let query = { ...filter }
+  //     delete query.quantity
+  //     delete query.page
+  //     query = { ...query, quantity: 1, page: searchParams.get('image-page') }
+  //     const data = await HandleFetchPictures(query)
+  //     const newImages = data.filtered_pictures.map((picture) => ({
+  //       link: picture.url,
+  //       id: picture.id,
+  //       date: picture.date,
+  //       url_original: picture.url_original
+  //     }))
+  //     console.log("se muestra esto", data.total_pages)
+  //     setImage(newImages[0])
+  //     setCardImagePage(Number(searchParams.get('image-page')))
+  //     setIsTaggerActive(true)
+  //     setMaxPage(data.total_pages)
+  //   }
+  //   getData()
+  // }
 
 
 
   const handleNext = () => {
     const newPage = Number(pageImage) + 1;
-    setSearchParams(params => {
-      params.set("page", newPage);
-      return params;
-    });
+    // setSearchParams(params => {
+    //   // params.set("page", newPage);
+    //   return params;
+    // });
     setPageImage(newPage); // Usa el nuevo número de página aquí
   }
 
   const handlePrevious = () => {
     const newPage = Number(pageImage) - 1;
-    setSearchParams(params => {
-      params.set("page", newPage);
-      return params;
-    });
+    // setSearchParams(params => {
+    //   params.set("page", newPage);
+    //   return params;
+    // });
     setPageImage(newPage); // Usa el nuevo número de página aquí
   }
 
@@ -70,14 +70,14 @@ function ImagesMenu() {
   useEffect(() => {
 
     setLoadingComplete(false)
-    const currentPage = searchParams.get("page") || 1; // Usa un valor por defecto
-    // Actualiza los parámetros de búsqueda si es necesario
-    setSearchParams(params => {
-      params.set("page", currentPage);
-      return params;
-    });
+    // const currentPage = searchParams.get("page") || 1; // Usa un valor por defecto
+    // // Actualiza los parámetros de búsqueda si es necesario
+    // setSearchParams(params => {
+    //   params.set("page", currentPage);
+    //   return params;
+    // });
 
-    setPageImage(currentPage ? Number(currentPage) : 1)
+    // setPageImage(currentPage ? Number(currentPage) : 1)
 
 
     let query = { ...filter }
@@ -90,7 +90,6 @@ function ImagesMenu() {
     } else {
       query = { ...filter, page: pageImage }
     }
-    console.log("pagiina actual",pageImage)
     const getData = async () => {
       const data = await HandleFetchPictures(query)
       console.log("datos datos datos", data)
@@ -98,7 +97,7 @@ function ImagesMenu() {
         link: picture.url,
         id: picture.id,
         date: picture.date,
-        url_original :picture.url_original
+        url_original: picture.url_original
       }))
       setImages(newData)
       setMaxPageGrid(data.total_pages)
@@ -112,9 +111,9 @@ function ImagesMenu() {
 
     console.log("esta chimoltrufiada", filter);
 
-    if (searchParams.get('is-active-tagger')) {
-      handleTagger()
-    }
+    // if (searchParams.get('is-active-tagger')) {
+    //   handleTagger()
+    // }
     return () => {
       setLoadingComplete(false);
     };
@@ -137,7 +136,7 @@ function ImagesMenu() {
 
     return true;
   }
-  
+
 
   const isDefaultFilter = () => {
 
@@ -161,7 +160,7 @@ function ImagesMenu() {
           Sin resultados.
         </div>
         : ""}
-      
+
       {images.length > 0 ? <Paginacion handleNext={handleNext} handlePrevious={handlePrevious} maxPage={maxPageGrid} /> : ""}
 
     </div>

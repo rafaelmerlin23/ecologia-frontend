@@ -21,10 +21,10 @@ export const Paginacion = ({ handleNext, handlePrevious, maxPage }) => {
     }, [])
 
     const handlePageImage = (newPage) => {
-        setSearchParams(params => {
-            params.set("page", newPage);
-            return params;
-        });
+        // setSearchParams(params => {
+        //     params.set("page", newPage);
+        //     return params;
+        // });
         setPageImage(newPage)
 
     }

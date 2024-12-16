@@ -9,16 +9,15 @@ export const TarjetaImagen = ({ image, index }) => {
     const [isHover, setIsHover] = useState(false);
     const containerRef = useRef(null); // Usamos useRef para acceder al contenedor
     const {
-         setIsTaggerActive
+        setIsTaggerActive
         , setImage
         , pageImage
         , setCardImagePage
         , quantityImagePerPage
         , setImagesToDelete
-        ,imagesTodelete
-         } = useAuth();
-    const [SearchParams, setSearchParams] = useSearchParams();
-    const [isCheck,setIsCheck] = useState(false) 
+        , imagesTodelete
+    } = useAuth();
+    const [isCheck, setIsCheck] = useState(false)
 
 
     const handleMouseOver = () => {
@@ -31,28 +30,28 @@ export const TarjetaImagen = ({ image, index }) => {
 
     const handleOpenTagger = () => setIsTaggerActive(true);
 
-    useEffect(()=>{
-        const img = imagesTodelete.filter((img)=>image.id == img.id);
-        if(img.length == 0 && isCheck){
+    useEffect(() => {
+        const img = imagesTodelete.filter((img) => image.id == img.id);
+        if (img.length == 0 && isCheck) {
             setIsCheck(false)
         }
     }
-    ,[imagesTodelete])
+        , [imagesTodelete])
 
 
-    useEffect(()=>{
+    useEffect(() => {
         setImagesToDelete([])
-    },[pageImage])
-    
-    
+    }, [pageImage])
+
+
     const handleInitImage = () => {
         const pageImageNumber = ((index + 1) + (pageImage - 1) * quantityImagePerPage)
 
-        setSearchParams((prev) => {
-            prev.set("is-active-tagger", true);
-            prev.set("image-page", pageImageNumber);
-            return prev;
-        });
+        // setSearchParams((prev) => {
+        //     prev.set("is-active-tagger", true);
+        //     prev.set("image-page", pageImageNumber);
+        //     return prev;
+        // });
         setCardImagePage(pageImageNumber)
         setImage(image)
         handleOpenTagger()
@@ -83,49 +82,49 @@ export const TarjetaImagen = ({ image, index }) => {
             onMouseOut={handleMouseOut}
             className="relative w-full h-full">
 
-            {!isHover && !isCheck? (
+            {!isHover && !isCheck ? (
                 <>
-                {/* <input 
+                    {/* <input 
                 onClick={(e)=> e.stopPropagation()}
                 className="z-30 absolute top-2 left-2 "
                 type="checkbox"/> */}
-                <img
-                
-                    src={image.link}
-                    alt="burning"
-                    className="object-cover w-full h-full aspect-[16/9]"
-                />
+                    <img
+
+                        src={image.link}
+                        alt="burning"
+                        className="object-cover w-full h-full aspect-[16/9]"
+                    />
                 </>
             ) : (
-                <div 
-                onClick={(e) => {
-                    if (e.target.type !== "checkbox") {
-                      handleInitImage();
-                    }
-                  }} 
-                  className="hover:cursor-pointer">
+                <div
+                    onClick={(e) => {
+                        if (e.target.type !== "checkbox") {
+                            handleInitImage();
+                        }
+                    }}
+                    className="hover:cursor-pointer">
                     <div className="relative w-full h-48 min-h-[12rem] bg-gray-200 flex items-center justify-center aspect-[16/9]">
                         <input
-                        checked = {isCheck}
-                        onChange={e=> {
-                            e.stopPropagation();
-                            const checked = e.target.checked; // Nuevo valor del checkbox
-                            if(checked){
-                                setImagesToDelete((images)=>[...images,image])
-                            }else{
-                                
-                                setImagesToDelete((images)=>{
-                                    const newImages = images.filter((img)=> img.id !== image.id)
-                                   return newImages
-                                })
-                            }
-                            setIsCheck(checked);
-                        }}
-                        className="w-8 h-8 z-30 absolute top-2 left-2 "
-                        type="checkbox"
+                            checked={isCheck}
+                            onChange={e => {
+                                e.stopPropagation();
+                                const checked = e.target.checked; // Nuevo valor del checkbox
+                                if (checked) {
+                                    setImagesToDelete((images) => [...images, image])
+                                } else {
+
+                                    setImagesToDelete((images) => {
+                                        const newImages = images.filter((img) => img.id !== image.id)
+                                        return newImages
+                                    })
+                                }
+                                setIsCheck(checked);
+                            }}
+                            className="w-8 h-8 z-30 absolute top-2 left-2 "
+                            type="checkbox"
                         />
                         {image.link ? (
-                            
+
                             <img src={image.link} alt="burning" className="object-cover w-full h-full" />
                         ) : (
                             <div className="flex items-center justify-center w-full h-full">

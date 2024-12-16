@@ -23,15 +23,6 @@ export const AuthProvider = ({ children }) => {
 
     const [images, setImages] = useState([])
 
-    const [categoriesToDelete, setCategoriesToDelete] = useState([])
-
-    const [categoryToDelete, setCategoryToDelete] = useState(null)
-
-
-    const [fields, setFields] = useState([])
-
-    const [isModalCategoryDeleteActive, setIsModalCategoryDeleteActive] = useState(true)
-
     const [image, setImage] = useState({});
 
     const [userName, setUserName] = useState(null)
@@ -94,9 +85,13 @@ export const AuthProvider = ({ children }) => {
 
     const [isLoadingStructure, setIsLoadingStructure] = useState({ project: false, location: false, album: false })
 
-    const [noTagsFilter,setNotagsFilter] = useState(false)
+    const [noTagsFilter, setNotagsFilter] = useState(false)
 
-    const [imagesTodelete,setImagesToDelete] = useState([])
+    const [imagesTodelete, setImagesToDelete] = useState([])
+
+    const [categories, setCategories] = useState([])
+
+
 
     const handleCategoryMenu = () => {
         setIsCategoryMenuActivate(prev => !prev)
@@ -169,17 +164,8 @@ export const AuthProvider = ({ children }) => {
             , albumInformation
             , setAlbumInformation
             , files
-            , setFiles
             , images
             , setImages
-            , setCategoriesToDelete
-            , categoriesToDelete
-            , fields
-            , setFields
-            , categoryToDelete
-            , setCategoryToDelete
-            , isModalCategoryDeleteActive
-            , setIsModalCategoryDeleteActive
             , image
             , setImage
             , setUserName
@@ -244,9 +230,12 @@ export const AuthProvider = ({ children }) => {
             , isLoadingStructure
             , setIsLoadingStructure
             , noTagsFilter
-            ,setNotagsFilter
+            , setNotagsFilter
             , imagesTodelete
             , setImagesToDelete
+            , categories
+            , setCategories
+
 
         }}>
             {children}

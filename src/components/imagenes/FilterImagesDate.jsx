@@ -22,6 +22,7 @@ function FilterImagesDate() {
         , setGroupedTags
         , setRanges
         , setSelectedOrderFilter
+        , setPageImage
         , setLocationToFilter
         , SetProjectToFilter
         , setAlbumsToFilter
@@ -143,10 +144,9 @@ function FilterImagesDate() {
         noTagsFilter && (query.rating = 0)
 
         selectedOrderFilter !== "None" && (query.order = selectedOrderFilter)
-        setSearchParams(params => {
-            params.set("page", 1);
-            return params;
-        });
+
+        setPageImage(1)
+
         setFilter(query)
     }
 
@@ -160,6 +160,7 @@ function FilterImagesDate() {
         setLocationToFilter({})
         setAlbumsToFilter({})
         setFilter({ quantity: quantityImagePerPage })
+        setPageImage(1)
     }
 
     return (
