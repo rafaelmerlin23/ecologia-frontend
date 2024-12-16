@@ -119,7 +119,7 @@ const Categories = () => {
             <div className="mb-4">
                 <input
                     type="text"
-                    placeholder="Buscar proyectos..."
+                    placeholder="Buscar categorías..."
                     value={searchText}
                     minLength={5}
                     onChange={(e) => setSearchText(e.target.value)}

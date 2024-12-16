@@ -2,6 +2,7 @@ import { useEffect } from "react"
 import { useAuth } from "../AuthProvider"
 import { CategorysSelector } from "../components/etiqueta/CategorysSelector"
 import handleGetData from "../helpers/handleGetData"
+import Tags from "../components/etiqueta/Tags"
 export const CategoriaEtiqueta = () => {
 
 
@@ -42,9 +43,15 @@ export const CategoriaEtiqueta = () => {
 
         <div className="mt-32">
             <CategorysSelector />
+            <div className="mt-14 flex justify-center items-center flex-col">
             {categories.filter(category => category.isSelected).map((category, index) => (
-                <p key={index} className="">{category.name}</p>
+                <div key={index}>
+                <label 
+                className="mt-14 rounded-2xl px-10 bg-gray-700 flex  justify-start text-3xl mb-6"> {category.name}</label>
+                <Tags  categoryId={category.id}/>
+                </div>
             ))}
+            </div>
         </div>
 
     )
