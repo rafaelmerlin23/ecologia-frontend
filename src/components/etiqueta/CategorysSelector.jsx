@@ -15,8 +15,8 @@ export const CategorysSelector = () => {
 
     return (
         <TagsPopover content={<Categories />}>
-            <div className="bg-zinc-600 px-14 py-1 rounded-full hover:opacity-60">
-                ver categorias
+            <div className="bg-zinc-700 w-[30vw] py-2 text-3xl rounded-full hover:opacity-60">
+                Administrar categorias
             </div>
         </TagsPopover>
     )
@@ -34,6 +34,7 @@ const Categories = () => {
     const [isCreateActive, setIsCreateActive] = useState(false)
     const [filteredCategories, setFilteredCategories] = useState([]);
     const [newCategoryName, setNewCategoryName] = useState("")
+    const buttonClass = "px-3 py-2 hover:bg-zinc-400 rounded-full";
 
 
 
@@ -126,18 +127,18 @@ const Categories = () => {
                     className="w-[57vw] p-2 rounded-md text-sm bg-zinc-800 text-white focus:outline-none focus:ring-2 focus:ring-green-500"
                 />
             </div>
-            {/* Lista de proyectos */}
+
             <button
                 onClick={e => setIsCreateActive((prev) => !prev)}
-                className="disabled:opacity-50"
+                className={`mb-4 p-1 rounded-md w-[5vw] bg-green-700 disabled:opacity-50 ${!isCreateActive && "hover:bg-green-500"}`}
                 disabled={isCreateActive}
             >
-                <FontAwesomeIcon className="bg-green-700 mb-4 p-1 rounded-md w-[5vw]" icon={faPlus} />
+                <FontAwesomeIcon  icon={faPlus} />
             </button>
 
             <div className="overflow-y-auto max-h-[400px] font-bold flex gap-3 flex-col">
                 {isCreateActive &&
-                    <div className="flex flex-row">
+                    <div className="flex flex-col xl:flex-row lg:flex-row">
                         <input
                             value={newCategoryName}
                             onChange={e => setNewCategoryName(e.target.value)}
@@ -146,13 +147,15 @@ const Categories = () => {
 
                         <div className="rounded-r-md bg-gray-500 px-6 gap-4 flex justify-center items-center">
                             <button
+                                className={buttonClass}
                                 onClick={() => setIsCreateActive(false)}
                             >
                                 <FontAwesomeIcon icon={faCancel} />
                             </button>
                             <button
+                                className={buttonClass}
                                 onClick={onCreateCategory}
-                                className="">
+                                >
                                 <FontAwesomeIcon icon={faCheck} />
 
                             </button>
@@ -161,39 +164,40 @@ const Categories = () => {
                 }
                 {filteredCategories.map((category, index) => (
                     (category.isEditActive ?
-                        <div key={index} className="flex flex-row">
+                        <div key={index} className="flex flex-col xl:flex-row lg:flex-row">
                             <input
                                 onChange={(e) => onChangeNameCategory(e, index)}
                                 value={category.name}
-                                className={`bg-zinc-500 border-zinc-500 border-2 px-2 rounded-l-md w-[45vw] overflow-hidden`}
+                                className={`bg-zinc-500  text-sm border-zinc-500 border-2 px-2 rounded-l-md w-[45vw] overflow-hidden`}
                                 type="text" />
 
                             <div className="rounded-r-md bg-gray-500 px-6 gap-4 flex justify-center items-center">
                                 <button
+                                    onClick={() => onEditCategory(category.id, category.name, index)}
+                                    className={buttonClass}>
+                                    <FontAwesomeIcon icon={faCheck} />
+
+                                </button>
+                                <button
+                                    className={buttonClass}
                                     onClick={() => togleEdit(index)}
                                 >
                                     <FontAwesomeIcon icon={faCancel} />
                                 </button>
-                                <button
-                                    onClick={() => onEditCategory(category.id, category.name, index)}
-                                    className="">
-                                    <FontAwesomeIcon icon={faCheck} />
-
-                                </button>
                             </div>
                         </div> :
                         (category.willDeleted ?
-                            <div key={index} className="flex flex-row">
+                            <div key={index} className="flex flex-col xl:flex-row lg:flex-row">
                                 <button
                                     type='button'
                                     onClick={() => onSelect(index)}
                                     className={`gap-4 rounded-l-md w-[45vw] overflow-hidden whitespace-nowrap text-ellipsis px-2  text-sm  flex border-4 border-red-500 bg-zinc-800`}
                                     key={index}
                                 >
-                                    <p className="text-red-500">eliminar categoria?</p> {category.originalName}
+                                    <p className="text-red-500">¿Eliminar categoria?</p> {category.originalName}
                                 </button>
                                 <div className="rounded-r-md bg-gray-500 px-6 gap-4 flex justify-center items-center">
-                                    <button className=""
+                                    <button className={buttonClass}
                                         onClick={() => {
                                             let newCategories = [...categories];
                                             newCategories[index].willDeleted = false;
@@ -203,6 +207,7 @@ const Categories = () => {
                                         <FontAwesomeIcon icon={faCancel} />
                                     </button>
                                     <button
+                                        className={buttonClass}
                                         onClick={(e) => onDeleteCategory(category.id)}
                                     >
                                         <FontAwesomeIcon icon={faCheck} />
@@ -211,11 +216,11 @@ const Categories = () => {
                             </div>
                             :
 
-                            <div key={index} className="flex flex-row">
+                            <div key={index} className="flex flex-col xl:flex-row lg:flex-row">
                                 <button
                                     type='button'
                                     onClick={() => onSelect(index)}
-                                    className={`rounded-l-md w-[45vw] overflow-hidden whitespace-nowrap text-ellipsis px-2  hover:brightness-200 hover:bg-transparent hover:border-4 hover:border-green-700 hover:text-green-500 disabled:opacity-40 text-sm  flex  ${category.isSelected
+                                    className={` rounded-l-md w-[45vw] overflow-hidden whitespace-nowrap text-ellipsis px-2  hover:brightness-200 hover:bg-transparent hover:border-4 hover:border-green-700 hover:text-green-500 disabled:opacity-40 text-sm  flex  ${category.isSelected
                                         ? "brightness-200 bg-transparent border-4 border-green-800 text-green-900"
                                         : "border-4 border-zinc-800 bg-zinc-800"
                                         }`}
@@ -223,13 +228,14 @@ const Categories = () => {
                                 >
                                     {category.originalName}
                                 </button>
-                                <div className="rounded-r-md bg-gray-500 px-6 gap-4 flex justify-center items-center">
-                                    <button className=""
+                                <div className={` rounded-r-md bg-gray-500 px-6 gap-4 flex justify-center items-center`}>
+                                    <button className={buttonClass}
                                         onClick={() => togleEdit(index)}
                                     >
                                         <FontAwesomeIcon icon={faEdit} />
                                     </button>
                                     <button
+                                    className={buttonClass}
                                         onClick={() => {
                                             let newCategories = [...categories]
                                             newCategories[index].willDeleted = true;
