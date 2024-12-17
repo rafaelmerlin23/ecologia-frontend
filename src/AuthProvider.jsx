@@ -91,6 +91,8 @@ export const AuthProvider = ({ children }) => {
 
     const [categories, setCategories] = useState([])
 
+    const [allTags,setAllTags] = useState({})
+
 
 
     const handleCategoryMenu = () => {
@@ -164,6 +166,7 @@ export const AuthProvider = ({ children }) => {
             , albumInformation
             , setAlbumInformation
             , files
+            , setFiles
             , images
             , setImages
             , image
@@ -235,7 +238,8 @@ export const AuthProvider = ({ children }) => {
             , setImagesToDelete
             , categories
             , setCategories
-
+            , allTags
+            , setAllTags
 
         }}>
             {children}

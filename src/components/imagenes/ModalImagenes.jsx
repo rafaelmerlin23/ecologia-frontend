@@ -19,9 +19,10 @@ function ModalImagenes({ closeModal, children }) {
     setIsUploading(true)
     files.forEach(async (file, index) => {
 
-      const dateString = file.date != "" ? new Date(file.lastModifiedDate) : new Date()
-      date.setMinutes(date.getMinutes() - date.getTimezoneOffset());
-      const date = dateString.toISOString().slice(0, 10)
+      const dateString = file.date ? new Date() : new Date(file.lastModifiedDate);
+      dateString.setMinutes(dateString.getMinutes() - dateString.getTimezoneOffset());
+      const date = dateString.toISOString().slice(0, 10);
+
 
       const formData = new FormData();
 

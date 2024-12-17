@@ -30,7 +30,6 @@ export const CategoriaEtiqueta = () => {
                 }
             });
 
-
             console.log(categories);
             setCategories(categories);
         }
@@ -49,14 +48,14 @@ export const CategoriaEtiqueta = () => {
 
     return (
 
-        <div className="mt-32">
+        <div className="mt-32 mb-24">
             <CategorysSelector />
             <div className="mt-14 flex justify-center items-center flex-col">
             {categories.filter(category => category.isSelected).map((category, index) => (
                 <div key={index}>
                 <label 
                 className="mt-14 rounded-2xl px-10 bg-gray-700 flex  justify-start text-3xl mb-6"> {category.name}</label>
-                <Tags  categoryId={category.id}/>
+                <Tags  categoryName={category.name} categoryId={category.id}/>
                 </div>
             ))}
             </div>

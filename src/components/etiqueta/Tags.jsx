@@ -9,8 +9,11 @@ import handleUpdate from "../../helpers/handleUpdate";
 import { handleDelete } from "../../helpers/handleDelete";
 import { PieChart } from "@mui/x-charts";
 
-export const Tags = ({categoryId}) => {
-    const {userData} = useAuth();
+export const Tags = ({categoryId,categoryName}) => {
+    const {
+        userData
+        , allTags
+        , setAllTags} = useAuth();
     const token = userData.token;
     const[tags,setTags] = useState([]);
     const [isCreateActive,setIsCreateActive] = useState(false);
@@ -47,7 +50,10 @@ export const Tags = ({categoryId}) => {
                             };
                         })
                     );
-                    setTags(newTagsWithUsed);
+                    
+                    setAllTags(alltags=>({...alltags,
+                        [categoryName] : newTagsWithUsed
+                    }));
                     // { id: 0, value: 10, label: 'series A' },
                     const newSeries= [
                         {
@@ -56,15 +62,20 @@ export const Tags = ({categoryId}) => {
                           })),
                         },
                     ];
-                    setSeriesTags(newSeries); 
-                    // Establecemos el estado con los datos resueltos
+                   
+
+                    setSeriesTags(newSeries);
+                   
                 } else {
                     setTags(newTags);
+                    setAllTags(alltags=>({...alltags,
+                        [categoryName] : newTags
+                    }));
                 }
             
         }
         getData();
-        tags.length>0 && console.log("tags tags",tags);
+        allTags[categoryName].length>0 && console.log("tags tags",tags);
     },[])
 
     const onCreateTag=()=>{
@@ -76,7 +87,7 @@ export const Tags = ({categoryId}) => {
         handleCreate(url,token,form,(data)=>{
             setTags(tags=>([...tags,
                 {
-                    id:data?.category_id,
+                    id:data?.tag_id,
                     name:data?.tag_name,
                     originalName:data?.tag_name,
                     categoryId:categoryId,
@@ -85,7 +96,8 @@ export const Tags = ({categoryId}) => {
                     used:0
                 }
             ]))
-            setIsCreateActive(false)
+            setNewTag('');
+            setIsCreateActive(false);
         });
 
     }
@@ -132,11 +144,11 @@ export const Tags = ({categoryId}) => {
         <div className="flex justify-center items-center">
             <div className="w-[60vw] ">
             
-            <div className="hidden xl:block lg:block bg-gray-400 py-2 rounded-xl mb-6">
+            <div className="flex justify-start items-center w-full hidden xl:block lg:block bg-gray-400 py-2 rounded-xl mb-6">
             {(tags.length>0 && serieTags.length>0 && !isEmptyCategory()) &&
              <PieChart
             series={serieTags}
-            width={600}
+            width={1000}
             height={200}
             />
             }
@@ -183,10 +195,10 @@ export const Tags = ({categoryId}) => {
             </div>
             }
             {tags.length > 0 && tags.map((tag, index) => (
-                 <div>
+                 <div key={index}>
                 {!tag.isEditActive && !tag.willDeleted &&  
                 <>
-                    <div className="mb-4 flex flex-row gap-2 items-center" key={index}>
+                    <div className="mb-4 flex flex-row gap-2 items-center" >
                         <label 
                             className="w-[24.5vw]  overflow-hidden text-ellipsis" // Max-width and text ellipsis
                         >
