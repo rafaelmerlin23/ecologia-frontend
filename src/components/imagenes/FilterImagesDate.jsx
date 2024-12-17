@@ -146,7 +146,7 @@ function FilterImagesDate() {
         selectedOrderFilter !== "None" && (query.order = selectedOrderFilter)
 
         setPageImage(1)
-
+        console.log("consulta",query)
         setFilter(query)
     }
 

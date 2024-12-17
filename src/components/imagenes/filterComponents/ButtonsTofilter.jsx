@@ -10,6 +10,7 @@ function ButtonsTofilter({ onReset }) {
   const token = userData.token
   const handleDowload = () => {
     const query = { ...filter, quantity: maxPage }
+    console.log("consulta",query)
     DownloadImages(query, token)
   }
 

@@ -75,7 +75,7 @@ export const Tags = ({categoryId,categoryName}) => {
             
         }
         getData();
-        allTags[categoryName].length>0 && console.log("tags tags",tags);
+        allTags[categoryName]?.length>0 && console.log("tags tags",allTags);
     },[])
 
     const onCreateTag=()=>{
@@ -85,17 +85,18 @@ export const Tags = ({categoryId,categoryName}) => {
         form.append('tag_name',newTag);
 
         handleCreate(url,token,form,(data)=>{
-            setTags(tags=>([...tags,
-                {
-                    id:data?.tag_id,
-                    name:data?.tag_name,
-                    originalName:data?.tag_name,
-                    categoryId:categoryId,
-                    isEditActive: false,
-                    willDeleted: false,
-                    used:0
-                }
-            ]))
+            setAllTags(allTag=>({
+                ...allTag,
+                [categoryName]: [...allTag[categoryName],
+                {id:data?.tag_id,
+                name:data?.tag_name,
+                originalName:data?.tag_name,
+                categoryId:categoryId,
+                isEditActive: false,
+                willDeleted: false,
+                used:0
+            }]
+            }))
             setNewTag('');
             setIsCreateActive(false);
         });
@@ -105,47 +106,52 @@ export const Tags = ({categoryId,categoryName}) => {
     const onEditTag = (index)=>{
         const url = `${prefixUrl}tag_system/update_tag`;
         const form = new FormData();
-        form.append('tag_id',tags[index].id);
-        form.append('tag_name',tags[index].name);
+        form.append('tag_id',allTags[categoryName][index].id);
+        form.append('tag_name',allTags[categoryName][index].name);
         form.append('category_id',categoryId);
         handleUpdate(url,token,form,()=>{
-            let newTags = [...tags];
-            newTags[index].originalName = tags[index].name;
+            let newTags = [...allTags[categoryName]];
+            newTags[index].originalName = allTags[categoryName][index].name;
             newTags[index].isEditActive = false
-            setTags(newTags);
+            setAllTags(alltags=>({...alltags,
+                [categoryName] : newTags
+            }));
         })
 
     }
 
     const onChangeTag = (index,e)=>{
-        let newTags= [...tags];
+        let newTags= [...allTags[categoryName]];
         newTags[index].name = e.target.value;
-        setTags(newTags);
+        setAllTags(alltags=>({...alltags,
+            [categoryName] : newTags
+        }));
     }
 
     const onDeleteTag= (index)=>{
         const endPoint = `tag_system/delete_tag`;
         const form = new FormData();
-        form.append('tag_id',tags[index].id);
+        const id = allTags[categoryName][index]?.id;
+        form.append('tag_id',id);
         handleDelete(endPoint,form,token,()=>{
-            let copyTag = [...tags];
-            copyTag[index].willDeleted = true
-            const newTags = copyTag.filter(tag=>tag.id != tags[index].id);
-            setTags(newTags);
+            const newTags = allTags[categoryName]?.filter(tag=>tag.id != id);
+            setAllTags(alltags=>({...alltags,
+                [categoryName] : newTags
+            }));
         });
     }
 
     const isEmptyCategory =()=>{
-        if(tags.length === 0) return true
-        return tags.every(tag=>tag.used == 0);
+        if(allTags[categoryName]?.length === 0) return true
+        return allTags[categoryName]?.every(tag=>tag.used == 0);
     }
 
     return(
         <div className="flex justify-center items-center">
             <div className="w-[60vw] ">
             
-            <div className="flex justify-start items-center w-full hidden xl:block lg:block bg-gray-400 py-2 rounded-xl mb-6">
-            {(tags.length>0 && serieTags.length>0 && !isEmptyCategory()) &&
+            <div className="flex justify-start items-center w-full hidden xl:block  bg-gray-400 py-2 rounded-xl mb-6">
+            {(allTags[categoryName]?.length>0 && serieTags.length>0 && !isEmptyCategory()) &&
              <PieChart
             series={serieTags}
             width={1000}
@@ -194,7 +200,7 @@ export const Tags = ({categoryId,categoryName}) => {
                 </div> 
             </div>
             }
-            {tags.length > 0 && tags.map((tag, index) => (
+            {allTags[categoryName]?.length > 0 && allTags[categoryName]?.map((tag, index) => (
                  <div key={index}>
                 {!tag.isEditActive && !tag.willDeleted &&  
                 <>
@@ -214,18 +220,22 @@ export const Tags = ({categoryId,categoryName}) => {
                             <button
                             className={buttonClass}
                             onClick={()=>{
-                                let newTags = [...tags]
+                                let newTags = [...allTags[categoryName]]
                                 newTags[index].isEditActive = true
-                                setTags(newTags);
+                                setAllTags(alltags=>({...alltags,
+                                    [categoryName] : newTags
+                                }));
                             }}>
                                 <FontAwesomeIcon icon={faPen}/>
                             </button>
                             <button
                             className={buttonClass}
                             onClick={()=>{
-                                let newTags = [...tags]
+                                let newTags = [...allTags[categoryName]]
                                 newTags[index].willDeleted = true
-                                setTags(newTags);
+                                setAllTags(alltags=>({...alltags,
+                                    [categoryName] : newTags
+                                }));
                             }}
                             >
                                 <FontAwesomeIcon icon={faTrash}/>
@@ -261,9 +271,11 @@ export const Tags = ({categoryId,categoryName}) => {
                             <button
                             className={buttonClass}
                             onClick={()=>{
-                                let newTags = [...tags]
+                                let newTags = [...allTags[categoryName]]
                                 newTags[index].isEditActive = false
-                                setTags(newTags);
+                                setAllTags(alltags=>({...alltags,
+                                    [categoryName] : newTags
+                                }));
                             }}>
                                 <FontAwesomeIcon icon={faCancel}/>
                             </button>
@@ -290,9 +302,11 @@ export const Tags = ({categoryId,categoryName}) => {
                             <button
                             className={buttonClass}
                             onClick={()=>{
-                              let newTags = [...tags];
+                              let newTags = [...allTags[categoryName]];
                               newTags[index].willDeleted = false;
-                              setTags(newTags);
+                              setAllTags(alltags=>({...alltags,
+                                [categoryName] : newTags
+                            }));
                             }}
                             >
                                 <FontAwesomeIcon icon={faCancel}/>
