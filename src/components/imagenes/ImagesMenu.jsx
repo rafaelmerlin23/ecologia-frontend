@@ -6,10 +6,14 @@ import { Paginacion } from './Paginacion'
 import FilterImagesDate from './FilterImagesDate'
 import HandleFetchPictures from '../../helpers/HandleFetchPictures'
 import ImagesLoader from '../Loaders/ImagesLoader'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faWarning } from '@fortawesome/free-solid-svg-icons'
+import WarningComponent from './WarningComponent'
 
 function ImagesMenu() {
   const { albumID, proyectoId, puntoID } = useParams()
   const {
+    imagesExist,setImagesExist,
     setLoadingComplete, loadingComplete, shouldRefresh, filter, setImages, images, setIsTaggerActive,
     setCardImagePage, setImage, setMaxPage, setPageImage,
     pageImage, userData, quantityImagePerPage } = useAuth()
@@ -137,6 +141,14 @@ function ImagesMenu() {
     return true;
   }
 
+  useEffect(()=>{
+    if(imagesExist){
+      setTimeout(()=>{
+        setImagesExist(false)
+      },3200)
+    }
+  },[imagesExist])
+
 
   const isDefaultFilter = () => {
 
@@ -145,7 +157,8 @@ function ImagesMenu() {
 
   return (
     <div className=' flex flex-col justify-center items-center w-full'>
-
+      
+       <WarningComponent isActive={imagesExist}/>
       <section>
         {(images.length > 0 || (images.length === 0 && !isDefaultFilter())) ? <FilterImagesDate /> : ""}
 

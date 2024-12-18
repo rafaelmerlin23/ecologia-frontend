@@ -11,7 +11,6 @@ function Login() {
     const navigate = useNavigate();
     const { login, setUserName } = useAuth();
     const location = useLocation();
-    const { hash, pathname, search } = location;
     const [isGoodForm, setIsGoodForm] = useState(true)
     const [messageError, setMessageError] = useState("Usuario o contraseña incorrectos")
 
@@ -39,6 +38,10 @@ function Login() {
                     if (data.message === "Incorrect username or password") {
                         setIsGoodForm(false)
                         setMessageError("Usuario o contraseña incorrectos")
+                    }
+                    if (data.message === "The account does not exist") {
+                        setIsGoodForm(false)
+                        setMessageError("Esta cuenta no existe.")
                     }
                     if (data.message === "Account denied, please contact administration for permission") {
                         setIsGoodForm(false)

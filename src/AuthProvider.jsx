@@ -93,6 +93,8 @@ export const AuthProvider = ({ children }) => {
 
     const [allTags,setAllTags] = useState({})
 
+    const [imagesExist,setImagesExist] = useState(false)
+
 
 
     const handleCategoryMenu = () => {
@@ -240,6 +242,8 @@ export const AuthProvider = ({ children }) => {
             , setCategories
             , allTags
             , setAllTags
+            , imagesExist
+            , setImagesExist
 
         }}>
             {children}

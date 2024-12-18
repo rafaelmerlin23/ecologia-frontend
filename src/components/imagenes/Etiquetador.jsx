@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import ModalIMagen from "./ModalIMagen";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faGreaterThan, faLessThan } from "@fortawesome/free-solid-svg-icons"
-import { useLocation, useNavigate, useParams, useSearchParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import handleGetData from "../../helpers/handleGetData";
 import LabelWrapper from "./label components/labelWrapper";
 import LabelImage from "./label components/LabelImage";
@@ -31,10 +31,11 @@ export const Etiquetador = ({ isActive, handleClose }) => {
     const [categories, setCategories] = useState([])
     const [tags, setTags] = useState([])
     const [isModalActive, setIsModalActive] = useState(false)
-    const [searchParams, setSearchParams] = useSearchParams()
     const userID = userData.decoded.user_id
     const [componentToRender, setComponentToRender] = useState(null);
-    
+    const location = useLocation()
+    const { albumID, proyectoId, puntoID } = useParams()
+
     useEffect(() => {
         if (isActive) {
             // Oculta el scroll al activar el modal
@@ -53,11 +54,22 @@ export const Etiquetador = ({ isActive, handleClose }) => {
 
         const getLastPage = async () => {
 
-            let filterPage = { ...filter }
-            delete filterPage.quantity
-            delete filterPage.page
+            let filterPage = {}
 
-            filterPage = { ...filterPage, quantity: 1, page: cardImagePage }
+            if (location.pathname != "/imagenes") {
+                
+                filterPage = {  
+                     quantity: 1
+                    , page: cardImagePage
+                    , projects: proyectoId
+                    , locations: puntoID
+                    , albums: albumID }
+                
+            } else {
+                filterPage = { 
+                    page: cardImagePage
+                    , quantity: 1}
+            }
 
             const data = await HandleFetchPictures(filterPage)
             console.log("datos del la ultimapagina : ", data)
@@ -103,15 +115,27 @@ export const Etiquetador = ({ isActive, handleClose }) => {
         }
         console.log("HAY SIGUIENTE PAGINA",isNextPage)
     }
+
     const handleNext = async () => {
 
-        let filterPage = { ...filter }
+        let filterPage = {}
 
-        delete filterPage.quantity
-        delete filterPage.page
 
-        filterPage = { ...filterPage, quantity: 1, page: cardImagePage + 1 }
-
+        if (location.pathname != "/imagenes") {
+            filterPage = {  
+                 quantity: 1
+                , page: cardImagePage + 1
+                , projects: proyectoId
+                , locations: puntoID
+                , albums: albumID }
+            
+        } else {
+            filterPage = {
+                page: cardImagePage + 1
+                , quantity: 1}
+        }
+        
+        console.log("filtros del next",filterPage)
         const data = await HandleFetchPictures(filterPage)
         console.log(data)
         const newImages = data.filtered_pictures.map(picture => ({
@@ -122,10 +146,7 @@ export const Etiquetador = ({ isActive, handleClose }) => {
         }))
 
         setImage(newImages[0])
-        setSearchParams((params) => {
-            params.set("image-page", cardImagePage + 1);
-            return params;
-        });
+        
 
         setCardImagePage(prevPage => prevPage + 1);
         handleIsNextPage();
@@ -135,12 +156,23 @@ export const Etiquetador = ({ isActive, handleClose }) => {
     };
 
     const handlePrevious = async () => {
-        let filterPage = { ...filter }
+        let filterPage = {}
 
-        delete filterPage.quantity
-        delete filterPage.page
+        if (location.pathname != "/imagenes") {
+            
+            filterPage = {  
+                 quantity: 1
+                , page: cardImagePage - 1
+                , projects: proyectoId
+                , locations: puntoID
+                , albums: albumID }
+            
+        } else {
+            filterPage = { 
+                page: cardImagePage - 1
+                , quantity: 1}
+        }
 
-        filterPage = { ...filterPage, quantity: 1, page: cardImagePage - 1 }
         const data = await HandleFetchPictures(filterPage)
         console.log(data)
         const newImages = data.filtered_pictures.map(picture => ({
@@ -151,11 +183,6 @@ export const Etiquetador = ({ isActive, handleClose }) => {
         }))
 
         setImage(newImages[0])
-        setSearchParams((params) => {
-            params.set("image-page", cardImagePage - 1);
-            return params;
-        });
-
         setCardImagePage(prevPage => prevPage - 1);
         handleIsNextPage();
         setChanges([]);

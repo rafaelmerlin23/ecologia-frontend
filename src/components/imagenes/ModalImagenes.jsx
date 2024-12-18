@@ -5,7 +5,7 @@ import prefixUrl from '../../helpers/ip';
 import { useEffect, useState } from 'react';
 
 function ModalImagenes({ closeModal, children }) {
-  const { files, userData, albumInformation, refreshProjects, setFiles } = useAuth()
+  const { files, userData,imagesExist,setImagesExist, albumInformation, refreshProjects, setFiles } = useAuth()
   const token = userData.token
   const [status, setStatus] = useState('0 imagenes subidas')
   const [isUploading, setIsUploading] = useState(false)
@@ -19,10 +19,10 @@ function ModalImagenes({ closeModal, children }) {
     setIsUploading(true)
     files.forEach(async (file, index) => {
 
-      const dateString = file.date ? new Date() : new Date(file.date);
+      const dateString = file.date ? new Date(file.date) : new Date();
       dateString.setMinutes(dateString.getMinutes() - dateString.getTimezoneOffset());
       const date = dateString.toISOString().slice(0, 10);
-
+      console.log("dia de la imagen",date);
 
       const formData = new FormData();
 
@@ -43,8 +43,12 @@ function ModalImagenes({ closeModal, children }) {
       }).then((res) => res.json())
         .then((data) => {
           console.log('Respuesta del servidor:', data);
+          if(data.message === "Image alredy exists"){
+            setImagesExist(true)
+          }
           if (data && data.status == 'success') {
             console.log(data.reponse)
+
             setStatus(`${index + 1} imagenes subidas`)
             refreshProjects()
           }
@@ -55,6 +59,9 @@ function ModalImagenes({ closeModal, children }) {
         });
 
     });
+    console.log("existe la imagen?",imagesExist)
+
+    
     setFiles([])
     setIsUploading(false)
     closeModal()

@@ -14,10 +14,8 @@ import { saveAs } from "file-saver";
 
 export const GridImagenes = ({ images }) => {
     const { refreshProjects, userData, setImagesToDelete, imagesTodelete, isTaggerActive, setIsTaggerActive, setChanges, setImage } = useAuth()
-    const [searchParams, setSearchParams] = useSearchParams()
     const [isModalDeleteActive, setIsModalDeletrActive] = useState(false)
     const token = userData.token
-    const [stateDelete, setStateDelete] = useState('')
 
 
     async function downloadImagesAsZip(imageUrls) {
@@ -49,11 +47,6 @@ export const GridImagenes = ({ images }) => {
     }
 
     const handlecloseTagger = () => {
-        setSearchParams((prev) => {
-            prev.delete('is-active-tagger')
-            prev.delete('image-page')
-            return prev
-        })
         setChanges([])
         setImage({})
         setIsTaggerActive(false)
@@ -76,10 +69,7 @@ export const GridImagenes = ({ images }) => {
 
     }
     const handleExitToModal = () => {
-        setSearchParams(params => {
-            params.set("page", 1);
-            return params;
-        });
+        
         setIsModalDeletrActive(false)
         refreshProjects()
     }
@@ -107,7 +97,7 @@ export const GridImagenes = ({ images }) => {
                         <FontAwesomeIcon icon={faTrash} />
                     </button>
                     <button
-                        onClick={() => downloadImagesAsZip(imagesTodelete.map((image) => image.link))}
+                        onClick={() => downloadImagesAsZip(imagesTodelete.map((image) => image.url_original))}
                         className="rounded-full px-3 py-2 hover:bg-zinc-600">
                         <FontAwesomeIcon icon={faDownload} />
                     </button>
