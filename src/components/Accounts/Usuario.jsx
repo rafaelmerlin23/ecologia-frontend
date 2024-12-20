@@ -21,6 +21,7 @@ export const Usuario = () => {
     const [sendFormUpdate,setSendFormUpdate] = useState(false);
     const [isChangePassword,setIsChangePassword] = useState(false);
     const [confirmChange,setComfirmChage] = useState(false);
+    const userRegex = /^[a-zA-Z0-9]{3,50}$/;
     const [errorMessages,setErrorMessages]= useState(
         {updatePassword:false
             ,passwordUpdateNotEqual:false,
@@ -240,6 +241,11 @@ export const Usuario = () => {
             }} value={newUserName} 
             className="mb-4 ml-2 mr-2 rounded-2xl px-4 py-2  text-white bg-gray-600 " 
             type="text" />
+            {(!userRegex.test(newUserName) && newUserName.length > 3) ?
+                    <div className="flex justify-center items-center">
+                    <label className="block text-sm font-medium flex  text-red-500 ">Usuario invalido no se admiten espacios o guiones</label>
+                </div>:<div className="h-5">
+                    </div>}
             <label className=" ml-2 text-1xl font-bold pb-2 ">Correo</label>
             <input 
             minLength={10}
@@ -264,7 +270,7 @@ export const Usuario = () => {
             }
             <button 
             disabled= {
-                email == '' || (email == newEmail && userName == newUserName)
+                email == '' || (email == newEmail && userName == newUserName) || !userRegex.test(newUserName)
             }
             type="submit"
             className={`disabled:opacity-50 mb-10 ml-2 bg-blue-600 px-4 py-2 rounded-xl mr-2 ${email == '' || (email == newEmail && userName == newUserName)?"":"hover:bg-blue-500"}`} > 

@@ -14,9 +14,13 @@ export const CreateAccount = () => {
     const [email,setEmail] = useState('')
     const [isGoodForm,setIsGoodForm] = useState(true)
     const [messageError,setMessageError] = useState('')
+    const userRegex = /^[a-zA-Z0-9]{3,50}$/;
 
     const handleSubmit = (e) => {
         e.preventDefault()
+        if(!userRegex.test(user)){
+            return
+        }
         if (password !== repeatPassword) {
             setIsEqualPassword(false)
             return
@@ -53,11 +57,18 @@ export const CreateAccount = () => {
             <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
                 Crea tu cuenta
             </h1>
-            <form onSubmit={handleSubmit} className="space-y-4 md:space-y-6" action="#">
+            <form onSubmit={handleSubmit} className="space-y-2 md:space-y-6" action="#">
                 <div>
                     <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Tu usuario</label>
-                    <input required value={user} onChange={(e) => setUser(e.target.value)} type="text" name="username" id="username" className="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="gerardor1234" />
+                    <input minLength={3} maxLength={50} required value={user} onChange={(e) => setUser(e.target.value)} type="text" name="username" id="username" className="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="gerardor1234" />
                 </div>
+                {(!userRegex.test(user) && user.length > 3) ?
+                    <div>
+                    <label className="block text-sm font-medium flex  text-red-500 ">Usuario invalido no se admiten espacios o guiones</label>
+                </div>:
+                <div>
+                <label className="block text-sm font-medium flex  text-gray-400 ">Minimo 3 caracteres, sin espacios o guiones</label>
+                </div>}
                 
                 <div>
                     <label className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Tu correo</label>
