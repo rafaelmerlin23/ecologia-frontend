@@ -36,6 +36,7 @@ export const Etiquetador = ({ isActive, handleClose }) => {
     const location = useLocation()
     const { albumID, proyectoId, puntoID } = useParams()
     const [isTagsLoading,setIsTagsIsLoading] = useState(false);
+    const [loaderTag,setIsLoaderTag]= useState(false);
 
     useEffect(() => {
         if (isActive) {
@@ -103,6 +104,9 @@ export const Etiquetador = ({ isActive, handleClose }) => {
 
     }, [cardImagePage, image, isCategoryMenuActivate,isNextPage,filter]);
 
+    // useEffect(()=>{
+
+    // },[ca])
 
     const handleClick = () => {
         // Aquí puedes realizar alguna lógica antes de redirigir
@@ -312,6 +316,9 @@ export const Etiquetador = ({ isActive, handleClose }) => {
 
 
     const handleTags = async (id) => {
+        if(tags.length != 0){
+            setIsLoaderTag(true)
+        }
         setComponentToRender(<RatingsVisualizer
             componentToRender={componentToRender}
             categoryId={id}
@@ -358,12 +365,18 @@ export const Etiquetador = ({ isActive, handleClose }) => {
                 console.log(tagsWithRating)
                 transformChangesToTags(tagsWithRating)
                 setIsTagsIsLoading(true);
+                if(tags.length != 0){
+                    setIsLoaderTag(false);
+                }  
             } else {
                 setTags(newTags);
                 transformChangesToTags(newTags);
                 setIsTagsIsLoading(true);
+                if(tags.length != 0){
+                    setIsLoaderTag(false);
+                }  
             }
-
+            
 
         } catch (error) {
             console.error(error);
@@ -428,6 +441,7 @@ export const Etiquetador = ({ isActive, handleClose }) => {
                     
                     { isTagsLoading ?
                         <TagsSelector
+                        loaderTag={loaderTag}
                         categories={categories}
                         handleClick={handleClick}
                         handleSelect={handleSelect}
