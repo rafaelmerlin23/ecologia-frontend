@@ -151,7 +151,7 @@ export const Tags = ({categoryId,categoryName}) => {
             <div className="w-[90vw]  sm:w-[90vw] lg:w-[60vw] xl:w-[60vw] ">
             
             <div 
-            className="flex justify-center items-center w-full   bg-gray-400 py-2 rounded-xl mb-6">
+            className="flex justify-center items-center w-full  bg-gray-400 py-2 rounded-xl mb-6">
             {(allTags[categoryName]?.length>0 && serieTags.length>0 && !isEmptyCategory()) &&
              <PieChart
              className="mx-auto ml-24"
