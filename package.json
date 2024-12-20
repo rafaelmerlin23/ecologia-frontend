@@ -1,9 +1,9 @@
 {
   "name": "ecologia",
-  "homepage": "https://Firepants69.github.io/ecologia-frontend/",
   "private": true,
   "version": "0.0.0",
   "type": "module",
+  "homepage": "./",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
