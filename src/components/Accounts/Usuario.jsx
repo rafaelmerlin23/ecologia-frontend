@@ -28,6 +28,7 @@ export const Usuario = () => {
             updateUserChange:false,
             ischangeUserInfo:false,
             userExists:false,
+            errorExistsMessage:'',
         });
 
     const token = userData.token
@@ -124,18 +125,36 @@ export const Usuario = () => {
                     }
                 });
             },(data)=>{
+                if(data.message == "The email that you are trying to register already exists"){
+                    setSendFormUpdate(false);
+                    setErrorMessages(err=>({...err,userExists:true}))
+                    setTimeout(() => {
+                        setErrorMessages(err=>({...err,userExists:false}))
+                    }, 3000);
+                    setErrorMessages((err)=>({...err,ischangeUserInfo:false}));
+                    setErrorMessages((err)=>({...err,errorExistsMessage:'Este email ya existe'}));
+                    setNewEmail(email);
+                    setNewUserName(userName);
+                }
                 if(data.message == "The user that you are trying to register already exists"){
                     setSendFormUpdate(false);
                     setErrorMessages(err=>({...err,userExists:true}))
                     setTimeout(() => {
                         setErrorMessages(err=>({...err,userExists:false}))
                     }, 3000);
+                    setErrorMessages((err)=>({...err,ischangeUserInfo:false}));
+                    setErrorMessages((err)=>({...err,errorExistsMessage:'Este usuario ya existe'}));
+                    setNewEmail(email);
+                    setNewUserName(userName);
                 }
                 if(data.status == "error"){
+                    setNewEmail(email);
+                    setNewUserName(userName);
                     setErrorMessages(err=>({...err,updateUserChange:true}))
                     setTimeout(() => {
                         setErrorMessages(err=>({...err,updateUserChange:false}))
                     }, 3000);
+                    setErrorMessages((err)=>({...err,ischangeUserInfo:false}));
                 }
             });
     
@@ -233,7 +252,7 @@ export const Usuario = () => {
             type="text" />
              {errorMessages.userExists && <div 
             className="mb-4 py-2 ml-2 mr-2 rounded-xl bg-red-500 flex justify-center items-center flex-row gap-4">
-                <p>Este usuario ya existe</p>
+                <p>{errorMessages.errorExistsMessage}</p>
                 <FontAwesomeIcon className="" icon={faWarning}/>
             </div>}
             {errorMessages.updateUserInformation &&
