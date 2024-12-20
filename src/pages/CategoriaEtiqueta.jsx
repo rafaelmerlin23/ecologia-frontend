@@ -85,11 +85,11 @@ export const CategoriaEtiqueta = () => {
             
              
             <div className="mt-14 flex justify-center items-center flex-col">
-            <div className="flex justify-center items-center hidden xl:block bg-zinc-400 rounded-xl w-[60vw] ">
+            <div className="flex justify-center items-center hidden xl:block bg-zinc-500 rounded-xl w-[60vw] ">
             { categoriesInfo.length >0 && Object.keys(allTags).length === categories.length  && 
             <>
             <label 
-                className=" flex  px-10 bg-gray-700 flex  justify-start text-4xl mb-6 rounded-t-xl"> Proporción de uso</label>
+                className="bg-zinc-700 flex  px-10  flex  justify-start text-4xl mb-6 rounded-t-xl"> Proporción de uso</label>
             <PieChart
             className="mx-auto mb-4 ml-[24vw]"
             series={categoriesInfo}
@@ -97,7 +97,7 @@ export const CategoriaEtiqueta = () => {
             width={300}
             height={200}
             />
-            <div className="bg-gray-700 text-gray-200 grid grid-cols-1 gap-4">
+            <div className=" bg-zinc-700 text-gray-200 grid grid-cols-1 gap-4">
             <div 
                 className="grid grid-cols-2 border-gray-200 items-center gap-2 p-2 border-b"
                 id="titulo"
