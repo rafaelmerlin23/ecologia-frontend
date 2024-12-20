@@ -35,6 +35,7 @@ export const Etiquetador = ({ isActive, handleClose }) => {
     const [componentToRender, setComponentToRender] = useState(null);
     const location = useLocation()
     const { albumID, proyectoId, puntoID } = useParams()
+    const [isTagsLoading,setIsTagsIsLoading] = useState(false);
 
     useEffect(() => {
         if (isActive) {
@@ -49,6 +50,7 @@ export const Etiquetador = ({ isActive, handleClose }) => {
       }, [isActive, handleClose]);
 
     useEffect(() => {
+        setIsTagsIsLoading(false)
         document.body.className = ' bg-gradient-to-r from-gray-900 to-blue-gray-950';
         console.log("esta activado el menu de categorias:", isCategoryMenuActivate)
 
@@ -90,6 +92,9 @@ export const Etiquetador = ({ isActive, handleClose }) => {
                         }
                     });
                     setCategories(newFields)
+                    if(newFields.length === 0){
+                        setIsTagsIsLoading(true)
+                    }
                     handleTags(newFields[0].id)
                 }
             }
@@ -352,9 +357,11 @@ export const Etiquetador = ({ isActive, handleClose }) => {
                 setTags(tagsWithRating);
                 console.log(tagsWithRating)
                 transformChangesToTags(tagsWithRating)
+                setIsTagsIsLoading(true);
             } else {
                 setTags(newTags);
-                transformChangesToTags(newTags)
+                transformChangesToTags(newTags);
+                setIsTagsIsLoading(true);
             }
 
 
@@ -419,15 +426,21 @@ export const Etiquetador = ({ isActive, handleClose }) => {
                     {/* <CambiosEtiquetas changes={changes}/> */}
                     {/* <div className="sm:invisible visible lg:visible md:visible xl:visible inline-block xl:min-h-[40rem] w-0.5 bg-zinc-600"></div> */}
                     
-                    <TagsSelector
+                    { isTagsLoading ?
+                        <TagsSelector
                         categories={categories}
                         handleClick={handleClick}
                         handleSelect={handleSelect}
                         handleTags={handleTags}
                         tags={tags}
-                        handleRatingChange={handleRatingChange} />
+                        handleRatingChange={handleRatingChange} />:
+                        <div className="flex h-[40rem] items-center justify-center w-[380px]">
+                            <div className="loader"></div>
+                        </div>
+                    }
                         
                 </div>
+                
                 <div className="flex flex-col items-center ">
                 </div>
             </div>

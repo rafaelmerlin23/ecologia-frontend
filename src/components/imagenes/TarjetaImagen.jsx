@@ -52,6 +52,7 @@ export const TarjetaImagen = ({ image, index }) => {
         //     prev.set("image-page", pageImageNumber);
         //     return prev;
         // });
+        console.log("Id de la imagen: ",image.id)
         setCardImagePage(pageImageNumber)
         setImage(image)
         handleOpenTagger()

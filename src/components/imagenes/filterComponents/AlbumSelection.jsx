@@ -5,13 +5,20 @@ import { useAuth } from '../../../AuthProvider';
 function AlbumSelection() {
 
     const [searchString, setSearchString] = useState('');
-    const { locationToFilter, userData, albumsToFilter, setAlbumsToFilter } = useAuth();
+    const { locationToFilter
+            , locationCharge
+            , setLocationCharge
+            , userData
+            , albumsToFilter
+            , setAlbumsToFilter } = useAuth();
 
     const token = userData.token;
 
     // Obtener proyectos al cargar el componente
     useEffect(() => {
-
+        if(Object.keys(albumsToFilter).length == 0){
+            setLocationCharge(location=>({...location,isAlbumCharge:false})); 
+        }
         const getProjects = async () => {
             let newAlbumInformation = {}
             // const endpoint = `projects/show_albums?location_id=${}`
@@ -38,6 +45,7 @@ function AlbumSelection() {
             }
 
             setAlbumsToFilter(newAlbumInformation)
+            setLocationCharge(location=>({...location,isAlbumCharge:true}));
 
         };
         getProjects();
@@ -54,7 +62,8 @@ function AlbumSelection() {
                 className="w-full mb-4 p-2 rounded-md text-sm bg-zinc-800 text-white focus:outline-none focus:ring-2 focus:ring-green-500"
             />
 
-            {Object.entries(albumsToFilter).map(([location, albums]) => (
+            {locationCharge.isAlbumCharge?
+            Object.entries(albumsToFilter).map(([location, albums]) => (
                 <div key={location} className="mb-4">
                     <h3 className="text-green-500 font-bold">{albums.filter(album => album.name.toLowerCase().includes(searchString.toLowerCase())).length > 0 && albums.length > 0 ? location : ""}</h3>
                     <div className="flex flex-col gap-2 mt-2">
@@ -81,7 +90,11 @@ function AlbumSelection() {
                             ))}
                     </div>
                 </div>
-            ))}
+            )):
+            <div className='flex justify-center items-center'> 
+                <div className='loader'></div>
+            </div>
+            }
         </div>
     );
 }

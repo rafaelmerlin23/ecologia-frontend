@@ -5,13 +5,23 @@ import { useAuth } from '../../../AuthProvider';
 function TagsSelection() {
 
     const [searchString, setSearchString] = useState('');
-    const { locationToFilter, setLocationToFilter, userData, projectsToFilter, setAlbumsToFilter } = useAuth();
+    const { 
+        locationCharge
+        , setLocationCharge
+        , locationToFilter
+        , setLocationToFilter
+        , userData
+        , projectsToFilter
+        , setAlbumsToFilter } = useAuth();
 
     const token = userData.token;
 
     // Obtener proyectos al cargar el componente
     useEffect(() => {
         setAlbumsToFilter({})
+        if(Object.keys(locationToFilter).length == 0){
+            setLocationCharge(location=>({...location,isLocationCharge: false}));
+        }
         const getProjects = async () => {
             let newLocationInformation = {}
             for (let i = 0; i < projectsToFilter.length; i++) {
@@ -31,6 +41,7 @@ function TagsSelection() {
                 }
             }
             setLocationToFilter(newLocationInformation)
+            setLocationCharge(location=>({...location,isLocationCharge: true}));
             console.log(newLocationInformation)
 
         };
@@ -48,11 +59,12 @@ function TagsSelection() {
                 className="w-full mb-4 p-2 rounded-md text-sm bg-zinc-800 text-white focus:outline-none focus:ring-2 focus:ring-green-500"
             />
 
-            {Object.entries(locationToFilter).map(([project, locations]) => (
+            {locationCharge.isLocationCharge ? Object.entries(locationToFilter).map(([project, locations]) => (
                 <div key={project} className="mb-4">
                     <h3 className="text-green-500 font-bold">{locations.filter(location => location.name.toLowerCase().includes(searchString.toLowerCase())).length > 0 && locations.length > 0 ? project : ""}</h3>
                     <div className="flex flex-col gap-2 mt-2">
-                        {locations
+                        { 
+                        locations
                             .filter(location => location.name.toLowerCase().includes(searchString.toLowerCase())) // Filtrar por búsqueda
                             .map(location => (
                                 <button
@@ -75,7 +87,11 @@ function TagsSelection() {
                             ))}
                     </div>
                 </div>
-            ))}
+            )):
+            <div className='flex justify-center items-center'>
+                <div className='loader'></div>
+            </div>
+                }
         </div>
     );
 }

@@ -1,4 +1,4 @@
-const handleCreate = (url, token, data, onSuccess) => {
+const handleCreate = (url, token, data, onSuccess,getData) => {
     fetch(url, {
         method: 'POST',
         headers: {
@@ -8,6 +8,7 @@ const handleCreate = (url, token, data, onSuccess) => {
     })
     .then((res) => res.json())
     .then((responseData) => {
+        getData && getData(responseData)
         if (responseData && responseData.status === 'success') {
             onSuccess(responseData);
         } 

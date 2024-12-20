@@ -95,7 +95,13 @@ export const AuthProvider = ({ children }) => {
 
     const [imagesExist,setImagesExist] = useState(false)
 
+    const [isCompleteChargeTagsSelector,setIsCompleteChargeTagsSelector] = useState(true);    
 
+    const [locationCharge,setLocationCharge] = useState({
+        isProjectsCharge:true,
+        isLocationCharge:true,
+        isAlbumCharge:true,
+    })
 
     const handleCategoryMenu = () => {
         setIsCategoryMenuActivate(prev => !prev)
@@ -244,6 +250,12 @@ export const AuthProvider = ({ children }) => {
             , setAllTags
             , imagesExist
             , setImagesExist
+            , isCompleteChargeTagsSelector
+            , setIsCompleteChargeTagsSelector
+            , locationCharge
+            , setLocationCharge
+            
+            
 
         }}>
             {children}

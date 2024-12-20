@@ -16,56 +16,48 @@ function ModalImagenes({ closeModal, children }) {
       console.error("No se seleccionó ningún archivo");
       return;
     }
-    setIsUploading(true)
-    files.forEach(async (file, index) => {
-
+  
+    setIsUploading(true);
+  
+    for (const [index, file] of files.entries()) {
       const dateString = file.date ? new Date(file.date) : new Date();
       dateString.setMinutes(dateString.getMinutes() - dateString.getTimezoneOffset());
       const date = dateString.toISOString().slice(0, 10);
-      console.log("dia de la imagen",date);
-
+      console.log("día de la imagen", date);
+  
       const formData = new FormData();
-
-      formData.append('file', file.file)
-
+      formData.append('file', file.file);
       formData.append('album_id', albumInformation.index);
-
-      formData.append('category_id', 1)
-
-      formData.append('date', date)
-
-      await fetch(`${prefixUrl}pictures/upload_picture`, {
-        method: 'POST',
-        headers: {
-          Authorization: token,
-        },
-        body: formData,
-      }).then((res) => res.json())
-        .then((data) => {
-          console.log('Respuesta del servidor:', data);
-          if(data.message === "Image alredy exists"){
-            setImagesExist(true)
-          }
-          if (data && data.status == 'success') {
-            console.log(data.reponse)
-
-            setStatus(`${index + 1} imagenes subidas`)
-            refreshProjects()
-          }
-
-        })
-        .catch((error) => {
-          console.error('Error:', error);
+      formData.append('category_id', 1);
+      formData.append('date', date);
+  
+      try {
+        const response = await fetch(`${prefixUrl}pictures/upload_picture`, {
+          method: 'POST',
+          headers: { Authorization: token },
+          body: formData,
         });
-
-    });
-    console.log("existe la imagen?",imagesExist)
-
-    
-    setFiles([])
-    setIsUploading(false)
-    closeModal()
-  }
+        const data = await response.json();
+        console.log('Respuesta del servidor:', data);
+  
+        if (data.message === "Image already exists") {
+          setImagesExist(true);
+        }
+        if (data && data.status === 'success') {
+          console.log(data.response);
+          setStatus(`${index + 1} imágenes subidas`);
+          refreshProjects();
+        }
+      } catch (error) {
+        console.error('Error:', error);
+      }
+    }
+  
+    console.log("¿Existe la imagen?", imagesExist);
+    setFiles([]);
+    setIsUploading(false);
+    closeModal();
+  };
 
   return (
     <div>
@@ -95,7 +87,10 @@ function ModalImagenes({ closeModal, children }) {
 
           <div className="p-4 border-t flex justify-end gap-x-6">
             {isUploading ?
-              <p className='text-2xl text-blue-200'>{status}</p>
+              <div className='flex flex-row justify-center items-center gap-3'>
+                <div className="loader-images "></div>
+                <p className='text-3xl text-blue-200'>{status}</p>
+              </div>
               :
               (<>
                 <button

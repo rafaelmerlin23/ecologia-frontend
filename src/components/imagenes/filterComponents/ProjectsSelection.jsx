@@ -3,7 +3,13 @@ import { handleGetData } from "../../../helpers/handleGetData";
 import { useAuth } from "../../../AuthProvider";
 
 export const ProjectsSelection = () => {
-    const { userData, projectsToFilter, SetProjectToFilter, setLocationToFilter,setAlbumsToFilter } = useAuth();
+    const { userData
+        , projectsToFilter
+        , SetProjectToFilter
+        , setLocationToFilter
+        , setAlbumsToFilter
+        , locationCharge
+        , setLocationCharge } = useAuth();
     const [searchText, setSearchText] = useState("");
     const [filteredProjects, setFilteredProjects] = useState([]);
     const token = userData.token;
@@ -16,6 +22,9 @@ export const ProjectsSelection = () => {
 
     // Obtener proyectos al cargar el componente
     useEffect(() => {
+        if(projectsToFilter.length == 0){
+            setLocationCharge(location=>({...location,isProjectsCharge: false}));
+        }
         setAlbumsToFilter({})
         setLocationToFilter({})
         const getProjects = async () => {
@@ -30,6 +39,7 @@ export const ProjectsSelection = () => {
                 isSelected: false,
             }));
             SetProjectToFilter(newProjects);
+            setLocationCharge(location=>({...location,isProjectsCharge: true}));
         };
         getProjects();
     }, []);
@@ -61,7 +71,8 @@ export const ProjectsSelection = () => {
 
             {/* Lista de proyectos */}
             <div className="font-bold flex gap-3 flex-col">
-                {filteredProjects.map((project, index) => (
+                {locationCharge.isProjectsCharge ?
+                filteredProjects.map((project, index) => (
                     <button
                         type='button'
                         onClick={() => onSelect(index)}
@@ -73,7 +84,11 @@ export const ProjectsSelection = () => {
                     >
                         {project.name}
                     </button>
-                ))}
+                )):
+                <div className="flex justify-center items-center">
+                    <div className="loader"></div>
+                </div>
+                    }
                 {filteredProjects.length === 0 && (
                     <p className="text-sm text-gray-400 text-center">No se encontraron proyectos</p>
                 )}

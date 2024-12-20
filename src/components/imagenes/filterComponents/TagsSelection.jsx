@@ -8,8 +8,9 @@ function TagsSelection() {
 
     const [searchString, setSearchString] = useState('');
     const { groupedTags, noTagsFilter ,setNotagsFilter
-        , setGroupedTags, userData,setRanges } = useAuth();
-
+        , setGroupedTags, userData,setRanges,
+        isCompleteChargeTagsSelector
+        ,setIsCompleteChargeTagsSelector } = useAuth();
     const token = userData.token;
 
     const onChangeCheckBox = (e)=>{
@@ -47,44 +48,56 @@ function TagsSelection() {
     }
 
     useEffect(() => {
-        setRanges({ 0: false, 0.5: false, 1: false, 1.5: false, 2: false, 2.5: false, 3: false })
+        setRanges({ 0: false, 0.5: false, 1: false, 1.5: false, 2: false, 2.5: false, 3: false });
+    
         if (Object.keys(groupedTags).length !== 0) {
-            return
+            return;
         }
+    
         const getData = async () => {
-            const endpointCategories = `tag_system/show_categories`;
-            const categories = await handleGetData(endpointCategories, token);
-            const response = categories.response;
-
-            const groupedInfo = {}; // Objeto para agrupar por categoría
-
-            for (let i = 0; i < response.length; i++) {
-                if (response[i][0] !== 1) {
-                    const endPointTags = `tag_system/show_tags?category_id=${response[i][0]}`;
-                    const tagsCategories = await handleGetData(endPointTags, token);
-                    const responseTags = tagsCategories.response;
-
-                    responseTags.forEach(tag => {
-                        const categoryName = response[i][1];
-                        if (!groupedInfo[categoryName]) {
-                            groupedInfo[categoryName] = [];
-                        }
-                        groupedInfo[categoryName].push({
-                            tagID: tag[0],
-                            tagName: tag[1],
-                            categoryID: tag[2],
-                            isSelected: false,
-                        });
-                    });
+            try {
+                if(Object.keys(groupedTags).length== 0){
+                    setIsCompleteChargeTagsSelector(true)
                 }
+                const endpointCategories = `tag_system/show_categories`;
+                const categories = await handleGetData(endpointCategories, token);
+                const response = categories.response;
+    
+                const groupedInfo = {}; // Objeto para agrupar por categoría
+    
+                for (let i = 0; i < response.length; i++) {
+                    if (response[i][0] !== 1) {
+                        const endPointTags = `tag_system/show_tags?category_id=${response[i][0]}`;
+                        const tagsCategories = await handleGetData(endPointTags, token);
+                        const responseTags = tagsCategories.response;
+    
+                        responseTags.forEach(tag => {
+                            const categoryName = response[i][1];
+                            if (!groupedInfo[categoryName]) {
+                                groupedInfo[categoryName] = [];
+                            }
+                            groupedInfo[categoryName].push({
+                                tagID: tag[0],
+                                tagName: tag[1],
+                                categoryID: tag[2],
+                                isSelected: false,
+                            });
+                        });
+                    }
+                }
+    
+                setGroupedTags(groupedInfo); // Actualiza el estado con la información agrupada
+                console.log("Tags agrupados por categoría: ", groupedInfo);
+            } catch (error) {
+                console.error("Error al cargar etiquetas:", error);
+            } finally {
+                setIsCompleteChargeTagsSelector(false); // Solo se ejecuta cuando finaliza correctamente o hay un error
             }
-
-            setGroupedTags(groupedInfo); // Actualiza el estado con la información agrupada
-            console.log("Tags agrupados por categoría: ", groupedInfo);
         };
-
+    
         getData();
-    }, []);
+    }, [groupedTags]);
+
 
     return (
         <div className='w-[310px] p-4 max-h-[20rem] overflow-y-auto bg-zinc-700 rounded-md'>
@@ -108,7 +121,8 @@ function TagsSelection() {
             </div>
 
             {/* Renderizado de tags agrupados */}
-            {Object.entries(groupedTags).map(([categoryName, tags]) => (
+            {!isCompleteChargeTagsSelector?
+            Object.entries(groupedTags).map(([categoryName, tags]) => (
                 <div  key={categoryName} className="mb-4">
                     <button
                         disabled = {noTagsFilter}
@@ -150,7 +164,12 @@ function TagsSelection() {
                             ))}
                     </div>
                 </div>
-            ))}
+            )): 
+            <div className='flex justify-center items-center'>
+                <div className="loader"></div>
+            </div>
+            
+            }
         </div>
     );
 }
