@@ -85,17 +85,36 @@ export const CategoriaEtiqueta = () => {
             
              
             <div className="mt-14 flex justify-center items-center flex-col">
-            <div className="flex justify-center items-center hidden xl:block bg-zinc-300 rounded-t-xl w-[80vw] ">
+            <div className="flex justify-center items-center hidden xl:block bg-zinc-400 rounded-xl w-[60vw] ">
             { categoriesInfo.length >0 && Object.keys(allTags).length === categories.length  && 
             <>
             <label 
                 className=" flex  px-10 bg-gray-700 flex  justify-start text-4xl mb-6 rounded-t-xl"> Proporción de uso</label>
             <PieChart
-            className="mb-6"
+            className="mx-auto mb-4 ml-[24vw]"
             series={categoriesInfo}
-            width={1300}
+            slotProps= {{ legend: { hidden: true }} }
+            width={300}
             height={200}
             />
+            <div className="bg-gray-700 text-gray-200 grid grid-cols-1 gap-4">
+            <div 
+                className="grid grid-cols-2 border-gray-200 items-center gap-2 p-2 border-b"
+                id="titulo"
+                >
+                <p className="font-bold">Nombre</p>
+                <p className="font-bold">Cantidad de usos</p>
+                </div>
+            {categoriesInfo[0].data.map(ct => (
+                <div 
+                className="grid grid-cols-2 border-gray-200 items-center gap-2 p-2 border-b"
+                key={ct.index}
+                >
+                <p >{ct.label}</p>
+                <p>{ct.value}</p>
+                </div>
+            ))}
+            </div>
             </>
             }
             </div>

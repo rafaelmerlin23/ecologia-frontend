@@ -1,8 +1,21 @@
+import { useEffect } from "react";
 import AdministrarCuentas from "./AdministrarCuentas"
+  
 
 export const GestorCuentas = () => {
+  
+  useEffect(() => {
+      // Cambiar la clase del body cuando el componente se monta
+      document.body.className = "bg-gradient-to-r from-gray-900 to-blue-gray-950";
+  
+      // Limpiar las clases al desmontar el componente
+      return () => {
+        document.body.className = "bg-black";
+      };
+    }, []);
+
   return (
-    <div className=" flex-col flex justify-start items-center h-screen  bg-gradient-to-r from-gray-900 to-blue-gray-950">
+    <div className=" flex-col flex justify-start items-center  mb-10">
       <div className=" pr-10 py-10 bg-gray-700 mt-24 flex flex-col items-start">
         <label className="ml-10 pt-0 mt-0 mb-4 text-3xl ">
           <span className="text-green-400">◉</span> Cuentas disponibles</label>
