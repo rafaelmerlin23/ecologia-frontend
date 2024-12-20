@@ -26,7 +26,8 @@ export const Usuario = () => {
             ,passwordUpdateNotEqual:false,
             updateUserInformation:false,
             updateUserChange:false,
-            ischangeUserInfo:false
+            ischangeUserInfo:false,
+            userExists:false,
         });
 
     const token = userData.token
@@ -123,6 +124,13 @@ export const Usuario = () => {
                     }
                 });
             },(data)=>{
+                if(data.message == "The user that you are trying to register already exists"){
+                    setSendFormUpdate(false);
+                    setErrorMessages(err=>({...err,userExists:true}))
+                    setTimeout(() => {
+                        setErrorMessages(err=>({...err,userExists:false}))
+                    }, 3000);
+                }
                 if(data.status == "error"){
                     setErrorMessages(err=>({...err,updateUserChange:true}))
                     setTimeout(() => {
@@ -223,6 +231,11 @@ export const Usuario = () => {
             }} value={newEmail} 
             className="disabled:opacity-50 mb-6  ml-2 m{r-2 rounded-2xl px-4 py-2 mr-2  text-white bg-gray-600 " 
             type="text" />
+             {errorMessages.userExists && <div 
+            className="mb-4 py-2 ml-2 mr-2 rounded-xl bg-red-500 flex justify-center items-center flex-row gap-4">
+                <p>Este usuario ya existe</p>
+                <FontAwesomeIcon className="" icon={faWarning}/>
+            </div>}
             {errorMessages.updateUserInformation &&
             <div 
             className="mb-4 py-2 ml-2 mr-2 rounded-xl bg-green-500 flex justify-center items-center flex-row gap-4">
