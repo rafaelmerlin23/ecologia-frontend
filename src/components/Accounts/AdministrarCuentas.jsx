@@ -41,7 +41,7 @@ export const AdministrarCuentas = () => {
     }, [])
 
     return (
-        <div className={` ${users.length > 1 ? "xl:grid xl:grid-cols-2" : ""}`}>
+        <div className={` ${users.length > 1 ? "" : ""}`}>
             {users.length > 0
                 ? users.map((user) => (
                     <CuentaItem

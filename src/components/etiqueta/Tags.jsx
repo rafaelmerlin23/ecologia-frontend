@@ -147,15 +147,19 @@ export const Tags = ({categoryId,categoryName}) => {
     }
 
     return(
-        <div className="flex justify-center items-center">
-            <div className="w-[60vw] ">
+        <div className="flex justify-center items-center flex-col sm:flex-col xl:flex-row lg:flex-row">
+            <div className="w-[90vw]  sm:w-[90vw] lg:w-[60vw] xl:w-[60vw] ">
             
-            <div className="flex justify-start items-center w-full hidden xl:block  bg-gray-400 py-2 rounded-xl mb-6">
+            <div 
+            className="flex justify-center items-center w-full   bg-gray-400 py-2 rounded-xl mb-6">
             {(allTags[categoryName]?.length>0 && serieTags.length>0 && !isEmptyCategory()) &&
              <PieChart
+             className="mx-auto ml-24"
             series={serieTags}
-            width={1000}
-            height={200}
+            width={300}
+            margin={0}
+            height={300}
+            slotProps= {{ legend: { hidden: true }} }
             />
             }
             {
@@ -177,7 +181,7 @@ export const Tags = ({categoryId,categoryName}) => {
                 </button>
             </div>
             {isCreateActive &&
-            <div className="mb-10 flex flex-row">
+            <div className="mb-10 flex-col sm:flex-col xl:flex-row lg:flex-row">
                 <input 
                 value={newTag}
                 

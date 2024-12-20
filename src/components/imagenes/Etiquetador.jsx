@@ -422,7 +422,7 @@ export const Etiquetador = ({ isActive, handleClose }) => {
                 <ModalIMagen handleClose={handleCloseModal} image={image} isActive={isModalActive} />
 
                 {/* Fila para la imagen y el select */}
-                <div className=" flex justify-center items-center xl:items-start gap-x-10 sm:flex-col flex-col md:flex-col lg:flex-row xl:flex-row  xl:overflow-hidden">
+                <div className=" flex justify-center items-center xl:items-start gap-x-10 sm:flex-col flex-col md:flex-col lg:flex-col xl:flex-row  xl:overflow-hidden">
                     {isCategoryMenuActivate ? componentToRender : ""}
                     <div className="min-h-[40rem] bg-zinc-800  hidden xl:block max-h-[40rem] w-[350px] overflow-y-auto">
                         {componentToRender}

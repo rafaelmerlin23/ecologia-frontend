@@ -186,8 +186,8 @@ export const Usuario = () => {
       }
     
     return (
-        <div className="flex justify-center flex flex-col items-center">
-            <div className="rounded-xl mt-32 bg-gray-800 w-[60vw] flex  justify-center pb-4">
+        <div className="mb-20 flex justify-center flex flex-col items-center">
+            <div className="rounded-xl mt-32 bg-gray-800 xl:w-[60vw] md:w-[80vw] lg:w-[60vw] w-[90vw] flex  justify-center pb-4">
             <div className="flex flex-col items-center justify-center mt-4">
                 <div 
                 className="flex justify-center items-center text-9xl bg-zinc-800 py-6 px-8 rounded-full">
@@ -202,7 +202,7 @@ export const Usuario = () => {
             !sendFormUpdate ? 
             <form 
             onSubmit={onSubmitUpdateAccount}
-            className="flex-col rounded-xl mt-4 bg-gray-800 w-[60vw] flex  justify-center">
+            className="flex-col rounded-xl mt-4 bg-gray-800 xl:w-[60vw] md:w-[80vw] lg:w-[60vw] w-[90vw] flex  justify-center">
             <label className="mt-4 ml-2 text-2xl font-bold pb-2">Informacion general</label>
             <label className="ml-2 text-1xl font-bold pb-2">Nombre de usuario</label>
             <input 
@@ -241,7 +241,7 @@ export const Usuario = () => {
         </form>:        
         <form 
         onSubmit={updateUserInformation}
-        className="flex-col rounded-xl mt-4 bg-gray-800 w-[60vw] flex  justify-center">
+        className="flex-col rounded-xl mt-4 bg-gray-800 xl:w-[60vw] md:w-[80vw] lg:w-[60vw] w-[90vw] flex  justify-center">
             <label className="mt-4 ml-2 text-2xl font-bold pb-2">Comfirmar cambios</label>
             <label className="ml-2 text-1xl font-bold pb-2">Contraseña</label>
             <input 
@@ -283,7 +283,7 @@ export const Usuario = () => {
 
         <form 
         onSubmit={changePassword}
-        className="flex-col rounded-xl mt-4 bg-gray-800 w-[60vw] flex  justify-center">
+        className="flex-col rounded-xl mt-4 bg-gray-800 xl:w-[60vw] md:w-[80vw] lg:w-[60vw] w-[90vw] flex  justify-center">
             <label className="mt-4 ml-2 text-2xl font-bold pb-2">Actualizar contraseña</label>
             <label className="ml-2 text-1xl font-bold pb-2">Contraseña actual</label>
             <input 

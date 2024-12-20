@@ -38,7 +38,7 @@ function LabelWrapper({ children, handleClose }) {
 
       <div
         onClick={(e) => e.stopPropagation()}
-        className="max-h-[50rem]  overflow-y-auto bg-zinc-900 border border-gray-300 px-10 pb-10 pt-5  rounded-3xl flex justify-center items-center">
+        className="h-screen lg:max-h-[50rem] xl:max-h-[50rem] md:max-h-[50rem] sm:h-screen  overflow-y-auto bg-zinc-900 border border-gray-300 px-10 pb-10 pt-5  rounded-3xl flex justify-center ">
         <button onClick={handleClose} className='text-bold absolute top-2 right-2 text-white text-4xl hover:opacity-70'>
           x
         </button>
@@ -46,11 +46,11 @@ function LabelWrapper({ children, handleClose }) {
           <div className='mb-3 mt-0 flex flex-row'>
             <div className='flex flex-col'>
               <p
-                className='flex gap-2 text-white font-bold text-[1em]'
+                className='flex gap-2 text-white font-bold text-[12px] sm:text-[12px]  lg:text-[1em] xl:text-[1em]'
               >Usuario: <span className="text-blue-300">{userName}</span></p>
               {(pathName.location && pathName.project && pathName.album) &&
                 <p
-                  className='text-wihte font-bold text-[1em] flex flex-row gap-2'
+                  className='text-wihte font-bold sm:text-[12px] lg:text-[1em] text-[12px] xl:text-[1em] flex flex-row gap-2'
                 >Dirección: <span className="gap-4 flex justify-center items-center text-blue-300">
                     {pathName.project}
                     <FontAwesomeIcon className='text-white' icon={faArrowRight} />

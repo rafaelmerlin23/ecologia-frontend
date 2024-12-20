@@ -17,9 +17,10 @@ function TagsSelector({
                             <select 
                             onChange={(e) => handleTags(e.target.value)}
                             about="hola" 
-                            className=" text-gray-700">
+                            className="text-[12px] sm:text-[12px] lg:text-sm xl:text-sm text-gray-700">
                                 {categories.map((category) => (
-                                    <option value={category.id} className="text-gray-700" key={category.id * 10}>
+                                    <option value={category.id} 
+                                    className="text-[12px] sm:text-[12px] lg:text-sm xl:text-sm  text-gray-700" key={category.id * 10}>
                                         {category.field}
                                     </option>
                                 ))}

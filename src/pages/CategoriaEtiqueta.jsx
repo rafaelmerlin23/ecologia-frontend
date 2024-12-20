@@ -85,21 +85,24 @@ export const CategoriaEtiqueta = () => {
             
              
             <div className="mt-14 flex justify-center items-center flex-col">
-            <label 
-                className="mt-14 rounded-2xl w-[70vw] py-2 px-10 bg-gray-700 flex  justify-start text-4xl mb-6"> Proporción de uso</label>
-            <div className="hidden xl:block bg-zinc-300 rounded-xl py-2 w-[70vw]">
+            <div className="flex justify-center items-center hidden xl:block bg-zinc-300 rounded-t-xl w-[80vw] ">
             { categoriesInfo.length >0 && Object.keys(allTags).length === categories.length  && 
+            <>
+            <label 
+                className=" flex  px-10 bg-gray-700 flex  justify-start text-4xl mb-6 rounded-t-xl"> Proporción de uso</label>
             <PieChart
+            className="mb-6"
             series={categoriesInfo}
             width={1300}
             height={200}
             />
+            </>
             }
             </div>
             {categories.filter(category => category.isSelected).map((category, index) => (
                 <div key={index}>
                 <label 
-                className="mt-14 rounded-2xl px-10 bg-gray-700 flex  justify-start text-3xl mb-6"> {category.name}</label>
+                className="mt-14  sm:rounded-2xl px-10 bg-gray-700 flex  justify-start text-3xl mb-6"> {category.name}</label>
                 <Tags  categoryName={category.name} categoryId={category.id}/>
                 </div>
             ))}

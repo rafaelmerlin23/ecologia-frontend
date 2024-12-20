@@ -15,7 +15,7 @@ export const CategorysSelector = () => {
 
     return (
         <TagsPopover content={<Categories />}>
-            <div className="bg-zinc-700 w-[30vw] py-2 text-3xl rounded-full hover:opacity-60">
+            <div className="bg-zinc-700 w-[90vw] sm:w-[90vw] lg:w-[50vw] xl:w-[30vw] py-2 text-3xl rounded-xl  hover:opacity-60">
                 Administrar categorias
             </div>
         </TagsPopover>
@@ -115,7 +115,7 @@ const Categories = () => {
     }
 
     return (
-        <div className="w-[60vw] p-4  bg-zinc-700 rounded-md flex justify-center items-center flex-col">
+        <div className="w-[90vw] sm:w-[90vw] lg:w-[50vw] xl:w-[30vw] p-4  bg-zinc-700 rounded-md flex justify-center items-center flex-col">
             {/* Barra de búsqueda */}
             <div className="mb-4">
                 <input
@@ -124,25 +124,25 @@ const Categories = () => {
                     value={searchText}
                     minLength={5}
                     onChange={(e) => setSearchText(e.target.value)}
-                    className="w-[57vw] p-2 rounded-md text-sm bg-zinc-800 text-white focus:outline-none focus:ring-2 focus:ring-green-500"
+                    className="w-[80vw] sm:w-[80vw] lg:w-[40vw] xl:w-[20vw] p-2 rounded-md text-sm bg-zinc-800 text-white focus:outline-none focus:ring-2 focus:ring-green-500"
                 />
             </div>
 
             <button
                 onClick={e => setIsCreateActive((prev) => !prev)}
-                className={`mb-4 p-1 rounded-md w-[5vw] bg-green-700 disabled:opacity-50 ${!isCreateActive && "hover:bg-green-500"}`}
+                className={`mb-4 p-1 rounded-md w-[50vw] sm:w-[50vw] lg:w-[10vw] xl:w-[5vw] bg-green-700 disabled:opacity-50 ${!isCreateActive && "hover:bg-green-500"}`}
                 disabled={isCreateActive}
             >
                 <FontAwesomeIcon  icon={faPlus} />
             </button>
 
-            <div className="overflow-y-auto max-h-[400px] font-bold flex gap-3 flex-col">
+            <div className="overflow-y-auto max-h-[400px] flex justify-center items-center font-bold flex gap-3 flex-col">
                 {isCreateActive &&
                     <div className="flex flex-col xl:flex-row lg:flex-row">
                         <input
                             value={newCategoryName}
                             onChange={e => setNewCategoryName(e.target.value)}
-                            className={`bg-zinc-500 border-zinc-500 border-2 px-2 rounded-l-md w-[45vw] overflow-hidden`}
+                            className={`bg-zinc-500 border-zinc-500 border-2 px-2 rounded-l-md w-[80vw] sm:w-[80vw] md:w-[80vw] lg:w-[32vw] xl:w-[20vw] overflow-hidden`}
                             type="text" />
 
                         <div className="rounded-r-md bg-gray-500 px-6 gap-4 flex justify-center items-center">
@@ -168,7 +168,7 @@ const Categories = () => {
                             <input
                                 onChange={(e) => onChangeNameCategory(e, index)}
                                 value={category.name}
-                                className={`bg-zinc-500  text-sm border-zinc-500 border-2 px-2 rounded-l-md w-[45vw] overflow-hidden`}
+                                className={`bg-zinc-500  text-sm border-zinc-500 border-2 px-2 rounded-l-md w-[80vw] sm:w-[80vw] md:w-[80vw] lg:w-[32vw] xl:w-[20vw] overflow-hidden`}
                                 type="text" />
 
                             <div className="rounded-r-md bg-gray-500 px-6 gap-4 flex justify-center items-center">
@@ -191,7 +191,7 @@ const Categories = () => {
                                 <button
                                     type='button'
                                     onClick={() => onSelect(index)}
-                                    className={`gap-4 rounded-l-md w-[45vw] overflow-hidden whitespace-nowrap text-ellipsis px-2  text-sm  flex border-4 border-red-500 bg-zinc-800`}
+                                    className={`gap-4 rounded-l-md w-[80vw] sm:w-[80vw] md:w-[80vw] lg:w-[32vw] xl:w-[20vw] overflow-hidden whitespace-nowrap text-ellipsis px-2  text-sm  flex border-4 border-red-500 bg-zinc-800`}
                                     key={index}
                                 >
                                     <p className="text-red-500">¿Eliminar categoria?</p> {category.originalName}
@@ -220,7 +220,7 @@ const Categories = () => {
                                 <button
                                     type='button'
                                     onClick={() => onSelect(index)}
-                                    className={` rounded-l-md w-[45vw] overflow-hidden whitespace-nowrap text-ellipsis px-2  hover:brightness-200 hover:bg-transparent hover:border-4 hover:border-green-700 hover:text-green-500 disabled:opacity-40 text-sm  flex  ${category.isSelected
+                                    className={` rounded-l-md w-[80vw] sm:w-[80vw] md:w-[80vw] lg:w-[32vw] xl:w-[20vw] overflow-hidden whitespace-nowrap text-ellipsis px-2  hover:brightness-200 hover:bg-transparent hover:border-4 hover:border-green-700 hover:text-green-500 disabled:opacity-40 text-sm  flex  ${category.isSelected
                                         ? "brightness-200 bg-transparent border-4 border-green-800 text-green-900"
                                         : "border-4 border-zinc-800 bg-zinc-800"
                                         }`}
