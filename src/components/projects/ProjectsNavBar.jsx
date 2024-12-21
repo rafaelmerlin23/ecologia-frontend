@@ -131,7 +131,7 @@ export const ProjectsNavBar = () => {
                 path={location.pathname} />
 
             <div className={`z-20 xl:py-0 lg:py-10 pl-2 flex items-center fixed top-16 left-0  h-14 bg-gray-400 w-screen transition-opacity duration-300 ${isScrolled ? 'opacity-90' : 'opacity-100'}`}>
-                <ul className="text-2xl xl:hidden lg:hidden md:flex sm:flex flex-row sm:flex-row md:flex-row">
+                <ul className="pl-4 xl:text-2xl sm:text-sm md:text-2xl lg:text-2xl  text-sm truncate xl:hidden lg:hidden md:flex sm:flex flex-row sm:flex-row md:flex-row">
                     {location.pathname !== '/gestor/proyectos' && location.pathname !== `/gestor/proyectos/${proyectoId}/puntos` ?
                         <div className="flex flex-row justify-center items-center gap-2">
                             <button

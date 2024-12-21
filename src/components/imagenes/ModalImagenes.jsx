@@ -62,7 +62,7 @@ function ModalImagenes({ closeModal, children }) {
   return (
     <div>
       <div className="fixed inset-0 z-40 flex items-center justify-center bg-gray-700 ">
-        <div className="relative w-full h-full bg-gray-800">
+        <div className="pt-6 relative w-full h-screen bg-gray-800">
           <div className="flex justify-between items-center p-4 border-b">
             <FontAwesomeIcon icon={faUpload}></FontAwesomeIcon>
             <button
@@ -74,7 +74,7 @@ function ModalImagenes({ closeModal, children }) {
           </div>
 
           {/* Contenido con scroll */}
-          <div className="h-[80vh] overflow-y-auto p-6">
+          <div className="h-[75vh] overflow-y-auto p-6">
             <div className='flex items-center justify-center flex-col gap-2'>
               {/* <label className='text-2xl'> fecha de las imagenes </label> */}
               {/* <input type="date"
@@ -87,7 +87,7 @@ function ModalImagenes({ closeModal, children }) {
 
           <div className="p-4 border-t flex justify-end gap-x-6">
             {isUploading ?
-              <div className='flex flex-row justify-center items-center gap-3'>
+              <div className='mb-4 flex flex-row justify-center items-center gap-3'>
                 <div className="loader-images "></div>
                 <p className='text-3xl text-blue-200'>{status}</p>
               </div>

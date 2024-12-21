@@ -63,7 +63,9 @@ const TarjetaPuntos=({ index, nombre, coordenadas, imagen ,setIsEditActive,setIs
         <TarjetaEnvoltorio imagen={imagen}>
           <BotonesTarjeta openDelete={abrirOverlayEliminar} openEdit={openEditOverlay} />
           <div className="flex flex-col justify-between p-4 leading-normal md:text-lg">
-            <h5 className="text-center mb-2 text-xl md:text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{nombre}</h5>
+            <h5 className="text-center mb-2 text-xl md:text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
+              {nombre.length >28 ? `${nombre.slice(0,25)}...`:nombre}
+              </h5>
             <div className='justify-center flex items-center space-x-2 mt-2 mb-4'>
               <FontAwesomeIcon className='h-5 w-5 mr-2' icon={faLocationDot} />
               <p className="font-normal text-gray-700 dark:text-gray-400 text-center">{coordenadas}</p>
