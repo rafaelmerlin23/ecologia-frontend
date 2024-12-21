@@ -85,22 +85,24 @@ export const CategoriaEtiqueta = () => {
             
              
             <div className="mt-14 flex justify-center items-center flex-col">
-                <div className="flex justify-center items-center hidden xl:block bg-transparent rounded-xl w-[60vw] ">
+                <div className="flex justify-center items-center flex-col w-[90vw] sm:w-[90vw]  md:w-[90vw] lg:w-[60vw] xl:w-[60vw] bg-transparent rounded-xl w-[60vw] ">
             { categoriesInfo.length >0 && Object.keys(allTags).length === categories.length  && 
             <>
             <label 
-                className="bg-zinc-700 flex  px-10  flex  justify-start text-4xl mb-6 rounded-xl"> Proporción de uso</label>
+                className="bg-zinc-700 flex  px-10 w-[90vw] sm:w-[90vw]  md:w-[90vw] lg:w-[60vw] xl:w-[60vw]   justify-start text-4xl mb-6 rounded-xl"> Proporción de uso</label>
            <div className="my-6 p-10 w-full rounded-xl bg-zinc-500">
+           <div className="flex justify-center items-center w-full  py-2 rounded-xl mb-6">
            <PieChart
-            className=" mx-auto mb-4 ml-[22vw]"
+            className="mx-auto ml-24"
             series={categoriesInfo}
             slotProps= {{ legend: { hidden: true }} }
             width={300}
             height={200}
             />
+           </div>
             
            </div>
-            <div className=" bg-transparent text-gray-200 grid grid-cols-1 gap-4">
+            <div className="w-[90vw] sm:w-[90vw]  md:w-[90vw] lg:w-[60vw] xl:w-[60vw]  bg-transparent text-gray-200 grid grid-cols-1 gap-4">
             <div 
                 className="grid grid-cols-2 border-gray-200 items-center gap-2 p-2 border-b"
                 id="titulo"

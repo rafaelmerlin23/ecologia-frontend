@@ -336,7 +336,7 @@ export const Usuario = () => {
             type="password" />
             <label className=" ml-2 text-1xl font-bold pb-2">Nueva contraseña</label>
             <input
-             
+             placeholder="*********"
             onChange={e=>{
                 setNewPassword(e.target.value);
             }}
@@ -349,6 +349,7 @@ export const Usuario = () => {
             <label className=" ml-2 text-1xl font-bold pb-2">Confirmar contraseña</label>
             
             <input 
+            placeholder="*********"
              onChange={(e)=>{
                 setConfirmPassword(e.target.value);
              }}

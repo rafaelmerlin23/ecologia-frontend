@@ -184,9 +184,9 @@ export const Tags = ({categoryId,categoryName}) => {
             <div className="mb-10 flex-col sm:flex-col xl:flex-row lg:flex-row">
                 <input 
                 value={newTag}
-                
+                placeholder="Nueva etiquetaz"
                 onChange={e=> setNewTag(e.target.value)}
-                className="bg-zinc-700 w-full pr-10"/>
+                className="bg-zinc-700 w-full pr-10 py-2 px-2"/>
                 <div 
                 className="flex gap-10 pl-auto bg-zinc-800 px-4 py-1">
                     <button

@@ -140,6 +140,7 @@ const Categories = () => {
                 {isCreateActive &&
                     <div className="flex flex-col xl:flex-row lg:flex-row">
                         <input
+                            placeholder="Nueva categoría"
                             value={newCategoryName}
                             onChange={e => setNewCategoryName(e.target.value)}
                             className={`bg-zinc-500 border-zinc-500 border-2 px-2 rounded-l-md w-[80vw] sm:w-[80vw] md:w-[80vw] lg:w-[32vw] xl:w-[20vw] overflow-hidden`}
