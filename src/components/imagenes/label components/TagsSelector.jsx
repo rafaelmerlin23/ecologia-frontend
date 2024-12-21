@@ -13,7 +13,7 @@ function TagsSelector({
     ,loaderTag
     }) {
   return (
-    <div className="flex-col  lg:self-start xl:self-start sm:flex sm:flex sm:justify-center sm-items-center sm:flex w-[380px]">
+    <div className="flex-col  lg:self-start xl:self-start sm:flex sm:flex justify-center sm:justify-center sm-items-center sm:flex w-[380px]">
                             <select 
                             onChange={(e) => handleTags(e.target.value)}
                             about="hola" 

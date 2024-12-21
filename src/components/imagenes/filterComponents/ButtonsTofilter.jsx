@@ -4,15 +4,45 @@ import { useAuth } from '../../../AuthProvider'
 import DownloadImages from '../../../helpers/DownloadImages'
 import { useLocation } from 'react-router-dom'
 
-function ButtonsTofilter({ onReset }) {
-  const { filter, maxPage, userData } = useAuth()
+export const ButtonsTofilter=({handelCloseModalFilter}) =>{
+  const { filter, maxPage, userData 
+    , setFilter
+    , quantityImagePerPage
+    , setDateRange
+    , setGroupedTags
+    , setRanges
+    , setSelectedOrderFilter
+    , setPageImage
+    , setLocationToFilter
+    , SetProjectToFilter
+    , setAlbumsToFilter
+    , setNotagsFilter
+
+  } = useAuth()
+
   const location = useLocation()
   const token = userData.token
+  
+  const onReset = () => {
+        setDateRange({ initDate: '', endDate: '' })
+        setNotagsFilter(false)
+        setGroupedTags({})
+        setRanges({ 0: false, 0.5: false, 1: false, 1.5: false, 2: false, 2.5: false, 3: false })
+        setSelectedOrderFilter("None")
+        SetProjectToFilter([])
+        setLocationToFilter({})
+        setAlbumsToFilter({})
+        setFilter({ quantity: quantityImagePerPage })
+        setPageImage(1)
+       
+  }
+
   const handleDowload = () => {
     const query = { ...filter, quantity: maxPage }
     console.log("consulta",query)
     DownloadImages(query, token)
   }
+
 
   return (
     <div className={`mb-0 col-span-4 flex sm:justify-center justify-center md:justify-center  gap-6 mt-6 ${location.pathname == "/imagenes" ? "xl:justify-end lg:justify-end" : "xl:justify-start lg:justify-start"}`}>

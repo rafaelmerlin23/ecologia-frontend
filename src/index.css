@@ -43,6 +43,18 @@ body {
   white-space: nowrap;
 }
 
+@media (max-width: 768px) {
+  .popover-content {
+    top: -100%; /* Ajuste para pantallas más pequeñas */
+  }
+}
+
+@media (max-width: 480px) {
+  .popover-content {
+    top: -150%; /* Ajuste para pantallas aún más pequeñas */
+  }
+}
+
 
 .break-word-button {
   word-wrap: break-word;

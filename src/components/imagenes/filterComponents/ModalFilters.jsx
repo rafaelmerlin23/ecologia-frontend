@@ -29,10 +29,16 @@ export const ModalFilters = ({ isActive, onClose, onSubmit }) => {
         };
     }, [isActive, onClose]);
 
+    const onSubmitFilter= (e)=>{
+        e.preventDefault();
+        onSubmit(e);
+        onClose();
+    }
+
     if (!isActive) return null;
 
     return (
-        <form onSubmit={onSubmit} className="xl:hidden md:hidden lg:hidden z-40 fixed inset-0 bg-zinc-900">
+        <form onSubmit={onSubmitFilter} className="xl:hidden md:hidden lg:hidden z-40 fixed inset-0 bg-zinc-900">
             <div className="mb-4 flex flex-row items-center justify-between">
                 <p className="ml-2 text-4xl">Filtros</p>
                 <button

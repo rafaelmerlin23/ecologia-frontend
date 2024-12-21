@@ -30,9 +30,7 @@ function FilterImagesDate() {
         , setNotagsFilter
     } = useAuth()
 
-    const [searchParams, setSearchParams] = useSearchParams()
 
-    const { albumID, proyectoId, puntoID } = useParams()
 
     const location = useLocation()
 
@@ -44,10 +42,7 @@ function FilterImagesDate() {
         setIsModalFilterActive(true)
     }
 
-    const getDaysInMonth = (month, year) => {
-        // `month` es de 1 a 12, por lo que restamos 1 para ajustarlo al índice (0 a 11)
-        return new Date(year, month, 0).getDate();
-    }
+   
 
     useEffect(() => {
         onReset()
@@ -169,7 +164,7 @@ function FilterImagesDate() {
 
                 <div className=''>
                     <FilterGrouped />
-                    <ButtonsTofilter onReset={onReset} />
+                    <ButtonsTofilter handelCloseModalFilter={handelCloseModalFilter} />
                 </div>
 
             </form>
@@ -178,7 +173,7 @@ function FilterImagesDate() {
                 isActive={isModalFilterActive} onClose={handelCloseModalFilter} />
             <button
                 onClick={handelOpenModalFilter}
-                className='xl:hidden lg:hidden md:hidden  sm:flex flex h-10 gap-2 justify-center items-center text-1xl bg-zinc-700 px-2 rounded-md hover:opacity-70 focus:opacity-50'>
+                className='mb-4 xl:hidden lg:hidden md:hidden  sm:flex flex h-10 gap-2 justify-center items-center text-1xl bg-zinc-700 px-2 rounded-md hover:opacity-70 focus:opacity-50'>
                 <FontAwesomeIcon className='text-sm' icon={faFilter} /> Abrir filtros
             </button>
         </>
