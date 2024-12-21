@@ -46,7 +46,7 @@ function LabelWrapper({ children, handleClose }) {
           <div className='mb-3 mt-0 flex flex-row'>
             <div className='flex flex-col'>
               <p
-                className='flex gap-2 text-white font-bold text-[12px] sm:text-[12px]  lg:text-[1em] xl:text-[1em]'
+                className='mt-10 sm:mt-10 xl:mt-0 lg:mt-0 md:mt-6   flex gap-2 text-white font-bold text-[12px] sm:text-[12px]  lg:text-[1em] xl:text-[1em]'
               >Usuario: <span className="text-blue-300">{userName}</span></p>
               {(pathName.location && pathName.project && pathName.album) &&
                 <p
