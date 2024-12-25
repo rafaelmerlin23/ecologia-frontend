@@ -1,18 +1,20 @@
 import { useAuth } from "../../AuthProvider"
 import FormularioAlbum from "../../forms/FormularioAlbum"
 import prefixUrl from "../../helpers/ip"
-export const EditarAlbum = ({closeEdit,isActive}) =>{
-    const {albumInformation,locationInformation,userData,refreshProjects}  = useAuth()
+import { useProjectStruct } from "../providers/StructProjectProvider"
+export const EditarAlbum = ({ closeEdit, isActive }) => {
+    const { userData, refreshProjects } = useAuth()
+    const { locationInformation, albumInformation } = useProjectStruct()
     const token = userData.token
-    
 
-    const handleUpdateAlbum = (e,name,date,index)=>{
+
+    const handleUpdateAlbum = (e, name, date, index) => {
         e.preventDefault()
         const formData = new FormData();
         formData.append('album_id', index);
         formData.append('album_name', name);
         formData.append('location_id', locationInformation.index);
-        formData.append('album_date',date );
+        formData.append('album_date', date);
 
         // Hacer la petición PATCH
         fetch(`${prefixUrl}projects/update_album`, {
@@ -39,10 +41,10 @@ export const EditarAlbum = ({closeEdit,isActive}) =>{
             });
 
     }
-    
-    if(!isActive) return null
 
-    return(
+    if (!isActive) return null
+
+    return (
         <FormularioAlbum closeCreatAlbum={closeEdit} handle={handleUpdateAlbum} message={"Actualizar"} album={albumInformation} >
 
         </FormularioAlbum>

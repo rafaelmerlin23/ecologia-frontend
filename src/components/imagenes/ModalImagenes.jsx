@@ -3,12 +3,23 @@ import { faUpload } from "@fortawesome/free-solid-svg-icons"
 import { useAuth } from '../../AuthProvider';
 import prefixUrl from '../../helpers/ip';
 import { useEffect, useState } from 'react';
+import { useProjectStruct } from '../providers/StructProjectProvider';
+import { useImages } from '../providers/ImagesProvider';
 
 function ModalImagenes({ closeModal, children }) {
-  const { files, userData,imagesExist,setImagesExist, albumInformation, refreshProjects, setFiles } = useAuth()
+  const { userData, refreshProjects } = useAuth()
+  const {
+    files,
+    setFiles,
+    imagesExist,
+    setImagesExist,
+    isUploading,
+    setIsUploading } = useImages()
+
   const token = userData.token
   const [status, setStatus] = useState('0 imagenes subidas')
-  const [isUploading, setIsUploading] = useState(false)
+
+  const { albumInformation } = useProjectStruct()
 
 
   const handleUploadPicture = async () => {
@@ -16,21 +27,21 @@ function ModalImagenes({ closeModal, children }) {
       console.error("No se seleccionó ningún archivo");
       return;
     }
-  
+
     setIsUploading(true);
-  
+
     for (const [index, file] of files.entries()) {
       const dateString = file.date ? new Date(file.date) : new Date();
       dateString.setMinutes(dateString.getMinutes() - dateString.getTimezoneOffset());
       const date = dateString.toISOString().slice(0, 10);
       console.log("día de la imagen", date);
-  
+
       const formData = new FormData();
       formData.append('file', file.file);
       formData.append('album_id', albumInformation.index);
       formData.append('category_id', 1);
       formData.append('date', date);
-  
+
       try {
         const response = await fetch(`${prefixUrl}pictures/upload_picture`, {
           method: 'POST',
@@ -39,8 +50,8 @@ function ModalImagenes({ closeModal, children }) {
         });
         const data = await response.json();
         console.log('Respuesta del servidor:', data);
-  
-        if (data.message === "Image already exists") {
+
+        if (data.message === "Image alredy exists") {
           setImagesExist(true);
         }
         if (data && data.status === 'success') {
@@ -52,7 +63,7 @@ function ModalImagenes({ closeModal, children }) {
         console.error('Error:', error);
       }
     }
-  
+
     console.log("¿Existe la imagen?", imagesExist);
     setFiles([]);
     setIsUploading(false);

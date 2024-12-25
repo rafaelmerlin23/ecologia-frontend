@@ -2,15 +2,17 @@ import { useAuth } from "../../AuthProvider"
 import FormularioPuntos from "../../forms/FormularioPuntos"
 import prefixUrl from "../../helpers/ip"
 import { useState } from "react"
+import { useProjectStruct } from "../providers/StructProjectProvider"
 
-const EditarPunto = ({closeEdit,isActive}) =>{
-    if(!isActive) return null
+const EditarPunto = ({ closeEdit, isActive }) => {
+    if (!isActive) return null
 
-    const [response,setResponse] = useState(null)
-    const {userData,refreshProjects,locationInformation,projectInformation} = useAuth()
+    const [response, setResponse] = useState(null)
+    const { userData, refreshProjects } = useAuth()
+    const { projectInformation, locationInformation } = useProjectStruct()
     const token = userData.token
 
-    const handleUpdateLocation = (e,name,latitude,longitude,id)=>{
+    const handleUpdateLocation = (e, name, latitude, longitude, id) => {
         e.preventDefault()
         const coordinates = `${latitude}, ${longitude}`
         const formData = new FormData();
@@ -45,7 +47,7 @@ const EditarPunto = ({closeEdit,isActive}) =>{
             });
     }
 
-    return(
+    return (
         <FormularioPuntos closeLocationForm={closeEdit} handle={handleUpdateLocation} message={"Actualizar"} location={locationInformation} >
 
         </FormularioPuntos>

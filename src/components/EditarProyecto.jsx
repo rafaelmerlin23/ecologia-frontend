@@ -3,15 +3,17 @@ import FormularioProyecto from '../forms/FormularioProyecto'
 import { useAuth } from '../AuthProvider'
 import { useState } from 'react'
 import prefixUrl from '../helpers/ip'
+import { useProjectStruct } from './providers/StructProjectProvider'
 
-const EditarProyecto = ({cerrarEditar, isActive }) => {
+const EditarProyecto = ({ cerrarEditar, isActive }) => {
     if (!isActive) return null
 
     const [response, setResponse] = useState(null)
-    const { projectInformation,userData, refreshProjects } = useAuth()
+    const { userData, refreshProjects } = useAuth()
+    const { projectInformation } = useProjectStruct()
     const token = userData.token
 
- 
+
     const handleUpdateProject = (e, name, description, date) => {
         e.preventDefault()
         const formData = new FormData();

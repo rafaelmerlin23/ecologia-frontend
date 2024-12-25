@@ -6,19 +6,27 @@ import { useAuth } from "../AuthProvider";
 import { useLocation, useParams } from "react-router-dom";
 import ImagesMenu from "../components/imagenes/ImagesMenu";
 import ImagesLoader from "../components/Loaders/ImagesLoader";
+import { useProjectStruct } from "../components/providers/StructProjectProvider";
+import { useImages } from "../components/providers/ImagesProvider";
+import { useFilterImages } from "../components/providers/FilterProvider";
 
 
 function Imagenes() {
   const [isActiveUploadImages, setIsActiveUploadImages] = useState(false);
+
   const {
     shouldRefresh
-    , setAlbumInformation
-    , images
-    , filter
-    , quantityImagePerPage
-    , loadingComplete
-  
   } = useAuth()
+
+  const { setAlbumInformation } = useProjectStruct()
+
+  const {
+    quantityImagePerPage
+    , images
+    , loadingComplete } = useImages()
+
+  const { filter } = useFilterImages()
+
   const location = useLocation()
   // const [searchParams, setSearchParams] = useSearchParams()
   const { albumID } = useParams()
@@ -78,16 +86,15 @@ function Imagenes() {
         isActive={isActiveUploadImages}
       />
       <div className={`   flex flex-col items-center justify-center ${images.length > 0 || (images.length === 0 && !isDefaultFilter()) ? "mt-32" : "h-screen"}`}>
-        
-        {(images.length > 0 || (images.length === 0 && !isDefaultFilter()))  ?
+
+        {(images.length > 0 || (images.length === 0 && !isDefaultFilter())) ?
           location.pathname != "/imagenes" ? (
             <button
               id="agregar-imagen"
-              className={`${
-                isActiveUploadImages
-                  ? ""
-                  : "flex items-center justify-center flex-col h-3/5 w-3/5 pb-4 pt-4 group hover:cursor-pointer"
-              } overflow-hidden`}
+              className={`${isActiveUploadImages
+                ? ""
+                : "flex items-center justify-center flex-col h-3/5 w-3/5 pb-4 pt-4 group hover:cursor-pointer"
+                } overflow-hidden`}
               onClick={openImageOverlay}
             >
               <FontAwesomeIcon
@@ -99,24 +106,24 @@ function Imagenes() {
               </p>
             </button>
 
-            ) : ""
+          ) : ""
 
-          :""}
-          {(loadingComplete && images.length === 0 && isDefaultFilter()) && <div className=" w-screen flex justify-center items-center">
-            <div className="flex flex-col items-center justify-center gap-4">
-              <div className="flex justify-center items-center h-42 w-42">
-                <div className="p-4 border rounded-full h-full w-full flex justify-center items-center">
-                  <FontAwesomeIcon className="text-5xl" icon={faCamera} />
-                </div>
+          : ""}
+        {(loadingComplete && images.length === 0 && isDefaultFilter()) && <div className=" w-screen flex justify-center items-center">
+          <div className="flex flex-col items-center justify-center gap-4">
+            <div className="flex justify-center items-center h-42 w-42">
+              <div className="p-4 border rounded-full h-full w-full flex justify-center items-center">
+                <FontAwesomeIcon className="text-5xl" icon={faCamera} />
               </div>
-              <p className="text-4xl">Album vacío</p>
-              <p className="text-1xl text-gray-200">Cuando subas fotos aparecerán aquí</p>
-              <a onClick={openImageOverlay} className="text-blue-500 hover:cursor-pointer hover:text-blue-200">Sube tus fotos aquí</a>
             </div>
-          </div>}
+            <p className="text-4xl">Album vacío</p>
+            <p className="text-1xl text-gray-200">Cuando subas fotos aparecerán aquí</p>
+            <a onClick={openImageOverlay} className="text-blue-500 hover:cursor-pointer hover:text-blue-200">Sube tus fotos aquí</a>
+          </div>
+        </div>}
       </div >
       <ImagesMenu />
-      
+
 
 
 

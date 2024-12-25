@@ -16,7 +16,6 @@ function Grid({ children }) {
         else if (numElementos === 4) gridColsClass = 'xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 ';
         else gridColsClass = `grid-cols-${numElementos > 4 ? 5 : numElementos}`;
         console.log("nuemro de columnas", gridColsClass)
-        console.log("hola")
         setClassText(`grid ${gridColsClass} gap-4 px-8`);
       }
     }

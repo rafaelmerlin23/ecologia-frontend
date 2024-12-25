@@ -1,23 +1,29 @@
 import React, { useEffect, useState } from 'react';
 import handleGetData from '../../../helpers/handleGetData';
 import { useAuth } from '../../../AuthProvider';
+import { useFilterImages } from '../../providers/FilterProvider';
 
 function AlbumSelection() {
 
     const [searchString, setSearchString] = useState('');
-    const { locationToFilter
-            , locationCharge
-            , setLocationCharge
-            , userData
-            , albumsToFilter
-            , setAlbumsToFilter } = useAuth();
+    const {
+        userData
+    } = useAuth();
+
+    const {
+        locationToFilter
+        , locationCharge
+        , setLocationCharge
+        , albumsToFilter
+        , setAlbumsToFilter
+    } = useFilterImages()
 
     const token = userData.token;
 
     // Obtener proyectos al cargar el componente
     useEffect(() => {
-        if(Object.keys(albumsToFilter).length == 0){
-            setLocationCharge(location=>({...location,isAlbumCharge:false})); 
+        if (Object.keys(albumsToFilter).length == 0) {
+            setLocationCharge(location => ({ ...location, isAlbumCharge: false }));
         }
         const getProjects = async () => {
             let newAlbumInformation = {}
@@ -45,7 +51,7 @@ function AlbumSelection() {
             }
 
             setAlbumsToFilter(newAlbumInformation)
-            setLocationCharge(location=>({...location,isAlbumCharge:true}));
+            setLocationCharge(location => ({ ...location, isAlbumCharge: true }));
 
         };
         getProjects();
@@ -62,38 +68,38 @@ function AlbumSelection() {
                 className="w-full mb-4 p-2 rounded-md text-sm bg-zinc-800 text-white focus:outline-none focus:ring-2 focus:ring-green-500"
             />
 
-            {locationCharge.isAlbumCharge?
-            Object.entries(albumsToFilter).map(([location, albums]) => (
-                <div key={location} className="mb-4">
-                    <h3 className="text-green-500 font-bold">{albums.filter(album => album.name.toLowerCase().includes(searchString.toLowerCase())).length > 0 && albums.length > 0 ? location : ""}</h3>
-                    <div className="flex flex-col gap-2 mt-2">
-                        {albums
-                            .filter(album => album.name.toLowerCase().includes(searchString.toLowerCase())) // Filtrar por búsqueda
-                            .map(album => (
-                                <button
-                                    type='button'
-                                    key={album.index}
-                                    className={`overflow-hidden whitespace-nowrap text-ellipsis px-2  hover:brightness-200 hover:bg-transparent hover:border-4 hover:border-green-700 hover:text-green-500 text-sm  flex  
+            {locationCharge.isAlbumCharge ?
+                Object.entries(albumsToFilter).map(([location, albums]) => (
+                    <div key={location} className="mb-4">
+                        <h3 className="text-green-500 font-bold">{albums.filter(album => album.name.toLowerCase().includes(searchString.toLowerCase())).length > 0 && albums.length > 0 ? location : ""}</h3>
+                        <div className="flex flex-col gap-2 mt-2">
+                            {albums
+                                .filter(album => album.name.toLowerCase().includes(searchString.toLowerCase())) // Filtrar por búsqueda
+                                .map(album => (
+                                    <button
+                                        type='button'
+                                        key={album.index}
+                                        className={`overflow-hidden whitespace-nowrap text-ellipsis px-2  hover:brightness-200 hover:bg-transparent hover:border-4 hover:border-green-700 hover:text-green-500 text-sm  flex  
                                         ${album.isSelected
-                                            ? 'brightness-200 bg-transparent border-4 border-green-800 text-green-900'
-                                            : ' border-4 border-zinc-800 bg-zinc-800'}`}
-                                    onClick={() => {
-                                        // Cambiar estado de selección
-                                        const updateAlbums = { ...albumsToFilter };
-                                        const albumIndex = updateAlbums[location].findIndex(a => a.index === album.index);
-                                        updateAlbums[location][albumIndex].isSelected = !album.isSelected;
-                                        setAlbumsToFilter(updateAlbums);
-                                    }}
-                                >
-                                    {album.name}
-                                </button>
-                            ))}
+                                                ? 'brightness-200 bg-transparent border-4 border-green-800 text-green-900'
+                                                : ' border-4 border-zinc-800 bg-zinc-800'}`}
+                                        onClick={() => {
+                                            // Cambiar estado de selección
+                                            const updateAlbums = { ...albumsToFilter };
+                                            const albumIndex = updateAlbums[location].findIndex(a => a.index === album.index);
+                                            updateAlbums[location][albumIndex].isSelected = !album.isSelected;
+                                            setAlbumsToFilter(updateAlbums);
+                                        }}
+                                    >
+                                        {album.name}
+                                    </button>
+                                ))}
+                        </div>
                     </div>
+                )) :
+                <div className='flex justify-center items-center'>
+                    <div className='loader'></div>
                 </div>
-            )):
-            <div className='flex justify-center items-center'> 
-                <div className='loader'></div>
-            </div>
             }
         </div>
     );

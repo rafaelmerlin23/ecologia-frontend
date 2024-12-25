@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react"
 import { Link, Outlet, useLocation, useNavigate, useParams, useSearchParams } from "react-router-dom"
 import handleGetData from '../../helpers/handleGetData'
 import { useAuth } from '../../AuthProvider'
+import { useProjectStruct } from "../providers/StructProjectProvider"
 
 const MONTHS = {
     1: "Enero",
@@ -22,7 +23,8 @@ const MONTHS = {
 
 export const ProjectsNavBar = () => {
     const location = useLocation()
-    const { setProjectsPath, userData } = useAuth()
+    const { userData, setProjectsPath } = useAuth()
+
     const token = userData.token
     const [isScrolled, setIsScrolled] = useState(false)
     const { albumID, proyectoId, puntoID, fechaImagen } = useParams()
@@ -108,7 +110,6 @@ export const ProjectsNavBar = () => {
         if (albumID != undefined) {
             const endpoint = `projects/get_album_by_id?album_id=${albumID}`
             handleGetData(endpoint, token).then((data) => {
-                console.log("algo ", data)
                 setPartPath((prev) => ({ ...prev, albumName: data.response[0][2] }))
             })
         }
@@ -224,7 +225,7 @@ export const ProjectsNavBar = () => {
 
 const NavElement = ({ name, path, isNext, isActive }) => {
     if (!isActive) return null
-    
+
 
     return (
         <li className="flex justify-center items-center ">
@@ -313,7 +314,7 @@ const ModalRoutes = ({ path, modalRef, params, pathParts, isActive, position, ha
 
 const ModalRouteElement = ({ name, path, isActive, onClose }) => {
     const handleClick = () => {
-        setImages([])
+
         onClose() // Close the modal after navigation
     };
 

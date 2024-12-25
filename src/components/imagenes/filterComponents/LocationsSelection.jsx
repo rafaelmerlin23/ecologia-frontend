@@ -1,26 +1,31 @@
 import React, { useEffect, useState } from 'react';
 import handleGetData from '../../../helpers/handleGetData';
 import { useAuth } from '../../../AuthProvider';
+import { useFilterImages } from '../../providers/FilterProvider';
 
 function TagsSelection() {
 
     const [searchString, setSearchString] = useState('');
-    const { 
-        locationCharge
-        , setLocationCharge
-        , locationToFilter
-        , setLocationToFilter
-        , userData
-        , projectsToFilter
-        , setAlbumsToFilter } = useAuth();
+    const {
+        userData
+    } = useAuth();
+
+    const {
+        locationCharge,
+        setLocationCharge,
+        locationToFilter,
+        setLocationToFilter,
+        projectsToFilter,
+        setAlbumsToFilter,
+    } = useFilterImages()
 
     const token = userData.token;
 
     // Obtener proyectos al cargar el componente
     useEffect(() => {
         setAlbumsToFilter({})
-        if(Object.keys(locationToFilter).length == 0){
-            setLocationCharge(location=>({...location,isLocationCharge: false}));
+        if (Object.keys(locationToFilter).length == 0) {
+            setLocationCharge(location => ({ ...location, isLocationCharge: false }));
         }
         const getProjects = async () => {
             let newLocationInformation = {}
@@ -41,7 +46,7 @@ function TagsSelection() {
                 }
             }
             setLocationToFilter(newLocationInformation)
-            setLocationCharge(location=>({...location,isLocationCharge: true}));
+            setLocationCharge(location => ({ ...location, isLocationCharge: true }));
             console.log(newLocationInformation)
 
         };
@@ -63,35 +68,35 @@ function TagsSelection() {
                 <div key={project} className="mb-4">
                     <h3 className="text-green-500 font-bold">{locations.filter(location => location.name.toLowerCase().includes(searchString.toLowerCase())).length > 0 && locations.length > 0 ? project : ""}</h3>
                     <div className="flex flex-col gap-2 mt-2">
-                        { 
-                        locations
-                            .filter(location => location.name.toLowerCase().includes(searchString.toLowerCase())) // Filtrar por búsqueda
-                            .map(location => (
-                                <button
-                                    type="button"
-                                    key={location.index}
-                                    className={`overflow-hidden whitespace-nowrap text-ellipsis px-2  hover:brightness-200 hover:bg-transparent hover:border-4 hover:border-green-700 hover:text-green-500 text-sm  flex  
+                        {
+                            locations
+                                .filter(location => location.name.toLowerCase().includes(searchString.toLowerCase())) // Filtrar por búsqueda
+                                .map(location => (
+                                    <button
+                                        type="button"
+                                        key={location.index}
+                                        className={`overflow-hidden whitespace-nowrap text-ellipsis px-2  hover:brightness-200 hover:bg-transparent hover:border-4 hover:border-green-700 hover:text-green-500 text-sm  flex  
                                         ${location.isSelected
-                                            ? 'brightness-200 bg-transparent border-4 border-green-800 text-green-900'
-                                            : ' border-4 border-zinc-800 bg-zinc-800'}`}
-                                    onClick={() => {
-                                        // Cambiar estado de selección
-                                        const updatedLocations = { ...locationToFilter };
-                                        const locationIndex = updatedLocations[project].findIndex(l => l.index === location.index);
-                                        updatedLocations[project][locationIndex].isSelected = !location.isSelected;
-                                        setLocationToFilter(updatedLocations);
-                                    }}
-                                >
-                                    {location.name}
-                                </button>
-                            ))}
+                                                ? 'brightness-200 bg-transparent border-4 border-green-800 text-green-900'
+                                                : ' border-4 border-zinc-800 bg-zinc-800'}`}
+                                        onClick={() => {
+                                            // Cambiar estado de selección
+                                            const updatedLocations = { ...locationToFilter };
+                                            const locationIndex = updatedLocations[project].findIndex(l => l.index === location.index);
+                                            updatedLocations[project][locationIndex].isSelected = !location.isSelected;
+                                            setLocationToFilter(updatedLocations);
+                                        }}
+                                    >
+                                        {location.name}
+                                    </button>
+                                ))}
                     </div>
                 </div>
-            )):
-            <div className='flex justify-center items-center'>
-                <div className='loader'></div>
-            </div>
-                }
+            )) :
+                <div className='flex justify-center items-center'>
+                    <div className='loader'></div>
+                </div>
+            }
         </div>
     );
 }

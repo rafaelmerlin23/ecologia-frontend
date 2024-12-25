@@ -7,10 +7,12 @@ import ProjectsSelection from './ProjectsSelection';
 import LocationSelection from './LocationsSelection';
 import AlbumSelection from './AlbumSelection'
 import { useLocation } from 'react-router-dom';
+import { useFilterImages } from '../../providers/FilterProvider';
 
 export const FilterGrouped = () => {
     const [isGoodForm, setIsGoodForm] = useState(true)
-    const { noTagsFilter
+    const {
+        noTagsFilter
         , setSelectedOrderFilter
         , dateRange
         , setDateRange
@@ -18,7 +20,8 @@ export const FilterGrouped = () => {
         , groupedTags
         , projectsToFilter
         , locationToFilter
-        , albumsToFilter } = useAuth()
+        , albumsToFilter
+    } = useFilterImages()
     const location = useLocation()
 
     useEffect(() => {

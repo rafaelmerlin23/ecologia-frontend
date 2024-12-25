@@ -10,23 +10,38 @@ import LabelImage from "./label components/LabelImage";
 import TagsSelector from "./label components/TagsSelector";
 import RatingsVisualizer from "./label components/RatingsVisualizer";
 import HandleFetchPictures from "../../helpers/HandleFetchPictures";
+import { useImages } from "../providers/ImagesProvider";
+import { useFilterImages } from "../providers/FilterProvider";
+import { useTagger } from "../providers/TaggerProvider";
 
 export const Etiquetador = ({ isActive, handleClose }) => {
 
     const navigate = useNavigate()
     const {
-        filter,
-        setMaxPage, maxPage,
-        changes, setChanges,
-        cardImagePage,
-        setCardImagePage,
+
+        userData,
+
+    } = useAuth()
+
+    const { filter } = useFilterImages()
+
+    const {
+        changes,
+        setChanges,
+        isCategoryMenuActivate
+    } = useTagger()
+
+    const {
         setImage,
         image,
-        userData,
-        isCategoryMenuActivate,
+        cardImagePage,
+        setCardImagePage,
+        setMaxPage,
+        maxPage,
         isNextPage,
         setIsNextPage
-    } = useAuth()
+    } = useImages()
+
     const token = userData.token
     const [categories, setCategories] = useState([])
     const [tags, setTags] = useState([])
@@ -35,8 +50,8 @@ export const Etiquetador = ({ isActive, handleClose }) => {
     const [componentToRender, setComponentToRender] = useState(null);
     const location = useLocation()
     const { albumID, proyectoId, puntoID } = useParams()
-    const [isTagsLoading,setIsTagsIsLoading] = useState(false);
-    const [loaderTag,setIsLoaderTag]= useState(false);
+    const [isTagsLoading, setIsTagsIsLoading] = useState(false);
+    const [loaderTag, setIsLoaderTag] = useState(false);
 
     useEffect(() => {
         if (isActive) {
@@ -46,9 +61,9 @@ export const Etiquetador = ({ isActive, handleClose }) => {
             // Restaura el scroll al desactivar el modal
             document.body.style.overflow = '';
         }
-            
-        
-      }, [isActive, handleClose]);
+
+
+    }, [isActive, handleClose]);
 
     useEffect(() => {
         setIsTagsIsLoading(false)
@@ -60,18 +75,22 @@ export const Etiquetador = ({ isActive, handleClose }) => {
             let filterPage = {}
 
             if (location.pathname != "/imagenes") {
-                
-                filterPage = {  
-                     quantity: 1
+
+                filterPage = {
+                    ...filter,
+                    quantity: 1
                     , page: cardImagePage
                     , projects: proyectoId
                     , locations: puntoID
-                    , albums: albumID }
-                
+                    , albums: albumID
+                }
+
             } else {
-                filterPage = { 
+                filterPage = {
+                    ...filter,
                     page: cardImagePage
-                    , quantity: 1}
+                    , quantity: 1
+                }
             }
 
             const data = await HandleFetchPictures(filterPage)
@@ -93,7 +112,7 @@ export const Etiquetador = ({ isActive, handleClose }) => {
                         }
                     });
                     setCategories(newFields)
-                    if(newFields.length === 0){
+                    if (newFields.length === 0) {
                         setIsTagsIsLoading(true)
                     }
                     handleTags(newFields[0].id)
@@ -102,7 +121,7 @@ export const Etiquetador = ({ isActive, handleClose }) => {
         ).catch((error) => console.error(error))
 
 
-    }, [cardImagePage, image, isCategoryMenuActivate,isNextPage,filter]);
+    }, [cardImagePage, image, isCategoryMenuActivate, isNextPage, filter]);
 
     // useEffect(()=>{
 
@@ -115,14 +134,14 @@ export const Etiquetador = ({ isActive, handleClose }) => {
 
 
     const handleIsNextPage = () => {
-        console.log("pagina",cardImagePage)
-        console.log("maxima pagina",maxPage)
+        console.log("pagina", cardImagePage)
+        console.log("maxima pagina", maxPage)
         if (cardImagePage < maxPage) {
             setIsNextPage(true)
         } else {
             setIsNextPage(false)
         }
-        console.log("HAY SIGUIENTE PAGINA",isNextPage)
+        console.log("HAY SIGUIENTE PAGINA", isNextPage)
     }
 
     const handleNext = async () => {
@@ -131,31 +150,35 @@ export const Etiquetador = ({ isActive, handleClose }) => {
 
 
         if (location.pathname != "/imagenes") {
-            filterPage = {  
-                 quantity: 1
+            filterPage = {
+                ...filter,
+                quantity: 1
                 , page: cardImagePage + 1
                 , projects: proyectoId
                 , locations: puntoID
-                , albums: albumID }
-            
+                , albums: albumID
+            }
+
         } else {
             filterPage = {
+                ...filter,
                 page: cardImagePage + 1
-                , quantity: 1}
+                , quantity: 1
+            }
         }
-        
-        console.log("filtros del next",filterPage)
+
+        console.log("filtros del next", filterPage)
         const data = await HandleFetchPictures(filterPage)
         console.log(data)
         const newImages = data.filtered_pictures.map(picture => ({
             link: picture.url,
             id: picture.id,
             date: picture.date,
-            url_original :picture.url_original
+            url_original: picture.url_original
         }))
 
         setImage(newImages[0])
-        
+
 
         setCardImagePage(prevPage => prevPage + 1);
         handleIsNextPage();
@@ -168,18 +191,22 @@ export const Etiquetador = ({ isActive, handleClose }) => {
         let filterPage = {}
 
         if (location.pathname != "/imagenes") {
-            
-            filterPage = {  
-                 quantity: 1
+
+            filterPage = {
+                ...filter,
+                quantity: 1
                 , page: cardImagePage - 1
                 , projects: proyectoId
                 , locations: puntoID
-                , albums: albumID }
-            
+                , albums: albumID
+            }
+
         } else {
-            filterPage = { 
+            filterPage = {
+                ...filter,
                 page: cardImagePage - 1
-                , quantity: 1}
+                , quantity: 1
+            }
         }
 
         const data = await HandleFetchPictures(filterPage)
@@ -188,7 +215,7 @@ export const Etiquetador = ({ isActive, handleClose }) => {
             link: picture.url,
             id: picture.id,
             date: picture.date,
-            url_original :picture.url_original
+            url_original: picture.url_original
         }))
 
         setImage(newImages[0])
@@ -316,7 +343,7 @@ export const Etiquetador = ({ isActive, handleClose }) => {
 
 
     const handleTags = async (id) => {
-        if(tags.length != 0){
+        if (tags.length != 0) {
             setIsLoaderTag(true)
         }
         setComponentToRender(<RatingsVisualizer
@@ -340,7 +367,6 @@ export const Etiquetador = ({ isActive, handleClose }) => {
             }));
             // Obtener etiquetas con calificación
             const dataTagsWithRating = await handleGetData(`ratings/show_ratings_from_user?picture_id=${image.id}&user_id=${userID}&category_id=${id}`, token);
-            console.log("datos de mierdaaaa :", dataTagsWithRating)
             if (dataTagsWithRating.response.length != 0) {
                 // Mapa de calificaciones para búsqueda eficiente
                 const ratingsMap = dataTagsWithRating.response.reduce((acc, rating) => {
@@ -365,18 +391,18 @@ export const Etiquetador = ({ isActive, handleClose }) => {
                 console.log(tagsWithRating)
                 transformChangesToTags(tagsWithRating)
                 setIsTagsIsLoading(true);
-                if(tags.length != 0){
+                if (tags.length != 0) {
                     setIsLoaderTag(false);
-                }  
+                }
             } else {
                 setTags(newTags);
                 transformChangesToTags(newTags);
                 setIsTagsIsLoading(true);
-                if(tags.length != 0){
+                if (tags.length != 0) {
                     setIsLoaderTag(false);
-                }  
+                }
             }
-            
+
 
         } catch (error) {
             console.error(error);
@@ -406,59 +432,59 @@ export const Etiquetador = ({ isActive, handleClose }) => {
 
     if (!isActive) return null
     return (
-        ( Object.keys(image).length !== 0 &&
+        (Object.keys(image).length !== 0 &&
 
             <LabelWrapper handleClose={handleClose} >
-            {cardImagePage != 1 ? <button onClick={handlePrevious}
-                className='z-40 flex justify-center items-center py-3 px-3 bg-white rounded-full absolute top-1/2 left-2 text-white text-xl hover:opacity-70'>
-                <FontAwesomeIcon className="text-sm text-black" icon={faLessThan} />
-            </button> : ""}
-            {isNextPage ? <button onClick={handleNext}
-                className='z-40 flex justify-center items-center py-3 px-3 bg-white  rounded-full absolute top-1/2 right-2 text-white text-xl hover:opacity-70'>
-                <FontAwesomeIcon className="text-sm text-black" icon={faGreaterThan} />
-            </button> : ""}
-            <div className="h-full w-full flex flex-col justify-center items-center gap-y-4 ">
+                {cardImagePage != 1 ? <button onClick={handlePrevious}
+                    className='z-40 flex justify-center items-center py-3 px-3 bg-white rounded-full absolute top-1/2 left-2 text-white text-xl hover:opacity-70'>
+                    <FontAwesomeIcon className="text-sm text-black" icon={faLessThan} />
+                </button> : ""}
+                {isNextPage ? <button onClick={handleNext}
+                    className='z-40 flex justify-center items-center py-3 px-3 bg-white  rounded-full absolute top-1/2 right-2 text-white text-xl hover:opacity-70'>
+                    <FontAwesomeIcon className="text-sm text-black" icon={faGreaterThan} />
+                </button> : ""}
+                <div className="h-full w-full flex flex-col justify-center items-center gap-y-4 ">
 
-                <ModalIMagen handleClose={handleCloseModal} image={image} isActive={isModalActive} />
+                    <ModalIMagen handleClose={handleCloseModal} image={image} isActive={isModalActive} />
 
-                {/* Fila para la imagen y el select */}
-                <div className=" flex justify-center items-center xl:items-start gap-x-10 sm:flex-col flex-col md:flex-col lg:flex-col xl:flex-row  xl:overflow-hidden">
-                    {isCategoryMenuActivate ? componentToRender : ""}
-                    <div className="min-h-[40rem] bg-zinc-800  hidden xl:block max-h-[40rem] w-[350px] overflow-y-auto">
-                        {componentToRender}
+                    {/* Fila para la imagen y el select */}
+                    <div className=" flex justify-center items-center xl:items-start gap-x-10 sm:flex-col flex-col md:flex-col lg:flex-col xl:flex-row  xl:overflow-hidden">
+                        {isCategoryMenuActivate ? componentToRender : ""}
+                        <div className="min-h-[40rem] bg-zinc-800  hidden xl:block max-h-[40rem] w-[350px] overflow-y-auto">
+                            {componentToRender}
+                        </div>
+
+
+                        <LabelImage
+                            setTags={setTags}
+                            tags={tags}
+                            changes={changes}
+                            image={image}
+                            setChanges={setChanges}
+                            handleOpenModal={handleOpenModal} />
+                        {/* <CambiosEtiquetas changes={changes}/> */}
+                        {/* <div className="sm:invisible visible lg:visible md:visible xl:visible inline-block xl:min-h-[40rem] w-0.5 bg-zinc-600"></div> */}
+
+                        {isTagsLoading ?
+                            <TagsSelector
+                                loaderTag={loaderTag}
+                                categories={categories}
+                                handleClick={handleClick}
+                                handleSelect={handleSelect}
+                                handleTags={handleTags}
+                                tags={tags}
+                                handleRatingChange={handleRatingChange} /> :
+                            <div className="flex h-[40rem] items-center justify-center w-[380px]">
+                                <div className="loader"></div>
+                            </div>
+                        }
+
                     </div>
 
-
-                    <LabelImage
-                        setTags={setTags}
-                        tags={tags}
-                        changes={changes}
-                        image={image}
-                        setChanges={setChanges}
-                        handleOpenModal={handleOpenModal} />
-                    {/* <CambiosEtiquetas changes={changes}/> */}
-                    {/* <div className="sm:invisible visible lg:visible md:visible xl:visible inline-block xl:min-h-[40rem] w-0.5 bg-zinc-600"></div> */}
-                    
-                    { isTagsLoading ?
-                        <TagsSelector
-                        loaderTag={loaderTag}
-                        categories={categories}
-                        handleClick={handleClick}
-                        handleSelect={handleSelect}
-                        handleTags={handleTags}
-                        tags={tags}
-                        handleRatingChange={handleRatingChange} />:
-                        <div className="flex h-[40rem] items-center justify-center w-[380px]">
-                            <div className="loader"></div>
-                        </div>
-                    }
-                        
+                    <div className="flex flex-col items-center ">
+                    </div>
                 </div>
-                
-                <div className="flex flex-col items-center ">
-                </div>
-            </div>
-        </LabelWrapper>
+            </LabelWrapper>
         )
 
     )

@@ -10,10 +10,20 @@ import { useState } from "react"
 import Overlay from "../Overlay"
 import JSZip from "jszip";
 import { saveAs } from "file-saver";
+import { useImages } from "../providers/ImagesProvider"
+import { useTagger } from "../providers/TaggerProvider"
 
 
 export const GridImagenes = ({ images }) => {
-    const { refreshProjects, userData, setImagesToDelete, imagesTodelete, isTaggerActive, setIsTaggerActive, setChanges, setImage } = useAuth()
+    const { refreshProjects, userData } = useAuth()
+
+    const {
+        isTaggerActive,
+        setIsTaggerActive,
+        setChanges
+    } = useTagger()
+
+    const { setImagesToDelete, imagesTodelete, setImage } = useImages()
     const [isModalDeleteActive, setIsModalDeletrActive] = useState(false)
     const token = userData.token
 
@@ -69,7 +79,7 @@ export const GridImagenes = ({ images }) => {
 
     }
     const handleExitToModal = () => {
-        
+
         setIsModalDeletrActive(false)
         refreshProjects()
     }

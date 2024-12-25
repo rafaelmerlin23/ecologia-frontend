@@ -1,15 +1,19 @@
 import { useEffect, useState } from "react";
 import { handleGetData } from "../../../helpers/handleGetData";
 import { useAuth } from "../../../AuthProvider";
+import { useFilterImages } from "../../providers/FilterProvider";
 
 export const ProjectsSelection = () => {
     const { userData
-        , projectsToFilter
-        , SetProjectToFilter
-        , setLocationToFilter
-        , setAlbumsToFilter
-        , locationCharge
-        , setLocationCharge } = useAuth();
+    } = useAuth();
+    const {
+        projectsToFilter,
+        SetProjectToFilter,
+        setLocationToFilter,
+        setAlbumsToFilter,
+        locationCharge,
+        setLocationCharge
+    } = useFilterImages()
     const [searchText, setSearchText] = useState("");
     const [filteredProjects, setFilteredProjects] = useState([]);
     const token = userData.token;
@@ -22,8 +26,8 @@ export const ProjectsSelection = () => {
 
     // Obtener proyectos al cargar el componente
     useEffect(() => {
-        if(projectsToFilter.length == 0){
-            setLocationCharge(location=>({...location,isProjectsCharge: false}));
+        if (projectsToFilter.length == 0) {
+            setLocationCharge(location => ({ ...location, isProjectsCharge: false }));
         }
         setAlbumsToFilter({})
         setLocationToFilter({})
@@ -39,7 +43,7 @@ export const ProjectsSelection = () => {
                 isSelected: false,
             }));
             SetProjectToFilter(newProjects);
-            setLocationCharge(location=>({...location,isProjectsCharge: true}));
+            setLocationCharge(location => ({ ...location, isProjectsCharge: true }));
         };
         getProjects();
     }, []);
@@ -72,23 +76,23 @@ export const ProjectsSelection = () => {
             {/* Lista de proyectos */}
             <div className="font-bold flex gap-3 flex-col">
                 {locationCharge.isProjectsCharge ?
-                filteredProjects.map((project, index) => (
-                    <button
-                        type='button'
-                        onClick={() => onSelect(index)}
-                        className={`overflow-hidden whitespace-nowrap text-ellipsis px-2  hover:brightness-200 hover:bg-transparent hover:border-4 hover:border-green-700 hover:text-green-500 disabled:opacity-40 text-sm  flex  ${project.isSelected
-                            ? "brightness-200 bg-transparent border-4 border-green-800 text-green-900"
-                            : "border-4 border-zinc-800 bg-zinc-800"
-                            }`}
-                        key={index}
-                    >
-                        {project.name}
-                    </button>
-                )):
-                <div className="flex justify-center items-center">
-                    <div className="loader"></div>
-                </div>
-                    }
+                    filteredProjects.map((project, index) => (
+                        <button
+                            type='button'
+                            onClick={() => onSelect(index)}
+                            className={`overflow-hidden whitespace-nowrap text-ellipsis px-2  hover:brightness-200 hover:bg-transparent hover:border-4 hover:border-green-700 hover:text-green-500 disabled:opacity-40 text-sm  flex  ${project.isSelected
+                                ? "brightness-200 bg-transparent border-4 border-green-800 text-green-900"
+                                : "border-4 border-zinc-800 bg-zinc-800"
+                                }`}
+                            key={index}
+                        >
+                            {project.name}
+                        </button>
+                    )) :
+                    <div className="flex justify-center items-center">
+                        <div className="loader"></div>
+                    </div>
+                }
                 {filteredProjects.length === 0 && (
                     <p className="text-sm text-gray-400 text-center">No se encontraron proyectos</p>
                 )}

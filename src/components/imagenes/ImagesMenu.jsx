@@ -9,16 +9,35 @@ import ImagesLoader from '../Loaders/ImagesLoader'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faWarning } from '@fortawesome/free-solid-svg-icons'
 import WarningComponent from './WarningComponent'
+import { useImages } from '../providers/ImagesProvider'
+import { useFilterImages } from '../providers/FilterProvider'
 
 function ImagesMenu() {
   const { albumID, proyectoId, puntoID } = useParams()
   const {
-    imagesExist,setImagesExist,
-    setLoadingComplete, loadingComplete, shouldRefresh, filter, setImages, images, setIsTaggerActive,
-    setCardImagePage, setImage, setMaxPage, setPageImage,
-    pageImage, userData, quantityImagePerPage } = useAuth()
+
+    shouldRefresh,
+    userData,
+  } = useAuth()
+
   const token = userData.token
-  const [searchParams, setSearchParams] = useSearchParams()
+
+  const {
+    setImages,
+    images,
+    setPageImage,
+    quantityImagePerPage,
+    pageImage,
+    setLoadingComplete,
+    loadingComplete,
+    imagesExist,
+    setImagesExist,
+    isUploading
+
+  } = useImages()
+
+  const { filter } = useFilterImages()
+
   const [maxPageGrid, setMaxPageGrid] = useState(1)
   const location = useLocation()
 
@@ -32,7 +51,7 @@ function ImagesMenu() {
   //     let query = { ...filter }
   //     delete query.quantity
   //     delete query.page
-  //     query = { ...query, quantity: 1, page: searchParams.get('image-page') }
+  //     query = { ...query, quantity: 1, page: seahParams.get('image-page') }
   //     const data = await HandleFetchPictures(query)
   //     const newImages = data.filtered_pictures.map((picture) => ({
   //       link: picture.url,
@@ -96,7 +115,7 @@ function ImagesMenu() {
     }
     const getData = async () => {
       const data = await HandleFetchPictures(query)
-      console.log("datos datos datos", data)
+      console.log("todos los datos del filtro", data)
       const newData = data.filtered_pictures.map((picture) => ({
         link: picture.url,
         id: picture.id,
@@ -113,7 +132,6 @@ function ImagesMenu() {
       images && setLoadingComplete(true)
     }, 600);
 
-    console.log("esta chimoltrufiada", filter);
 
     // if (searchParams.get('is-active-tagger')) {
     //   handleTagger()
@@ -127,7 +145,6 @@ function ImagesMenu() {
   const areObjectsEqual = (obj1, obj2) => {
     const keys1 = Object.keys(obj1);
     const keys2 = Object.keys(obj2);
-
     if (keys1.length !== keys2.length) {
       return false;
     }
@@ -141,13 +158,14 @@ function ImagesMenu() {
     return true;
   }
 
-  useEffect(()=>{
-    if(imagesExist){
-      setTimeout(()=>{
+  useEffect(() => {
+    console.log("existencia de la imagen", imagesExist)
+    if (imagesExist && !isUploading) {
+      setTimeout(() => {
         setImagesExist(false)
-      },3200)
+      }, 3200)
     }
-  },[imagesExist])
+  }, [imagesExist, isUploading])
 
 
   const isDefaultFilter = () => {
@@ -157,8 +175,8 @@ function ImagesMenu() {
 
   return (
     <div className=' flex flex-col justify-center items-center w-full'>
-      
-       <WarningComponent isActive={imagesExist}/>
+
+      <WarningComponent isActive={imagesExist} />
       <section>
         {(images.length > 0 || (images.length === 0 && !isDefaultFilter())) ? <FilterImagesDate /> : ""}
 

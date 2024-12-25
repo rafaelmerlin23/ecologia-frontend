@@ -9,6 +9,7 @@ import handleUpdate from "../../helpers/handleUpdate";
 import prefixUrl from "../../helpers/ip";
 import handleCreate from "../../helpers/handleCreate";
 import { handleDelete } from "../../helpers/handleDelete";
+import { useCategoryTags } from "../providers/CategoryTagsProvider";
 
 export const CategorysSelector = () => {
 
@@ -25,10 +26,8 @@ export const CategorysSelector = () => {
 export default CategorysSelector;
 
 const Categories = () => {
-    const {
-        categories
-        , setCategories
-        , userData } = useAuth();
+    const { userData } = useAuth();
+    const { categories, setCategories } = useCategoryTags()
     const token = userData.token;
     const [searchText, setSearchText] = useState("");
     const [isCreateActive, setIsCreateActive] = useState(false)
@@ -133,7 +132,7 @@ const Categories = () => {
                 className={`mb-4 p-1 rounded-md w-[50vw] sm:w-[50vw] lg:w-[10vw] xl:w-[5vw] bg-green-700 disabled:opacity-50 ${!isCreateActive && "hover:bg-green-500"}`}
                 disabled={isCreateActive}
             >
-                <FontAwesomeIcon  icon={faPlus} />
+                <FontAwesomeIcon icon={faPlus} />
             </button>
 
             <div className="overflow-y-auto max-h-[400px] flex justify-center items-center font-bold flex gap-3 flex-col">
@@ -156,7 +155,7 @@ const Categories = () => {
                             <button
                                 className={buttonClass}
                                 onClick={onCreateCategory}
-                                >
+                            >
                                 <FontAwesomeIcon icon={faCheck} />
 
                             </button>
@@ -236,7 +235,7 @@ const Categories = () => {
                                         <FontAwesomeIcon icon={faEdit} />
                                     </button>
                                     <button
-                                    className={buttonClass}
+                                        className={buttonClass}
                                         onClick={() => {
                                             let newCategories = [...categories]
                                             newCategories[index].willDeleted = true;

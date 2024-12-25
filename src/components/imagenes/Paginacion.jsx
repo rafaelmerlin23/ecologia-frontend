@@ -1,14 +1,12 @@
 import { useEffect, useState } from "react"
-import { useAuth } from "../../AuthProvider"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
 import { faArrowRight, faArrowLeft } from "@fortawesome/free-solid-svg-icons"
-import { useSearchParams } from "react-router-dom"
+import { useImages } from "../providers/ImagesProvider"
 
 export const Paginacion = ({ handleNext, handlePrevious, maxPage }) => {
     const [hasNext, setHasNext] = useState(true)
 
-    const { pageImage, setPageImage } = useAuth()
-    const [searchParams, setSearchParams] = useSearchParams()
+    const { pageImage, setPageImage } = useImages()
     const bottonClassName = "px-4 rounded-1xl hover:bg-gray-800 "
     const arrowsButtonStyle = "flex justify-center items-center hover:bg-gray-800 disabled:hover:bg-transparent px-2 disabled:opacity-50 "
 

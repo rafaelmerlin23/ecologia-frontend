@@ -2,9 +2,11 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faWarning } from '@fortawesome/free-solid-svg-icons';
 import { motion } from 'framer-motion';
 
-function WarningComponent({isActive}) {
-  if(!isActive) return null
-    return (
+function WarningComponent({ isActive }) {
+
+
+  if (!isActive) return null
+  return (
     <>
       <style>
         {`
@@ -42,8 +44,8 @@ function WarningComponent({isActive}) {
         <motion.div
           className="warning-message"
           initial={{ y: 100, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }} 
-           
+          animate={{ y: 0, opacity: 1 }}
+
           transition={{ duration: 0.7 }}         >
           <FontAwesomeIcon className="warning-icon" icon={faWarning} />
           <p className="warning-text">Error, La imagen ya existente</p>

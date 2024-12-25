@@ -8,11 +8,20 @@ import EditarProyecto from './EditarProyecto'
 import Eliminar from './Eliminar'
 import fetchPicture from '../helpers/HandleFetchPictures'
 import EstructuraLoader from './Loaders/EstructuraLoader'
+import { useProjectStruct } from './providers/StructProjectProvider'
 
 function GridProyecto() {
 
-  const { imagesInformation, setImagesInformation, userData, shouldRefresh, isLoadingStructure
-    , setIsLoadingStructure } = useAuth()
+  const { userData, shouldRefresh
+  } = useAuth()
+
+  const {
+    setIsLoadingStructure,
+    isLoadingStructure,
+    imagesInformation,
+    setImagesInformation
+  } = useProjectStruct()
+
   const token = userData.token
   const page = 1
   const quantity = 50

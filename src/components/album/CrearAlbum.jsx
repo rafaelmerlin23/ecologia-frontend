@@ -2,13 +2,14 @@ import { useState } from 'react'
 import FormularioAlbum from '../../forms/FormularioAlbum'
 import prefixUrl from '../../helpers/ip'
 import { useAuth } from '../../AuthProvider'
+import { useProjectStruct } from '../providers/StructProjectProvider'
 
 export function CrearAlbum({ isActive, closeCreateAlbum }) {
-    if(!isActive) return null
+    if (!isActive) return null
     const [response, setResponse] = useState(null)
-    const { locationInformation,userData, refreshProjects } = useAuth()
+    const { userData, refreshProjects } = useAuth()
+    const { locationInformation } = useProjectStruct()
     const token = userData.token
-    console.log(token)
 
     const handleCreateProject = (e, name, date) => {
         e.preventDefault()
@@ -44,12 +45,12 @@ export function CrearAlbum({ isActive, closeCreateAlbum }) {
             });
 
     }
-  
-    return (
-    <FormularioAlbum closeCreatAlbum={closeCreateAlbum} handle={handleCreateProject} message={"Crear"} >
 
-    </FormularioAlbum>
-  )
+    return (
+        <FormularioAlbum closeCreatAlbum={closeCreateAlbum} handle={handleCreateProject} message={"Crear"} >
+
+        </FormularioAlbum>
+    )
 }
 
 export default CrearAlbum

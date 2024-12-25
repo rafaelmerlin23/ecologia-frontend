@@ -9,17 +9,18 @@ import { EditarAlbum } from "./EditarAlbum"
 import Eliminar from "../Eliminar"
 import fetchPicture from '../../helpers/HandleFetchPictures'
 import EstructuraLoader from "../Loaders/EstructuraLoader"
+import { useProjectStruct } from "../providers/StructProjectProvider"
 
 export const GridAlbum = () => {
-  const { 
-    isLoadingStructure
-    , setIsLoadingStructure
-    , setLocationInformation, userData, shouldRefresh } = useAuth()
+  const {
+    userData, shouldRefresh } = useAuth()
+  const { setLocationInformation, isLoadingStructure
+    , setIsLoadingStructure } = useProjectStruct()
   const token = userData.token
   const [page] = useState(1)
   const [quantity] = useState(50)
   const [albumsInformation, setAlbumsInformation] = useState([])
-  const {  puntoID } = useParams()
+  const { puntoID } = useParams()
 
   const [isEditActive, setIsEditActive] = useState(false)
   const [isDeleteActive, setIsDeleteActive] = useState(false)

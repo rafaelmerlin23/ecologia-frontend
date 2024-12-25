@@ -4,9 +4,10 @@ import ModalImagenes from './ModalImagenes';
 import DropZone from './DropZone';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrash } from "@fortawesome/free-solid-svg-icons";
+import { useImages } from '../providers/ImagesProvider';
 
 export function SubirImagenes({ closeOverlay, isActive }) {
-  const { files, setFiles } = useAuth();
+  const { files, setFiles, isUploading } = useImages()
 
 
   useEffect(() => {
@@ -58,22 +59,28 @@ export function SubirImagenes({ closeOverlay, isActive }) {
       <p className='text-3xl'>Sube tus imágenes aquí</p>
       <DropZone />
       {files.length > 0 ? (
-        <div className="pt-10 grid grid-cols-2 xl:grid-cols-8 lg:grid-cols-4 sm:grid-cols-3  gap-x-0 gap-y-6 p-4 w-full place-items-center ">
+        <div
+          className="pt-10 grid grid-cols-2 xl:grid-cols-8 lg:grid-cols-4 sm:grid-cols-3  gap-x-0 gap-y-6 p-4 w-full place-items-center ">
           {files.map((file, index) => (
             <div
+
               className='flex justify-center content-center flex-col '
               key={index}>
               <input
+                disabled={isUploading}
                 onChange={(e) => onDateChange(index, e)}
                 value={file.date}
                 type='date'
-                className='bg-gray-700 text-center' />
+                className='disabled:opacity-50 bg-gray-700 text-center' />
               <img
                 className="object-contain h-48 w-48  m-0  border-dashed border-x-2 border-t-2 border-gray-600"
                 src={file.resizeFile}
                 alt={`Preview ${index}`}
               />
-              <button onClick={() => handleDiscardImage(file)} className='bg-red-800 p-1 hover:opacity-50'>
+              <button
+                disabled={isUploading}
+                onClick={() => handleDiscardImage(file)}
+                className='disabled:opacity-50 bg-red-800 p-1 hover:opacity-50'>
                 <FontAwesomeIcon icon={faTrash} />
               </button>
             </div>

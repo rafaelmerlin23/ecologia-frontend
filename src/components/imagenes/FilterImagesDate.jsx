@@ -6,10 +6,14 @@ import ModalFilters from "./filterComponents/ModalFilters";
 import ButtonsTofilter from "./filterComponents/ButtonsTofilter";
 import { useAuth } from "../../AuthProvider";
 import { useLocation, useParams, useSearchParams } from "react-router-dom";
+import { useImages } from "../providers/ImagesProvider";
+import { useFilterImages } from "../providers/FilterProvider";
 
 function FilterImagesDate() {
     const [isModalFilterActive, setIsModalFilterActive] = useState(false)
-    const { projectsToFilter
+
+    const {
+        projectsToFilter
         , groupedTags
         , locationToFilter
         , albumsToFilter
@@ -17,19 +21,19 @@ function FilterImagesDate() {
         , ranges
         , selectedOrderFilter
         , setFilter
-        , quantityImagePerPage
         , setDateRange
         , setGroupedTags
         , setRanges
         , setSelectedOrderFilter
-        , setPageImage
         , setLocationToFilter
         , SetProjectToFilter
         , setAlbumsToFilter
         , noTagsFilter
         , setNotagsFilter
-    } = useAuth()
 
+    } = useFilterImages()
+
+    const { setPageImage, quantityImagePerPage } = useImages()
 
 
     const location = useLocation()
@@ -42,7 +46,7 @@ function FilterImagesDate() {
         setIsModalFilterActive(true)
     }
 
-   
+
 
     useEffect(() => {
         onReset()
@@ -141,7 +145,7 @@ function FilterImagesDate() {
         selectedOrderFilter !== "None" && (query.order = selectedOrderFilter)
 
         setPageImage(1)
-        console.log("consulta",query)
+        console.log("consulta", query)
         setFilter(query)
     }
 

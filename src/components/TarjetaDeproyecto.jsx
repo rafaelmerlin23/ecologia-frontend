@@ -6,6 +6,7 @@ import { useAuth } from '../AuthProvider'
 import { handleDelete } from '../helpers/handleDelete'
 import TarjetaEnvoltorio from './TarjetaEnvoltorio'
 import BotonesTarjeta from './BotonesTarjeta'
+import { useProjectStruct } from './providers/StructProjectProvider'
 
 function TarjetaDeproyecto({
   LinkImagen
@@ -17,7 +18,14 @@ function TarjetaDeproyecto({
   , setEsActivaEliminar
 }) {
 
-  const { setImagesInformation, imagesInformation, setDeleteInformation, setBackRoute, userData, setProjectInformation, projectInformation, refreshProjects } = useAuth()
+  const { setBackRoute, userData, refreshProjects } = useAuth()
+  const {
+    setProjectInformation,
+    projectInformation,
+    setDeleteInformation,
+    setImagesInformation,
+    imagesInformation
+  } = useProjectStruct()
   const token = userData.token
 
   const handleProjectInformation = () => {
@@ -80,7 +88,7 @@ function TarjetaDeproyecto({
           <BotonesTarjeta openDelete={abrirOverlayEliminar} openEdit={abrirOverlayEditar} />
           <div className="flex flex-col justify-between p-4 leading-normal md:text-lg overflow-hidden">
             <h5 className="text-center mb-2 text-xl md:text-2xl font-bold tracking-tight text-gray-900 dark:text-white truncate">
-              {nombre.length >28 ? `${nombre.slice(0,25)}...`:nombre}
+              {nombre.length > 28 ? `${nombre.slice(0, 25)}...` : nombre}
             </h5>
             <div className='justify-center flex items-center space-x-2 mt-2 mb-4'>
               <FontAwesomeIcon className='h-5 w-5 mr-2' icon={faCalendar} />

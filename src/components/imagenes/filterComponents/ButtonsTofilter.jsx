@@ -3,43 +3,49 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useAuth } from '../../../AuthProvider'
 import DownloadImages from '../../../helpers/DownloadImages'
 import { useLocation } from 'react-router-dom'
+import { useFilterImages } from '../../providers/FilterProvider'
+import { useImages } from '../../providers/ImagesProvider'
 
-export const ButtonsTofilter=({handelCloseModalFilter}) =>{
-  const { filter, maxPage, userData 
-    , setFilter
-    , quantityImagePerPage
-    , setDateRange
-    , setGroupedTags
-    , setRanges
-    , setSelectedOrderFilter
-    , setPageImage
-    , setLocationToFilter
-    , SetProjectToFilter
-    , setAlbumsToFilter
-    , setNotagsFilter
-
+export const ButtonsTofilter = ({ handelCloseModalFilter }) => {
+  const {
+    userData,
   } = useAuth()
+
+  const {
+    setFilter,
+    filter,
+    setDateRange,
+    setGroupedTags,
+    setRanges,
+    setSelectedOrderFilter,
+    setLocationToFilter,
+    SetProjectToFilter,
+    setAlbumsToFilter,
+    setNotagsFilter,
+  } = useFilterImages()
+
+  const { maxPage, quantityImagePerPage, setPageImage } = useImages()
 
   const location = useLocation()
   const token = userData.token
-  
+
   const onReset = () => {
-        setDateRange({ initDate: '', endDate: '' })
-        setNotagsFilter(false)
-        setGroupedTags({})
-        setRanges({ 0: false, 0.5: false, 1: false, 1.5: false, 2: false, 2.5: false, 3: false })
-        setSelectedOrderFilter("None")
-        SetProjectToFilter([])
-        setLocationToFilter({})
-        setAlbumsToFilter({})
-        setFilter({ quantity: quantityImagePerPage })
-        setPageImage(1)
-       
+    setDateRange({ initDate: '', endDate: '' })
+    setNotagsFilter(false)
+    setGroupedTags({})
+    setRanges({ 0: false, 0.5: false, 1: false, 1.5: false, 2: false, 2.5: false, 3: false })
+    setSelectedOrderFilter("None")
+    SetProjectToFilter([])
+    setLocationToFilter({})
+    setAlbumsToFilter({})
+    setFilter({ quantity: quantityImagePerPage })
+    setPageImage(1)
+
   }
 
   const handleDowload = () => {
     const query = { ...filter, quantity: maxPage }
-    console.log("consulta",query)
+    console.log("consulta", query)
     DownloadImages(query, token)
   }
 

@@ -15,8 +15,12 @@ import { useEffect, useRef, useState } from 'react';
 import ProjectsNavBar from './components/projects/ProjectsNavBar';
 import GestorCuentas from './components/Accounts/GestorCuentas';
 import Usuario from './components/Accounts/Usuario';
-import ImagesLoader from './components/Loaders/ImagesLoader';
 import EstructuraLoader from './components/Loaders/EstructuraLoader';
+import { ProjectStructProvider } from './components/providers/StructProjectProvider';
+import { FilterProvider } from './components/providers/FilterProvider';
+import { ImagesProvider } from './components/providers/ImagesProvider';
+import { TaggerProvider } from './components/providers/TaggerProvider';
+import { CategoryTagsProvider } from './components/providers/CategoryTagsProvider';
 
 function PrivateRoute({ element, ...rest }) {
   const { isAuthenticated } = useAuth();
@@ -29,33 +33,55 @@ function App() {
     <Router>
       <AuthProvider>
         <Navigation />
-        <Routes>
-          {/* Redirigir raíz a login */}
-          <Route path="/" element={<Navigate to="/login" />} />
 
-          {/* Rutas independientes */}
-          <Route path="/login" element={<Login />} />
-          <Route path="/crear_cuenta" element={<CreateAccount />} />
-          <Route path="/usuario" element={<PrivateRoute element={<Usuario />} />} />
-          <Route path="/cuentas" element={<PrivateRoute element={<GestorCuentas />} />} />
-          <Route path="/imagenes" element={<PrivateRoute element={<Imagenes />} />} />
+        <ProjectStructProvider>
 
-          {/* Rutas privadas */}
-          <Route path="/categoria-etiqueta" element={<PrivateRoute element={<CategoriaEtiqueta />} />} />
-          <Route path='/loader' element={<EstructuraLoader/>}/>
+          <CategoryTagsProvider>
 
-          {/* Rutas bajo /gestor */}
-          <Route path="/gestor" element={<PrivateRoute element={<ProjectsNavBar />} />}>
-            <Route path="proyectos" element={<PrivateRoute element={<Proyectos />} />} />
-            <Route path="proyectos/:proyectoId/puntos" element={<PrivateRoute element={<Puntos />} />} />
-            <Route path="proyectos/:proyectoId/puntos/:puntoID/albumes" element={<PrivateRoute element={<Albumes />} />} />
-            <Route path="proyectos/:proyectoId/puntos/:puntoID/albumes/:albumID/imagenes" element={<PrivateRoute element={<Imagenes />} />} />
-            <Route path="proyectos/:proyectoId/puntos/:puntoID/albumes/:albumID/imagenes/:fechaImagen" element={<PrivateRoute element={<ImagesDate />} />} />
-          </Route>
+            <ImagesProvider>
 
-          {/* Ruta para página 404 */}
-          <Route path="*" element={<Error404 />} />
-        </Routes>
+              <TaggerProvider>
+
+                <FilterProvider>
+
+                  <Routes>
+                    {/* Redirigir raíz a login */}
+                    <Route path="/" element={<Navigate to="/login" />} />
+
+                    {/* Rutas independientes */}
+                    <Route path="/login" element={<Login />} />
+                    <Route path="/crear_cuenta" element={<CreateAccount />} />
+                    <Route path="/usuario" element={<PrivateRoute element={<Usuario />} />} />
+                    <Route path="/cuentas" element={<PrivateRoute element={<GestorCuentas />} />} />
+                    <Route path="/imagenes" element={<PrivateRoute element={<Imagenes />} />} />
+
+                    {/* Rutas privadas */}
+                    <Route path="/categoria-etiqueta" element={<PrivateRoute element={<CategoriaEtiqueta />} />} />
+                    <Route path='/loader' element={<EstructuraLoader />} />
+
+                    {/* Rutas bajo /gestor */}
+                    <Route path="/gestor" element={<PrivateRoute element={<ProjectsNavBar />} />}>
+                      <Route path="proyectos" element={<PrivateRoute element={<Proyectos />} />} />
+                      <Route path="proyectos/:proyectoId/puntos" element={<PrivateRoute element={<Puntos />} />} />
+                      <Route path="proyectos/:proyectoId/puntos/:puntoID/albumes" element={<PrivateRoute element={<Albumes />} />} />
+                      <Route path="proyectos/:proyectoId/puntos/:puntoID/albumes/:albumID/imagenes" element={<PrivateRoute element={<Imagenes />} />} />
+                      <Route path="proyectos/:proyectoId/puntos/:puntoID/albumes/:albumID/imagenes/:fechaImagen" element={<PrivateRoute element={<ImagesDate />} />} />
+                    </Route>
+
+                    {/* Ruta para página 404 */}
+                    <Route path="*" element={<Error404 />} />
+                  </Routes>
+
+                </FilterProvider>
+
+              </TaggerProvider>
+
+            </ImagesProvider>
+
+          </CategoryTagsProvider>
+
+        </ProjectStructProvider>
+
       </AuthProvider>
     </Router>
   );

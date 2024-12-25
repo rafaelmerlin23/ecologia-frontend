@@ -1,22 +1,28 @@
 import { useEffect, useState, useRef } from "react";
-import { useAuth } from "../../AuthProvider";
 import { handleDateTime } from "../../helpers/formatDate";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCalendar } from '@fortawesome/free-solid-svg-icons';
 import { useLocation, useParams, useSearchParams } from "react-router-dom";
+import { useImages } from "../providers/ImagesProvider";
+import { useTagger } from "../providers/TaggerProvider";
 
 export const TarjetaImagen = ({ image, index }) => {
     const [isHover, setIsHover] = useState(false);
     const containerRef = useRef(null); // Usamos useRef para acceder al contenedor
     const {
         setIsTaggerActive
-        , setImage
-        , pageImage
-        , setCardImagePage
-        , quantityImagePerPage
-        , setImagesToDelete
-        , imagesTodelete
-    } = useAuth();
+
+    } = useTagger()
+
+    const {
+        pageImage,
+        quantityImagePerPage,
+        setImage,
+        setCardImagePage,
+        setImagesToDelete,
+        imagesTodelete,
+    } = useImages()
+
     const [isCheck, setIsCheck] = useState(false)
 
 
@@ -52,7 +58,7 @@ export const TarjetaImagen = ({ image, index }) => {
         //     prev.set("image-page", pageImageNumber);
         //     return prev;
         // });
-        console.log("Id de la imagen: ",image.id)
+        console.log("Id de la imagen: ", image.id)
         setCardImagePage(pageImageNumber)
         setImage(image)
         handleOpenTagger()

@@ -9,14 +9,16 @@ import EditarPunto from './location/EditarPunto'
 import Eliminar from './Eliminar'
 import fetchPicture from '../helpers/HandleFetchPictures'
 import EstructuraLoader from './Loaders/EstructuraLoader'
+import { useProjectStruct } from './providers/StructProjectProvider'
 
 function GridPunto() {
   const [locationsInformation, setLocationsInformation] = useState([])
-  const { isLoadingStructure
-    , setIsLoadingStructure, setBackRoute, userData, shouldRefresh, projectInformation, setProjectInformation } = useAuth()
+  const { setBackRoute, userData, shouldRefresh } = useAuth()
   const token = userData.token
   const [isEditActive, setIsEditActive] = useState(false)
   const [isDeleteActive, setIsDeleteActive] = useState(false)
+  const { isLoadingStructure
+    , setIsLoadingStructure, projectInformation, setProjectInformation } = useProjectStruct()
 
   // Usar useSearchParams para obtener los parámetros de la URL
   const { proyectoId } = useParams();  // Accede al proyectoId desde la URL

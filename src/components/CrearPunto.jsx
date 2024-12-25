@@ -1,10 +1,12 @@
 import { useAuth } from "../AuthProvider"
 import FormularioPuntos from "../forms/FormularioPuntos"
 import prefixUrl from "../helpers/ip"
+import { useProjectStruct } from "./providers/StructProjectProvider"
 export const CrearPunto = ({ closeCreateLocation, isActive }) => {
     if (!isActive) return null
-    const {refreshProjects ,userData, projectInformation } = useAuth()
-    
+    const { refreshProjects, userData } = useAuth()
+    const { projectInformation } = useProjectStruct()
+
     const token = userData.token
 
     const handleCreateLocation = (e, name, longitude, latitude) => {

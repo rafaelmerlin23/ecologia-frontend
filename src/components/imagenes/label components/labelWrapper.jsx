@@ -4,9 +4,11 @@ import { useAuth } from '../../../AuthProvider'
 import handleGetData from '../../../helpers/handleGetData'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faArrowRight } from '@fortawesome/free-solid-svg-icons'
+import { useImages } from '../../providers/ImagesProvider'
 
 function LabelWrapper({ children, handleClose }) {
-  const { userData, cardImagePage, handleCategoryMenu, image } = useAuth()
+  const { userData } = useAuth()
+  const { cardImagePage, image } = useImages()
   const userName = userData.userName
   const token = userData.token
   const [pathName, setPathName] = useState({})

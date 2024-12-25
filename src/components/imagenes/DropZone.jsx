@@ -1,9 +1,9 @@
 import React, { useState } from 'react'
-import { useAuth } from '../../AuthProvider'
+import { useImages } from '../providers/ImagesProvider'
 
 function DropZone({ }) {
 
-  const { files, setFiles } = useAuth()
+  const { files, setFiles } = useImages()
   const [isDrag, setIsDrag] = useState()
 
   const handleDrop = (e) => {
