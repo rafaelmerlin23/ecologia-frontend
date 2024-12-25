@@ -94,12 +94,14 @@ export const AuthProvider = ({ children }) => {
             , setUserName
             , userName
 
+            // Eliminar por contenido no usado
             , backRoute
             , setBackRoute
 
             , projectsPath
             , setProjectsPath
 
+            // Eliminar por contenido no usado
             , indexDateUbicationImagesDate
             , setIndexDateUbicationImagesDate
             , initialDate
