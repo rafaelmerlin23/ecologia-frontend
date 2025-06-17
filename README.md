@@ -25,4 +25,4 @@ z-30 barra de navegacion
 z-40 etiquetador
 z-50 vista completa de imagenes
 
-👉 [Repositorio backend ProtecVida](https://github.com/rafaelmerlin23/picture_classification)
+👉 [Repositorio backend ](https://github.com/rafaelmerlin23/picture_classification)
